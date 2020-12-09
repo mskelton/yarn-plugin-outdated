@@ -6,7 +6,7 @@ import {
   structUtils,
   Workspace,
 } from "@yarnpkg/core"
-import { Command } from "clipanion"
+import { Command, Usage } from "clipanion"
 import * as semver from "semver"
 import { DependencyFetcher } from "./DependencyFetcher"
 import { DependencyTable } from "./DependencyTable"
@@ -14,13 +14,25 @@ import { DependencyInfo, OutdatedDependency } from "./types"
 import { parseVersion } from "./utils/semver"
 
 export class OutdatedCommand extends BaseCommand {
-  @Command.Boolean("-a,--all")
+  static usage: Usage = Command.Usage({
+    description: "view outdated dependencies",
+    details:
+      "This command finds outdated dependencies in a project and prints the result in a table or JSON format.",
+    examples: [["View outdated dependencies", "yarn outdated"]],
+  })
+
+  @Command.Boolean("-a,--all", {
+    description: "Include outdated dependencies from all workspaces",
+  })
   all = false
 
-  @Command.Boolean("-w,--wanted")
+  @Command.Boolean("-w,--wanted", {
+    description:
+      "Show the newest version within the semver range of the current version",
+  })
   wanted = false
 
-  @Command.Boolean("--json")
+  @Command.Boolean("--json", { description: "Format the output as JSON" })
   json = false
 
   @Command.Path("outdated")
