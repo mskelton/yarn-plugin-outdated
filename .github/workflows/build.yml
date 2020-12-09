@@ -16,8 +16,11 @@ jobs:
       - run: yarn lint
       - run: yarn ts
       - run: yarn build
+      - name: Move plugin to lib directory
+        run: cp bundles/@yarnpkg/plugin-outdated.js lib/plugin.js
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4.1.2
         with:
           commit_message: Update plugin artifact
+          file_pattern: lib/*.js
           branch: ${{ github.head_ref }}
