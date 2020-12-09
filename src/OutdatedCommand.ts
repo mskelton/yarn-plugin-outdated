@@ -1,5 +1,11 @@
 import { BaseCommand, WorkspaceRequiredError } from "@yarnpkg/cli"
-import { Cache, Configuration, Project, Workspace } from "@yarnpkg/core"
+import {
+  Cache,
+  Configuration,
+  Project,
+  structUtils,
+  Workspace,
+} from "@yarnpkg/core"
 import { Command } from "clipanion"
 import * as semver from "semver"
 import { DependencyFetcher } from "./DependencyFetcher"
@@ -106,7 +112,7 @@ export class OutdatedCommand extends BaseCommand {
         return {
           current: parseVersion(descriptor.range),
           latest: parseVersion(latestVersion),
-          name: descriptor.name,
+          name: structUtils.stringifyIdent(descriptor),
           type: dependencyType,
         }
       }
