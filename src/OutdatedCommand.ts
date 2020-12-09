@@ -140,7 +140,7 @@ export class OutdatedCommand extends BaseCommand {
           name: structUtils.stringifyIdent(descriptor),
           type: dependencyType,
           wanted,
-          workspace: this.all ? workspace.computeCandidateName() : undefined,
+          workspace: this.all ? this.getWorkspaceName(workspace) : undefined,
         }
       }
     )
@@ -148,5 +148,11 @@ export class OutdatedCommand extends BaseCommand {
     return (await Promise.all(outdated))
       .filter((dep) => semver.neq(dep.current!, dep.latest!))
       .sort((a, b) => a.name.localeCompare(b.name))
+  }
+
+  private getWorkspaceName(workspace: Workspace) {
+    return workspace.manifest.name
+      ? structUtils.stringifyIdent(workspace.manifest.name)
+      : workspace.computeCandidateName()
   }
 }
