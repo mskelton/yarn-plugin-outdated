@@ -16,7 +16,7 @@ jobs:
       - run: yarn ts
       - run: yarn build
       - name: Move plugin to lib directory
-        run: cp -p bundles/@yarnpkg/plugin-outdated.js lib/plugin.js
+        run: cp bundles/@yarnpkg/plugin-outdated.js lib/plugin.js
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4.1.2
         with:
