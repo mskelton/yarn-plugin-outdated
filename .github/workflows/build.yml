@@ -1,0 +1,23 @@
+name: Build
+on:
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - run: yarn --immutable --immutable-cache
+      - run: yarn lint
+      - run: yarn ts
+      - run: yarn build
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4.1.2
+        with:
+          commit_message: Update plugin artifact
+          branch: ${{ github.head_ref }}
