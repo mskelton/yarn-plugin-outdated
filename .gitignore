@@ -5,7 +5,3 @@
 !.yarn/plugins
 !.yarn/sdks
 !.yarn/versions
-
-# We move the plugin after building to simplify the URL, so we can safely ignore
-# the bundles directory.
-bundles/
