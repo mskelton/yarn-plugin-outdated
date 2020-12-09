@@ -10,8 +10,8 @@ import {
 import { suggestUtils } from "@yarnpkg/plugin-essentials"
 import { Command } from "clipanion"
 import * as semver from "semver"
-import { parseVersion } from "../utils/semver"
-import { printTable } from "../utils/table"
+import { DependencyTable } from "./DependencyTable"
+import { parseVersion } from "./utils/semver"
 
 export class OutdatedCommand extends Command<CommandContext> {
   @Command.Boolean("-a,--all")
@@ -19,6 +19,9 @@ export class OutdatedCommand extends Command<CommandContext> {
 
   @Command.Boolean("-w,--wanted")
   wanted = false
+
+  @Command.Boolean("--json")
+  json = false
 
   @Command.Path("outdated")
   async execute() {
@@ -32,27 +35,31 @@ export class OutdatedCommand extends Command<CommandContext> {
       this.context.cwd
     )
 
-    const dependencies = await this.getOutdatedDependencies(
-      configuration,
+    const allDependencies = await this.getOutdatedDependencies(
       project,
       workspace!,
       await Cache.find(configuration)
     )
 
-    printTable(
-      configuration,
-      dependencies.filter((dep) => semver.neq(dep.current!, dep.latest!))
+    const outdated = allDependencies.filter((dep) =>
+      semver.neq(dep.current!, dep.latest!)
     )
+
+    if (this.json) {
+      console.log(JSON.stringify(outdated))
+    } else {
+      new DependencyTable(configuration, outdated).print()
+    }
   }
 
   async getOutdatedDependencies(
-    configuration: Configuration,
     project: Project,
     workspace: Workspace,
     cache: Cache
   ) {
     const dependencies = []
     const dependencyTypes = ["dependencies", "devDependencies"] as const
+    console.log(workspace)
 
     for (const workspace of project.workspaces) {
       for (const dependencyType of dependencyTypes) {

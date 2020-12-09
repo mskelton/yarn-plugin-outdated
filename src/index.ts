@@ -1,5 +1,5 @@
 import { Plugin } from "@yarnpkg/core"
-import { OutdatedCommand } from "./commands/OutdatedCommand"
+import { OutdatedCommand } from "./OutdatedCommand"
 
 const plugin: Plugin = {
   commands: [OutdatedCommand],
