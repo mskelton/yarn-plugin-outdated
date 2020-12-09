@@ -39,11 +39,13 @@ export class OutdatedCommand extends BaseCommand {
 
     if (this.json) {
       console.log(JSON.stringify(outdated))
-    } else {
+    } else if (dependencies.length) {
       new DependencyTable(configuration, outdated, {
         wanted: this.wanted,
         workspace: this.all,
       }).print()
+    } else {
+      console.log("✨ All your dependencies are up to date!")
     }
   }
 
