@@ -1,19 +1,13 @@
-import {
-  Cache,
-  CommandContext,
-  Configuration,
-  Descriptor,
-  Project,
-  structUtils,
-  Workspace,
-} from "@yarnpkg/core"
-import { suggestUtils } from "@yarnpkg/plugin-essentials"
+import { BaseCommand, WorkspaceRequiredError } from "@yarnpkg/cli"
+import { Cache, Configuration, Project, Workspace } from "@yarnpkg/core"
 import { Command } from "clipanion"
 import * as semver from "semver"
+import { DependencyFetcher } from "./DependencyFetcher"
 import { DependencyTable } from "./DependencyTable"
+import { DependencyInfo, OutdatedDependency } from "./types"
 import { parseVersion } from "./utils/semver"
 
-export class OutdatedCommand extends Command<CommandContext> {
+export class OutdatedCommand extends BaseCommand {
   @Command.Boolean("-a,--all")
   all = false
 
@@ -25,25 +19,17 @@ export class OutdatedCommand extends Command<CommandContext> {
 
   @Command.Path("outdated")
   async execute() {
-    const configuration = await Configuration.find(
-      this.context.cwd,
-      this.context.plugins
-    )
-
-    const { project, workspace } = await Project.find(
+    const {
+      cache,
       configuration,
-      this.context.cwd
-    )
-
-    const allDependencies = await this.getOutdatedDependencies(
       project,
-      workspace!,
-      await Cache.find(configuration)
-    )
+      workspace,
+    } = await this.loadProject()
 
-    const outdated = allDependencies.filter((dep) =>
-      semver.neq(dep.current!, dep.latest!)
-    )
+    const fetcher = new DependencyFetcher(project, workspace, cache)
+    const workspaces = this.getWorkspaces(project, workspace)
+    const dependencies = this.getDependencies(workspaces)
+    const outdated = await this.getOutdatedDependencies(fetcher, dependencies)
 
     if (this.json) {
       console.log(JSON.stringify(outdated))
@@ -52,65 +38,82 @@ export class OutdatedCommand extends Command<CommandContext> {
     }
   }
 
-  async getOutdatedDependencies(
-    project: Project,
-    workspace: Workspace,
-    cache: Cache
-  ) {
-    const dependencies = []
-    const dependencyTypes = ["dependencies", "devDependencies"] as const
-    console.log(workspace)
+  /**
+   * Loads the project and current workspace.
+   */
+  async loadProject() {
+    const configuration = await Configuration.find(
+      this.context.cwd,
+      this.context.plugins
+    )
 
-    for (const workspace of project.workspaces) {
+    const [cache, { project, workspace }] = await Promise.all([
+      Cache.find(configuration),
+      Project.find(configuration, this.context.cwd),
+    ])
+
+    if (!workspace) {
+      throw new WorkspaceRequiredError(project.cwd, this.context.cwd)
+    }
+
+    return {
+      cache,
+      configuration,
+      project,
+      workspace,
+    }
+  }
+
+  /**
+   * If the user passed the `--all` CLI flag, then we will load dependencies
+   * from all workspaces instead of just the current workspace.
+   */
+  getWorkspaces(project: Project, workspace: Workspace) {
+    return this.all ? project.workspaces : [workspace]
+  }
+
+  /**
+   * Collect all dependencies and devDependencies from all workspaces into an
+   * array which we can process more easily.
+   */
+  getDependencies(workspaces: Workspace[]) {
+    const dependencies: DependencyInfo[] = []
+    const dependencyTypes = ["dependencies", "devDependencies"] as const
+
+    for (const workspace of workspaces) {
       for (const dependencyType of dependencyTypes) {
-        for (const desc of workspace.manifest[dependencyType].values()) {
-          dependencies.push({
-            current: parseVersion(desc.range),
-            descriptor: desc,
-            name: structUtils.stringifyIdent(desc),
-            type: dependencyType,
-          })
+        for (const descriptor of workspace.manifest[dependencyType].values()) {
+          dependencies.push({ dependencyType, descriptor, workspace })
         }
       }
     }
 
-    const sortedDependencies = dependencies
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map(async (dep) => {
-        const latestVersion = await this.fetchLatestDescriptor(
-          project,
-          workspace,
-          cache,
-          dep.descriptor
-        )
-
-        return {
-          ...dep,
-          latest: parseVersion(latestVersion),
-        }
-      })
-
-    return Promise.all(sortedDependencies)
+    return dependencies
   }
 
-  async fetchLatestDescriptor(
-    project: Project,
-    workspace: Workspace,
-    cache: Cache,
-    descriptor: Descriptor,
-    range = "latest"
-  ) {
-    const candidate = await suggestUtils.fetchDescriptorFrom(
-      descriptor,
-      range,
-      {
-        cache,
-        preserveModifier: descriptor.range,
-        project,
-        workspace,
+  /**
+   * Iterates through the dependencies to find the outdated dependencies and
+   * sort them in ascending order.
+   */
+  async getOutdatedDependencies(
+    fetcher: DependencyFetcher,
+    dependencies: DependencyInfo[]
+  ): Promise<OutdatedDependency[]> {
+    const outdated = dependencies.map(
+      async ({ dependencyType, descriptor }) => {
+        const latestVersion = await fetcher.fetch(descriptor)
+
+        return {
+          current: parseVersion(descriptor.range),
+          latest: parseVersion(latestVersion),
+          name: descriptor.name,
+          type: dependencyType,
+        }
       }
     )
 
-    return candidate === null ? descriptor.range : candidate.range
+    return (await Promise.all(outdated))
+      .filter((dep) => semver.neq(dep.current!, dep.latest!))
+      .sort((a, b) => a.name.localeCompare(b.name))
   }
 }
