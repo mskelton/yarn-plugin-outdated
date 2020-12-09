@@ -3,7 +3,9 @@
     "experimentalDecorators": true,
     "module": "commonjs",
     "target": "es2018",
-    "lib": ["es2018"]
+    "lib": ["es2018"],
+    "skipLibCheck": true,
+    "strict": true
   },
   "include": ["src/**/*.ts"]
 }
