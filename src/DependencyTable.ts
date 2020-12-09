@@ -2,7 +2,14 @@ import { Configuration, formatUtils } from "@yarnpkg/core"
 import * as semver from "semver"
 import { OutdatedDependency } from "./types"
 
-const columns = ["name", "current", "latest", "type"] as const
+const columns = [
+  "name",
+  "current",
+  "wanted",
+  "latest",
+  "workspace",
+  "type",
+] as const
 
 type TableColumn = typeof columns[number]
 
@@ -13,11 +20,14 @@ export class DependencyTable {
     latest: "Latest",
     name: "Package",
     type: "Package Type",
+    wanted: "Wanted",
+    workspace: "Workspace",
   }
 
   constructor(
     private configuration: Configuration,
-    private dependencies: OutdatedDependency[]
+    private dependencies: OutdatedDependency[],
+    private extraColumns: Partial<Record<TableColumn, boolean>>
   ) {}
 
   print() {
@@ -44,6 +54,8 @@ export class DependencyTable {
           color
         ),
         type: dep.type.padEnd(this.sizes.type),
+        wanted: dep.wanted?.padEnd(this.sizes.wanted),
+        workspace: dep.workspace?.padEnd(this.sizes.workspace),
       })
     })
   }
@@ -54,12 +66,14 @@ export class DependencyTable {
       latest: this.headers.latest.length,
       name: this.headers.name.length,
       type: this.headers.type.length,
+      wanted: this.headers.wanted.length,
+      workspace: this.headers.workspace.length,
     }
 
     for (const dependency of this.dependencies) {
       for (const [key, value] of Object.entries(dependency)) {
         const acc = sizes[key as TableColumn]
-        const cur = value.length
+        const cur = (value || "").length
 
         sizes[key as TableColumn] = acc > cur ? acc : cur
       }
@@ -82,10 +96,17 @@ export class DependencyTable {
       latest: this.formatColumnHeader("latest"),
       name: this.formatColumnHeader("name"),
       type: this.formatColumnHeader("type"),
+      wanted: this.formatColumnHeader("wanted"),
+      workspace: this.formatColumnHeader("workspace"),
     })
   }
 
-  private printRow(row: Record<TableColumn, string>) {
-    console.log(columns.map((column) => row[column]).join("   "))
+  private printRow(row: Record<TableColumn, string | undefined>) {
+    const output = columns
+      .filter((column) => this.extraColumns[column] ?? true)
+      .map((column) => row[column])
+      .join("   ")
+
+    console.log(output)
   }
 }

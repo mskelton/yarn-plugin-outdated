@@ -40,7 +40,10 @@ export class OutdatedCommand extends BaseCommand {
     if (this.json) {
       console.log(JSON.stringify(outdated))
     } else {
-      new DependencyTable(configuration, outdated).print()
+      new DependencyTable(configuration, outdated, {
+        wanted: this.wanted,
+        workspace: this.all,
+      }).print()
     }
   }
 
@@ -106,14 +109,24 @@ export class OutdatedCommand extends BaseCommand {
     dependencies: DependencyInfo[]
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
-      async ({ dependencyType, descriptor }) => {
-        const latestVersion = await fetcher.fetch(descriptor)
+      async ({ dependencyType, descriptor, workspace }) => {
+        const referenceRange = semver.valid(descriptor.range)
+          ? `^${descriptor.range}`
+          : descriptor.range
+
+        const [latest, wanted] = await Promise.all([
+          fetcher.fetch(descriptor, "latest"),
+          // Only fetch the wanted version if we need to.
+          this.wanted ? fetcher.fetch(descriptor, referenceRange) : undefined,
+        ])
 
         return {
           current: parseVersion(descriptor.range),
-          latest: parseVersion(latestVersion),
+          latest,
           name: structUtils.stringifyIdent(descriptor),
           type: dependencyType,
+          wanted,
+          workspace: this.all ? workspace.computeCandidateName() : undefined,
         }
       }
     )

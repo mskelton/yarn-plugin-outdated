@@ -1,5 +1,6 @@
 import { Cache, Descriptor, Project, Workspace } from "@yarnpkg/core"
 import { suggestUtils } from "@yarnpkg/plugin-essentials"
+import { parseVersion } from "./utils/semver"
 
 export class DependencyFetcher {
   constructor(
@@ -8,7 +9,7 @@ export class DependencyFetcher {
     private cache: Cache
   ) {}
 
-  async fetch(descriptor: Descriptor, range = "latest") {
+  async fetch(descriptor: Descriptor, range: string) {
     const candidate = await suggestUtils.fetchDescriptorFrom(
       descriptor,
       range,
@@ -20,6 +21,6 @@ export class DependencyFetcher {
       }
     )
 
-    return candidate === null ? descriptor.range : candidate.range
+    return parseVersion(candidate === null ? descriptor.range : candidate.range)
   }
 }
