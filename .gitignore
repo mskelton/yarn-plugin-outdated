@@ -1,6 +1,11 @@
+# Yarn 2 release, plugins, and cache
 .yarn/*
 !.yarn/cache
 !.yarn/releases
 !.yarn/plugins
 !.yarn/sdks
 !.yarn/versions
+
+# We move the plugin after building to simplify the URL, so we can safely ignore
+# the bundles directory.
+bundles/

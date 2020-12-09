@@ -5,7 +5,7 @@ Yarn 2 plugin to show outdated dependencies.
 ## Installation
 
 ```sh
-yarn plugin import https://github.com/mskelton/yarn-plugin-outdated/blob/main/lib/plugin-outdated.js
+yarn plugin import https://github.com/mskelton/yarn-plugin-outdated/raw/main/lib/plugin.js
 ```
 
 ## Usage
