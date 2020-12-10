@@ -106,7 +106,11 @@ export class OutdatedCommand extends BaseCommand {
     for (const workspace of workspaces) {
       for (const dependencyType of dependencyTypes) {
         for (const descriptor of workspace.manifest[dependencyType].values()) {
-          dependencies.push({ dependencyType, descriptor, workspace })
+          // Only include valid semver ranges. Non-semver ranges such as tags
+          // (e.g. `next`) or protocols (e.g. `workspace:*`) should be ignored.
+          if (semver.coerce(descriptor.range)) {
+            dependencies.push({ dependencyType, descriptor, workspace })
+          }
         }
       }
     }
@@ -146,7 +150,7 @@ export class OutdatedCommand extends BaseCommand {
     )
 
     return (await Promise.all(outdated))
-      .filter((dep) => semver.neq(dep.current!, dep.latest!))
+      .filter((dep) => semver.neq(dep.current, dep.latest))
       .sort((a, b) => a.name.localeCompare(b.name))
   }
 
