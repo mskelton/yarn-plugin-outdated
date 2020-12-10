@@ -11,7 +11,7 @@ import * as semver from "semver"
 import { DependencyFetcher } from "./DependencyFetcher"
 import { DependencyTable } from "./DependencyTable"
 import { DependencyInfo, OutdatedDependency } from "./types"
-import { parseVersion } from "./utils/semver"
+import { excludeFalsey, parseVersion } from "./utils"
 
 export class OutdatedCommand extends BaseCommand {
   static usage: Usage = Command.Usage({
@@ -25,12 +25,6 @@ export class OutdatedCommand extends BaseCommand {
     description: "Include outdated dependencies from all workspaces",
   })
   all = false
-
-  @Command.Boolean("-w,--wanted", {
-    description:
-      "Show the newest version within the semver range of the current version",
-  })
-  wanted = false
 
   @Command.Boolean("--json", { description: "Format the output as JSON" })
   json = false
@@ -53,7 +47,6 @@ export class OutdatedCommand extends BaseCommand {
       console.log(JSON.stringify(outdated))
     } else if (dependencies.length) {
       new DependencyTable(configuration, outdated, {
-        wanted: this.wanted,
         workspace: this.all,
       }).print()
     } else {
@@ -128,29 +121,23 @@ export class OutdatedCommand extends BaseCommand {
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
       async ({ dependencyType, descriptor, workspace }) => {
-        const referenceRange = semver.valid(descriptor.range)
-          ? `^${descriptor.range}`
-          : descriptor.range
+        const latest = await fetcher.fetch(descriptor, "latest")
+        const current = parseVersion(descriptor.range)
 
-        const [latest, wanted] = await Promise.all([
-          fetcher.fetch(descriptor, "latest"),
-          // Only fetch the wanted version if we need to.
-          this.wanted ? fetcher.fetch(descriptor, referenceRange) : undefined,
-        ])
-
-        return {
-          current: parseVersion(descriptor.range),
-          latest,
-          name: structUtils.stringifyIdent(descriptor),
-          type: dependencyType,
-          wanted,
-          workspace: this.all ? this.getWorkspaceName(workspace) : undefined,
+        if (current !== latest) {
+          return {
+            current,
+            latest,
+            name: structUtils.stringifyIdent(descriptor),
+            type: dependencyType,
+            workspace: this.all ? this.getWorkspaceName(workspace) : undefined,
+          } as OutdatedDependency
         }
       }
     )
 
     return (await Promise.all(outdated))
-      .filter((dep) => semver.neq(dep.current, dep.latest))
+      .filter(excludeFalsey)
       .sort((a, b) => a.name.localeCompare(b.name))
   }
 

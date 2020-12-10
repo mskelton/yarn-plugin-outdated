@@ -1,6 +1,6 @@
 import { Cache, Descriptor, Project, Workspace } from "@yarnpkg/core"
 import { suggestUtils } from "@yarnpkg/plugin-essentials"
-import { parseVersion } from "./utils/semver"
+import { parseVersion } from "./utils"
 
 export class DependencyFetcher {
   constructor(

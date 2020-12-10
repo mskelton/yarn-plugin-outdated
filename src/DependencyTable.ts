@@ -31,21 +31,35 @@ export class DependencyTable {
 
       this.printRow({
         current: dependency.current.padEnd(this.sizes.current),
-        latest: dependency.latest.padEnd(this.sizes.latest),
-        name: formatUtils.pretty(
-          this.configuration,
-          dependency.name.padEnd(this.sizes.name),
-          color
-        ),
+        latest: this.formatVersion(dependency, "latest", color),
+        name: this.applyColor(dependency.name.padEnd(this.sizes.name), color),
         type: dependency.type.padEnd(this.sizes.type),
         workspace: dependency.workspace?.padEnd(this.sizes.workspace),
       })
     })
   }
 
-  getDiffColor(dependency: OutdatedDependency) {
-    const current = semver.parse(dependency.current)!
-    const latest = semver.parse(dependency.latest)!
+  private applyColor(value: string, color: string) {
+    return formatUtils.pretty(this.configuration, value, color)
+  }
+
+  private formatVersion(
+    dependency: OutdatedDependency,
+    column: TableColumn,
+    color: string
+  ) {
+    const value = dependency[column]!.padEnd(this.sizes[column])
+
+    return formatUtils.pretty(
+      this.configuration,
+      this.applyColor(value, color),
+      "bold"
+    )
+  }
+
+  private getDiffColor(dependency: OutdatedDependency) {
+    const current = semver.coerce(dependency.current)!
+    const latest = semver.coerce(dependency.latest)!
 
     return latest.major > current.major
       ? "red"
