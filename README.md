@@ -16,8 +16,7 @@ yarn outdated
 
 ### Options
 
-| Definition       | Description                                                             |
-| ---------------- | ----------------------------------------------------------------------- |
-| `-A`, `--all`    | Include outdated dependencies from all workspaces.                      |
-| `-W`, `--wanted` | Show the newest version within the semver range of the current version. |
-| `--json`         | Output in JSON format instead of in the formatted table.                |
+| Definition    | Description                                              |
+| ------------- | -------------------------------------------------------- |
+| `-A`, `--all` | Include outdated dependencies from all workspaces.       |
+| `--json`      | Output in JSON format instead of in the formatted table. |

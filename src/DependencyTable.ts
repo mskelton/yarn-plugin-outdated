@@ -2,14 +2,7 @@ import { Configuration, formatUtils } from "@yarnpkg/core"
 import * as semver from "semver"
 import { OutdatedDependency } from "./types"
 
-const columns = [
-  "name",
-  "current",
-  "wanted",
-  "latest",
-  "workspace",
-  "type",
-] as const
+const columns = ["name", "current", "latest", "workspace", "type"] as const
 
 type TableColumn = typeof columns[number]
 
@@ -20,7 +13,6 @@ export class DependencyTable {
     latest: "Latest",
     name: "Package",
     type: "Package Type",
-    wanted: "Wanted",
     workspace: "Workspace",
   }
 
@@ -34,30 +26,32 @@ export class DependencyTable {
     this.sizes = this.getColumnSizes()
     this.printHeader()
 
-    this.dependencies.forEach((dep) => {
-      const current = semver.parse(dep.current)!
-      const latest = semver.parse(dep.latest)!
-
-      const color =
-        latest.major > current.major
-          ? "red"
-          : latest.minor > current.minor
-          ? "yellow"
-          : "green"
+    this.dependencies.forEach((dependency) => {
+      const color = this.getDiffColor(dependency)
 
       this.printRow({
-        current: dep.current.padEnd(this.sizes.current),
-        latest: dep.latest.padEnd(this.sizes.latest),
+        current: dependency.current.padEnd(this.sizes.current),
+        latest: dependency.latest.padEnd(this.sizes.latest),
         name: formatUtils.pretty(
           this.configuration,
-          dep.name.padEnd(this.sizes.name),
+          dependency.name.padEnd(this.sizes.name),
           color
         ),
-        type: dep.type.padEnd(this.sizes.type),
-        wanted: dep.wanted?.padEnd(this.sizes.wanted),
-        workspace: dep.workspace?.padEnd(this.sizes.workspace),
+        type: dependency.type.padEnd(this.sizes.type),
+        workspace: dependency.workspace?.padEnd(this.sizes.workspace),
       })
     })
+  }
+
+  getDiffColor(dependency: OutdatedDependency) {
+    const current = semver.parse(dependency.current)!
+    const latest = semver.parse(dependency.latest)!
+
+    return latest.major > current.major
+      ? "red"
+      : latest.minor > current.minor
+      ? "yellow"
+      : "green"
   }
 
   private getColumnSizes(): Record<TableColumn, number> {
@@ -66,7 +60,6 @@ export class DependencyTable {
       latest: this.headers.latest.length,
       name: this.headers.name.length,
       type: this.headers.type.length,
-      wanted: this.headers.wanted.length,
       workspace: this.headers.workspace.length,
     }
 
@@ -96,7 +89,6 @@ export class DependencyTable {
       latest: this.formatColumnHeader("latest"),
       name: this.formatColumnHeader("name"),
       type: this.formatColumnHeader("type"),
-      wanted: this.formatColumnHeader("wanted"),
       workspace: this.formatColumnHeader("workspace"),
     })
   }
