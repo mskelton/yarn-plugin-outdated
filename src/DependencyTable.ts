@@ -2,6 +2,7 @@ import { Configuration, formatUtils } from "@yarnpkg/core"
 import * as semver from "semver"
 import { OutdatedDependency } from "./types"
 
+const semverRegex = /^([0-9]+\.)([0-9]+\.)(.+)$/
 const columns = ["name", "current", "latest", "workspace", "type"] as const
 
 type TableColumn = typeof columns[number]
@@ -49,11 +50,23 @@ export class DependencyTable {
     color: string
   ) {
     const value = dependency[column]!.padEnd(this.sizes[column])
+    const matches = value.match(semverRegex)
 
-    return formatUtils.pretty(
-      this.configuration,
-      this.applyColor(value, color),
-      "bold"
+    if (!matches) {
+      return value
+    }
+
+    const index = ["red", "yellow", "green"].indexOf(color) + 1
+    const start = matches.slice(1, index).join("")
+    const end = matches.slice(index).join("")
+
+    return (
+      start +
+      formatUtils.pretty(
+        this.configuration,
+        this.applyColor(end, color),
+        "bold"
+      )
     )
   }
 
