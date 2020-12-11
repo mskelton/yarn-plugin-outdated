@@ -9,6 +9,7 @@
     "build": "builder build plugin",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "test": "jest",
     "ts": "tsc"
   },
   "dependencies": {
