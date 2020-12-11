@@ -1,3 +1,6 @@
 {
-  "extends": ["@mskelton", "@mskelton/eslint-config/typescript"]
+  "extends": ["@mskelton", "@mskelton/eslint-config/typescript"],
+  "env": {
+    "jest": true
+  }
 }
