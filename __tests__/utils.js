@@ -1,11 +1,14 @@
-import { Project } from "@yarnpkg/core"
-import { ppath } from "@yarnpkg/fslib"
+import { formatUtils, Project } from "@yarnpkg/core"
 import { suggestUtils } from "@yarnpkg/plugin-essentials"
 import { Cli } from "clipanion"
 import getStream from "get-stream"
 import { PassThrough } from "stream"
 import { structUtils } from "../__mocks__/@yarnpkg/core"
 import { OutdatedCommand } from "../src/OutdatedCommand"
+
+beforeEach(() => {
+  formatUtils.pretty.mockImplementation((_, string) => string)
+})
 
 const dependenciesToMap = (obj = {}) =>
   new Map(

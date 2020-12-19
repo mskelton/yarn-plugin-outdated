@@ -5,5 +5,5 @@ export const structUtils = {
   stringifyIdent: ({ name, scope }) => (scope ? `@${scope}/${name}` : name),
 }
 export const formatUtils = {
-  pretty: jest.fn().mockImplementation((_, string) => string),
+  pretty: jest.fn(),
 }

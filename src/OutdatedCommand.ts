@@ -46,7 +46,7 @@ export class OutdatedCommand extends BaseCommand {
 
     if (this.json) {
       this.context.stdout.write(JSON.stringify(outdated) + EOL)
-    } else if (dependencies.length) {
+    } else if (outdated.length) {
       new DependencyTable(this.context, configuration, outdated, {
         workspace: this.all,
       }).print()
