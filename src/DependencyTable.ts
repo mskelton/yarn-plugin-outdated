@@ -1,4 +1,5 @@
-import { Configuration, formatUtils } from "@yarnpkg/core"
+import { CommandContext, Configuration, formatUtils } from "@yarnpkg/core"
+import { EOL } from "os"
 import * as semver from "semver"
 import { OutdatedDependency } from "./types"
 
@@ -18,6 +19,7 @@ export class DependencyTable {
   }
 
   constructor(
+    private context: CommandContext,
     private configuration: Configuration,
     private dependencies: OutdatedDependency[],
     private extraColumns: Partial<Record<TableColumn, boolean>>
@@ -126,6 +128,6 @@ export class DependencyTable {
       .map((column) => row[column])
       .join("   ")
 
-    console.log(output)
+    this.context.stdout.write(output + EOL)
   }
 }

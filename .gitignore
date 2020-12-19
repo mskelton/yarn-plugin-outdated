@@ -1,3 +1,5 @@
+node_modules/
+
 # Yarn 2 release, plugins, and cache
 .yarn/*
 !.yarn/cache

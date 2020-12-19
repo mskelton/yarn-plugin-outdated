@@ -7,6 +7,7 @@ import {
   Workspace,
 } from "@yarnpkg/core"
 import { Command, Usage } from "clipanion"
+import { EOL } from "os"
 import * as semver from "semver"
 import { DependencyFetcher } from "./DependencyFetcher"
 import { DependencyTable } from "./DependencyTable"
@@ -44,13 +45,15 @@ export class OutdatedCommand extends BaseCommand {
     const outdated = await this.getOutdatedDependencies(fetcher, dependencies)
 
     if (this.json) {
-      console.log(JSON.stringify(outdated))
-    } else if (dependencies.length) {
-      new DependencyTable(configuration, outdated, {
+      this.context.stdout.write(JSON.stringify(outdated) + EOL)
+    } else if (outdated.length) {
+      new DependencyTable(this.context, configuration, outdated, {
         workspace: this.all,
       }).print()
     } else {
-      console.log("✨ All your dependencies are up to date!")
+      this.context.stdout.write(
+        `✨ All your dependencies are up to date!${EOL}`
+      )
     }
   }
 
