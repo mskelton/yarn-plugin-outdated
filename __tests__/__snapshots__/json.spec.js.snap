@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`yarn outdated should ignore non-semver ranges 1`] = `
+Array [
+  Object {
+    "current": "1.1.1",
+    "latest": "1.3.0",
+    "name": "package-b",
+    "type": "dependencies",
+  },
+  Object {
+    "current": "1.2.3",
+    "latest": "2.0.0",
+    "name": "package-d",
+    "type": "dependencies",
+  },
+]
+`;
+
+exports[`yarn outdated should show outdated dependencies 1`] = `
+Array [
+  Object {
+    "current": "1.1.1",
+    "latest": "1.3.0",
+    "name": "package-b",
+    "type": "dependencies",
+  },
+  Object {
+    "current": "1.2.0",
+    "latest": "1.2.1",
+    "name": "package-c",
+    "type": "dependencies",
+  },
+]
+`;
+
+exports[`yarn outdated should show outdated devDependencies 1`] = `
+Array [
+  Object {
+    "current": "1.1.1",
+    "latest": "1.3.0",
+    "name": "package-b",
+    "type": "devDependencies",
+  },
+]
+`;

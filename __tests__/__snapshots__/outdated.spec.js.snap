@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`yarn outdated should highlight package names and version ranges 1`] = `
-"{bold}Package  {bold}   {bold}Current{bold}   {bold}Latest{bold}   {bold}Package Type   {bold}
-{yellow}package-b{yellow}   1.1.1     1.{bold}{yellow}3.0 {yellow}{bold}   devDependencies
-{green}package-c{green}   1.2.0     1.2.{bold}{green}1 {green}{bold}   devDependencies
-{red}package-d{red}   1.0.0     {bold}{red}2.0.0 {red}{bold}   devDependencies
+"{bold}Package  {bold}   {bold}Current{bold}   {bold}Latest{bold}   {bold}Package Type{bold}
+{yellow}package-b{yellow}   1.1.1     1.{bold}{yellow}3.0 {yellow}{bold}   dependencies
+{green}package-c{green}   1.2.0     1.2.{bold}{green}1 {green}{bold}   dependencies
+{red}package-d{red}   1.0.0     {bold}{red}2.0.0 {red}{bold}   dependencies
 "
 `;
 
