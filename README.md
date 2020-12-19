@@ -18,5 +18,5 @@ yarn outdated
 
 | Definition    | Description                                              |
 | ------------- | -------------------------------------------------------- |
-| `-A`, `--all` | Include outdated dependencies from all workspaces.       |
+| `-a`, `--all` | Include outdated dependencies from all workspaces.       |
 | `--json`      | Output in JSON format instead of in the formatted table. |

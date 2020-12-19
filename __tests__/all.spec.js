@@ -40,7 +40,7 @@ describe("yarn outdated --all", () => {
   })
 
   it("should fallback to computed workspace name", async () => {
-    const output = await run("outdated --all", {
+    const output = await run("outdated -a", {
       candidates,
       manifests: [
         {
