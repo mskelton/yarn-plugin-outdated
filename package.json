@@ -24,7 +24,10 @@
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/eslint-parser": "^7.12.1",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-proposal-decorators": "^7.12.1",
     "@babel/preset-env": "^7.12.11",
+    "@babel/preset-typescript": "^7.12.7",
     "@mskelton/eslint-config": "^6.1.0",
     "@types/semver": "^7.3.4",
     "@typescript-eslint/eslint-plugin": "^4.10.0",
