@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`yarn outdated should ignore non-semver ranges 1`] = `
+exports[`yarn outdated --json should ignore non-semver ranges 1`] = `
 Array [
   Object {
     "current": "1.1.1",
@@ -17,7 +17,7 @@ Array [
 ]
 `;
 
-exports[`yarn outdated should show outdated dependencies 1`] = `
+exports[`yarn outdated --json should show outdated dependencies 1`] = `
 Array [
   Object {
     "current": "1.1.1",
@@ -34,7 +34,7 @@ Array [
 ]
 `;
 
-exports[`yarn outdated should show outdated devDependencies 1`] = `
+exports[`yarn outdated --json should show outdated devDependencies 1`] = `
 Array [
   Object {
     "current": "1.1.1",

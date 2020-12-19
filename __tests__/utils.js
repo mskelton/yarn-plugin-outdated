@@ -27,7 +27,7 @@ const dependenciesToMap = (obj = {}) =>
   )
 
 const createWorkspace = (manifest) => ({
-  getComputedWorkspaceName: () => "computed-name",
+  computeCandidateName: () => "computed-name",
   manifest: {
     ...manifest,
     dependencies: dependenciesToMap(manifest.dependencies),

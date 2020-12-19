@@ -10,7 +10,7 @@ const candidates = {
 
 const runJson = (...args) => run(...args).then(JSON.parse)
 
-describe("yarn outdated", () => {
+describe("yarn outdated --json", () => {
   it("should show outdated dependencies", async () => {
     const output = await runJson(command, {
       candidates,
