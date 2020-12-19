@@ -12,7 +12,7 @@ jobs:
       - run: yarn ts
       - run: yarn test
   build:
-    if: ${{ github.ref == refs/tags/main }}
+    if: ${{ github.ref == 'refs/tags/main' }}
     needs: test
     runs-on: ubuntu-latest
     steps:
