@@ -1,9 +1,19 @@
 name: Build
-on:
-  push:
-    branches: [main]
+on: [push]
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - run: yarn lint
+      - run: yarn ts
+      - run: yarn test
   build:
+    if: ${{ github.ref == refs/tags/main }}
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -12,9 +22,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14
-      - run: yarn lint
-      - run: yarn ts
-      - run: yarn test
       - run: yarn build
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4.1.2
