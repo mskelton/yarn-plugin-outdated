@@ -15,6 +15,13 @@ package-d   1.2.3     2.0.0    devDependencies
 "
 `;
 
+exports[`yarn outdated should properly format scoped dependencies 1`] = `
+"Package                 Current   Latest   Package Type   
+@test-scope/package-a   3.0.1     3.4.0    dependencies   
+package-a               1.0.1     1.1.0    devDependencies
+"
+`;
+
 exports[`yarn outdated should show outdated dependencies 1`] = `
 "Package     Current   Latest   Package Type
 package-b   1.1.1     1.3.0    dependencies
