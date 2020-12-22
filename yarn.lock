@@ -1628,6 +1628,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/braces@npm:*":
+  version: 3.0.0
+  resolution: "@types/braces@npm:3.0.0"
+  checksum: 4bebd28e5b04c7e4930997017343516a2ab8fab2bcc64095da1e3b927c173f48c4bc3c75f3ef8037e9e8c7a54e0133b8705887ae52c8f9adb11dfb8d32cd9b78
+  languageName: node
+  linkType: hard
+
 "@types/cacheable-request@npm:^6.0.1":
   version: 6.0.1
   resolution: "@types/cacheable-request@npm:6.0.1"
@@ -1738,6 +1745,15 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 3aaf557d5b82e733d5a17b7f55af5d6be953363c3a594f006d64265790fe87c301c6e1400c0b6b1cf72add50a0ceddc25afb8231ab8302a2e5b6ebfbfac30e5d
+  languageName: node
+  linkType: hard
+
+"@types/micromatch@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@types/micromatch@npm:4.0.1"
+  dependencies:
+    "@types/braces": "*"
+  checksum: 50c26e31fad668994476f8b027c83e86f849586ea1b971d0e16998bcb51f8522dd188c7e2511616d9148464631b5cd5dc5a073aa0a0475cb12b3e1b0b99f315d
   languageName: node
   linkType: hard
 
@@ -8910,6 +8926,7 @@ typescript@^4.1.3:
     "@babel/preset-typescript": ^7.12.7
     "@mskelton/eslint-config": ^6.1.0
     "@types/jest": ^26.0.19
+    "@types/micromatch": ^4.0.1
     "@types/node": ^14.14.14
     "@types/semver": ^7.3.4
     "@typescript-eslint/eslint-plugin": ^4.10.0
@@ -8922,6 +8939,7 @@ typescript@^4.1.3:
     eslint: ^7.16.0
     eslint-plugin-sort: ^1.5.0
     jest: ^26.6.3
+    micromatch: ^4.0.2
     prettier: ^2.2.1
     semver: ^7.3.4
     typescript: ^4.1.3
