@@ -2,11 +2,13 @@ import { BaseCommand, WorkspaceRequiredError } from "@yarnpkg/cli"
 import {
   Cache,
   Configuration,
+  FormatType,
+  formatUtils,
   Project,
   structUtils,
   Workspace,
 } from "@yarnpkg/core"
-import { Command, Usage } from "clipanion"
+import { Command, Usage, UsageError } from "clipanion"
 import * as micromatch from "micromatch"
 import { EOL } from "os"
 import * as semver from "semver"
@@ -54,7 +56,7 @@ export class OutdatedCommand extends BaseCommand {
 
     const fetcher = new DependencyFetcher(project, workspace, cache)
     const workspaces = this.getWorkspaces(project, workspace)
-    const dependencies = this.getDependencies(workspaces)
+    const dependencies = this.getDependencies(configuration, workspaces)
     const outdated = await this.getOutdatedDependencies(fetcher, dependencies)
 
     if (this.json) {
@@ -108,7 +110,7 @@ export class OutdatedCommand extends BaseCommand {
    * Collect all dependencies and devDependencies from all workspaces into an
    * array which we can process more easily.
    */
-  getDependencies(workspaces: Workspace[]) {
+  getDependencies(configuration: Configuration, workspaces: Workspace[]) {
     const dependencies: DependencyInfo[] = []
     const dependencyTypes = ["dependencies", "devDependencies"] as const
 
@@ -129,13 +131,32 @@ export class OutdatedCommand extends BaseCommand {
       }
     }
 
-    // if the user provide a filter pattern, filter the dependencies that
-    // should be checked using micromatch.
-    return !this.patterns.length
-      ? dependencies
-      : dependencies.filter(({ name }) =>
-          micromatch.isMatch(name, this.patterns)
-        )
+    // If the user didn't provide a filter pattern, we don't need to do any
+    // filtering so we can return early.
+    if (!this.patterns.length) {
+      return dependencies
+    }
+
+    // Only include the dependencies matching the pattern provided by the user.
+    const filteredDependencies = dependencies.filter(({ name }) =>
+      micromatch.isMatch(name, this.patterns)
+    )
+
+    // If ther user entered a pattern that doesn't match any dependencies, they
+    // likely made a mistake. If we simply return an empty array they may
+    // incorrectly think that no packages are outdated. Instead, we can throw
+    // an error to warn them that their pattern didn't match any dependencies.
+    if (!filteredDependencies.length) {
+      throw new UsageError(
+        `Pattern ${formatUtils.prettyList(
+          configuration,
+          this.patterns,
+          FormatType.CODE
+        )} doesn't match any packages referenced by any workspace`
+      )
+    }
+
+    return filteredDependencies
   }
 
   /**
