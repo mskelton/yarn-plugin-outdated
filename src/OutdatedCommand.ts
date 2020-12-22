@@ -17,10 +17,22 @@ import { excludeFalsey, parseVersion } from "./utils"
 export class OutdatedCommand extends BaseCommand {
   static usage: Usage = Command.Usage({
     description: "view outdated dependencies",
-    details:
-      "This command finds outdated dependencies in a project and prints the result in a table or JSON format.",
-    examples: [["View outdated dependencies", "yarn outdated"]],
+    details: `
+      This command finds outdated dependencies in a project and prints the result in a table or JSON format.
+
+      This command accepts glob patterns as arguments to filter the output. Make sure to escape the patterns, to prevent your own shell from trying to expand them.
+    `,
+    examples: [
+      ["View outdated dependencies", "yarn outdated"],
+      [
+        "View outdated dependencies with the `@babel` scope",
+        "yarn outdated '@babel/*'",
+      ],
+    ],
   })
+
+  @Command.Rest()
+  patterns: Array<string> = []
 
   @Command.Boolean("-a,--all", {
     description: "Include outdated dependencies from all workspaces",
