@@ -7,6 +7,7 @@ import {
   Workspace,
 } from "@yarnpkg/core"
 import { Command, Usage } from "clipanion"
+import * as micromatch from "micromatch"
 import { EOL } from "os"
 import * as semver from "semver"
 import { DependencyFetcher } from "./DependencyFetcher"
@@ -32,7 +33,7 @@ export class OutdatedCommand extends BaseCommand {
   })
 
   @Command.Rest()
-  patterns: Array<string> = []
+  patterns: string[] = []
 
   @Command.Boolean("-a,--all", {
     description: "Include outdated dependencies from all workspaces",
@@ -117,13 +118,24 @@ export class OutdatedCommand extends BaseCommand {
           // Only include valid semver ranges. Non-semver ranges such as tags
           // (e.g. `next`) or protocols (e.g. `workspace:*`) should be ignored.
           if (semver.coerce(descriptor.range)) {
-            dependencies.push({ dependencyType, descriptor, workspace })
+            dependencies.push({
+              dependencyType,
+              descriptor,
+              name: structUtils.stringifyIdent(descriptor),
+              workspace,
+            })
           }
         }
       }
     }
 
-    return dependencies
+    // if the user provide a filter pattern, filter the dependencies that
+    // should be checked using micromatch.
+    return !this.patterns.length
+      ? dependencies
+      : dependencies.filter(({ name }) =>
+          micromatch.isMatch(name, this.patterns)
+        )
   }
 
   /**
@@ -135,7 +147,7 @@ export class OutdatedCommand extends BaseCommand {
     dependencies: DependencyInfo[]
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
-      async ({ dependencyType, descriptor, workspace }) => {
+      async ({ dependencyType, descriptor, name, workspace }) => {
         const latest = await fetcher.fetch(descriptor, "latest")
         const current = parseVersion(descriptor.range)
 
@@ -143,7 +155,7 @@ export class OutdatedCommand extends BaseCommand {
           return {
             current,
             latest,
-            name: structUtils.stringifyIdent(descriptor),
+            name,
             type: dependencyType,
             workspace: this.all ? this.getWorkspaceName(workspace) : undefined,
           } as OutdatedDependency

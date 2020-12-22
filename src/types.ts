@@ -4,6 +4,7 @@ export const dependencyTypes = ["dependencies", "devDependencies"]
 export type DependencyType = typeof dependencyTypes[number]
 
 export interface DependencyInfo {
+  name: string
   descriptor: Descriptor
   dependencyType: DependencyType
   workspace: Workspace
