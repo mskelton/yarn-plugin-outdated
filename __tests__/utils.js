@@ -8,6 +8,7 @@ import { OutdatedCommand } from "../src/OutdatedCommand"
 
 beforeEach(() => {
   formatUtils.pretty.mockImplementation((_, string) => string)
+  formatUtils.prettyList.mockImplementation((_, string) => string)
 })
 
 const dependenciesToMap = (obj = {}) =>

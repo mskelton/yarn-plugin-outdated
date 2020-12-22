@@ -8,10 +8,18 @@ Yarn 2 plugin to show outdated dependencies.
 yarn plugin import https://github.com/mskelton/yarn-plugin-outdated/raw/main/bundles/@yarnpkg/plugin-outdated.js
 ```
 
-## Usage
+## Examples
+
+View outdated dependencies:
 
 ```sh
 yarn outdated
+```
+
+View outdated dependencies with the `@babel` scope:
+
+```sh
+yarn outdated '@babel/*'
 ```
 
 ### Options
