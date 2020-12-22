@@ -1,5 +1,4 @@
 import { CommandContext, Configuration, formatUtils } from "@yarnpkg/core"
-import { EOL } from "os"
 import * as semver from "semver"
 import { OutdatedDependency } from "./types"
 
@@ -128,6 +127,6 @@ export class DependencyTable {
       .map((column) => row[column])
       .join("   ")
 
-    this.context.stdout.write(output + EOL)
+    this.context.stdout.write(output + "\n")
   }
 }
