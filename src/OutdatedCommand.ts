@@ -112,10 +112,7 @@ export class OutdatedCommand extends BaseCommand {
       table.print()
       report.reportSeparator()
     } else {
-      report.reportInfo(
-        MessageName.UNNAMED,
-        "✨ All your dependencies are up to date!"
-      )
+      this.printUpToDate(configuration, report)
     }
   }
 
@@ -241,9 +238,18 @@ export class OutdatedCommand extends BaseCommand {
       .sort((a, b) => a.name.localeCompare(b.name))
   }
 
-  private getWorkspaceName(workspace: Workspace) {
+  getWorkspaceName(workspace: Workspace) {
     return workspace.manifest.name
       ? structUtils.stringifyIdent(workspace.manifest.name)
       : workspace.computeCandidateName()
+  }
+
+  printUpToDate(configuration: Configuration, report: StreamReport) {
+    const message = "✨ All your dependencies are up to date!"
+
+    report.reportInfo(
+      MessageName.UNNAMED,
+      formatUtils.pretty(configuration, message, "green")
+    )
   }
 }
