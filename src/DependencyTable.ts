@@ -1,4 +1,4 @@
-import { CommandContext, Configuration, formatUtils } from "@yarnpkg/core"
+import { Configuration, formatUtils, MessageName, Report } from "@yarnpkg/core"
 import * as semver from "semver"
 import { OutdatedDependency } from "./types"
 
@@ -18,7 +18,7 @@ export class DependencyTable {
   }
 
   constructor(
-    private context: CommandContext,
+    private report: Report,
     private configuration: Configuration,
     private dependencies: OutdatedDependency[],
     private extraColumns: Partial<Record<TableColumn, boolean>>
@@ -127,6 +127,6 @@ export class DependencyTable {
       .map((column) => row[column])
       .join("   ")
 
-    this.context.stdout.write(output + "\n")
+    this.report.reportInfo(MessageName.UNNAMED, output)
   }
 }

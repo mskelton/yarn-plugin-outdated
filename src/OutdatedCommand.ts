@@ -4,7 +4,10 @@ import {
   Configuration,
   FormatType,
   formatUtils,
+  MessageName,
   Project,
+  Report,
+  StreamReport,
   structUtils,
   Workspace,
 } from "@yarnpkg/core"
@@ -56,16 +59,63 @@ export class OutdatedCommand extends BaseCommand {
     const fetcher = new DependencyFetcher(project, workspace, cache)
     const workspaces = this.getWorkspaces(project, workspace)
     const dependencies = this.getDependencies(configuration, workspaces)
-    const outdated = await this.getOutdatedDependencies(fetcher, dependencies)
 
     if (this.json) {
+      const outdated = await this.getOutdatedDependencies(fetcher, dependencies)
       this.context.stdout.write(JSON.stringify(outdated) + "\n")
-    } else if (outdated.length) {
-      new DependencyTable(this.context, configuration, outdated, {
+      return
+    }
+
+    await StreamReport.start(
+      { configuration, stdout: this.context.stdout },
+      async (report) => {
+        await this.checkOutdatedDependencies(
+          configuration,
+          dependencies,
+          fetcher,
+          report
+        )
+      }
+    )
+  }
+
+  async checkOutdatedDependencies(
+    configuration: Configuration,
+    dependencies: DependencyInfo[],
+    fetcher: DependencyFetcher,
+    report: StreamReport
+  ) {
+    let outdated: OutdatedDependency[] = null!
+
+    await report.startTimerPromise(
+      "Checking for outdated dependencies",
+      async () => {
+        const count = dependencies.length
+        const progress = StreamReport.progressViaCounter(count)
+        report.reportProgress(progress)
+
+        outdated = await this.getOutdatedDependencies(
+          fetcher,
+          dependencies,
+          progress
+        )
+      }
+    )
+
+    report.reportSeparator()
+
+    if (outdated.length) {
+      const table = new DependencyTable(report, configuration, outdated, {
         workspace: this.all,
-      }).print()
+      })
+
+      table.print()
+      report.reportSeparator()
     } else {
-      this.context.stdout.write("✨ All your dependencies are up to date!\n")
+      report.reportInfo(
+        MessageName.UNNAMED,
+        "✨ All your dependencies are up to date!\n"
+      )
     }
   }
 
@@ -162,12 +212,17 @@ export class OutdatedCommand extends BaseCommand {
    */
   async getOutdatedDependencies(
     fetcher: DependencyFetcher,
-    dependencies: DependencyInfo[]
+    dependencies: DependencyInfo[],
+    progress?: ReturnType<typeof Report["progressViaCounter"]>
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
       async ({ dependencyType, descriptor, name, workspace }) => {
         const latest = await fetcher.fetch(descriptor, "latest")
         const current = parseVersion(descriptor.range)
+
+        // JSON reports don't use progress, so this only applies for non-JSON
+        // cases.
+        progress?.tick()
 
         if (current !== latest) {
           return {
