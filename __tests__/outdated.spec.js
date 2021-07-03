@@ -69,7 +69,7 @@ describe("yarn outdated", () => {
       },
     })
 
-    expect(output).toBe("✨ All your dependencies are up to date!\n")
+    expect(output).toMatchSnapshot()
   })
 
   it("should ignore non-semver ranges", async () => {

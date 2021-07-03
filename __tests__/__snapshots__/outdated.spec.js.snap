@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`yarn outdated should display empty state if no dependencies are outdated 1`] = `
+"Checking for outdated dependencies
+--- PROGRESS ---
+--- SEPARATOR ---
+✨ All your dependencies are up to date!
+"
+`;
+
 exports[`yarn outdated should highlight package names and version ranges 1`] = `
 "Checking for outdated dependencies
 --- PROGRESS ---
