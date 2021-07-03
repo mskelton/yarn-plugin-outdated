@@ -114,7 +114,7 @@ export class OutdatedCommand extends BaseCommand {
     } else {
       report.reportInfo(
         MessageName.UNNAMED,
-        "✨ All your dependencies are up to date!\n"
+        "✨ All your dependencies are up to date!"
       )
     }
   }
