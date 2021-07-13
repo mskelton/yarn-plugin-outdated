@@ -75,7 +75,7 @@ export class OutdatedCommand extends BaseCommand {
       return
     }
 
-    await StreamReport.start(
+    const report = await StreamReport.start(
       { configuration, stdout: this.context.stdout },
       async (report) => {
         await this.checkOutdatedDependencies(
@@ -86,6 +86,8 @@ export class OutdatedCommand extends BaseCommand {
         )
       }
     )
+
+    return report.exitCode()
   }
 
   async checkOutdatedDependencies(

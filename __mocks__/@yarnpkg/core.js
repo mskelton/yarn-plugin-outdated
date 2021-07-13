@@ -22,7 +22,13 @@ export const MessageName = {
 export const StreamReport = {
   progressViaCounter() {},
   async start({ stdout }, cb) {
+    let exitCode = 0
+
     await cb({
+      reportError: (_, msg) => {
+        stdout.write(`ERROR: ${msg}\n`)
+        exitCode = 1
+      },
       reportInfo: (_, msg) => stdout.write(msg + "\n"),
       reportProgress: () => stdout.write("--- PROGRESS ---\n"),
       reportSeparator: () => stdout.write("--- SEPARATOR ---\n"),
@@ -31,5 +37,9 @@ export const StreamReport = {
         await cb()
       },
     })
+
+    return {
+      exitCode: () => exitCode,
+    }
   },
 }
