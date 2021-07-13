@@ -122,7 +122,7 @@ export class OutdatedCommand extends BaseCommand {
 
       table.print()
       report.reportSeparator()
-      this.reportError(report, outdated.length)
+      this.printOutdatedCount(report, outdated.length)
     } else {
       this.printUpToDate(configuration, report)
     }
@@ -256,15 +256,21 @@ export class OutdatedCommand extends BaseCommand {
       : workspace.computeCandidateName()
   }
 
-  reportError(report: StreamReport, count: number) {
-    if (!this.check) return
-
-    report.reportError(
-      MessageName.EXCEPTION,
+  printOutdatedCount(report: StreamReport, count: number) {
+    const args = [
+      MessageName.UNNAMED,
       count === 1
         ? "1 dependency is out of date"
-        : `${count} dependencies are out of date`
-    )
+        : `${count} dependencies are out of date`,
+    ] as const
+
+    // If the user passed the `--check` flag, we report the count of outdated
+    // dependencies as an error rather than a warning.
+    if (this.check) {
+      report.reportError(...args)
+    } else {
+      report.reportWarning(...args)
+    }
   }
 
   printUpToDate(configuration: Configuration, report: StreamReport) {
