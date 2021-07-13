@@ -33,6 +33,10 @@ export class OutdatedCommand extends BaseCommand {
         "View outdated dependencies with the `@babel` scope",
         "yarn outdated '@babel/*'",
       ],
+      [
+        "Check for outdated dependencies and return exit code 1 if outdated dependencies are found",
+        "yarn outdated --check",
+      ],
     ],
   })
 
@@ -43,6 +47,11 @@ export class OutdatedCommand extends BaseCommand {
     description: "Include outdated dependencies from all workspaces",
   })
   all = false
+
+  @Command.Boolean("-c,--check", {
+    description: `Exit with exit code 1 when outdated dependencies are found`,
+  })
+  check = false
 
   @Command.Boolean("--json", { description: "Format the output as JSON" })
   json = false
@@ -111,6 +120,7 @@ export class OutdatedCommand extends BaseCommand {
 
       table.print()
       report.reportSeparator()
+      this.reportError(report, outdated.length)
     } else {
       this.printUpToDate(configuration, report)
     }
@@ -242,6 +252,17 @@ export class OutdatedCommand extends BaseCommand {
     return workspace.manifest.name
       ? structUtils.stringifyIdent(workspace.manifest.name)
       : workspace.computeCandidateName()
+  }
+
+  reportError(report: StreamReport, count: number) {
+    if (!this.check) return
+
+    report.reportError(
+      MessageName.EXCEPTION,
+      count === 1
+        ? "1 dependency is out of date"
+        : `${count} dependencies are out of date`
+    )
   }
 
   printUpToDate(configuration: Configuration, report: StreamReport) {
