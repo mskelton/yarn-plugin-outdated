@@ -4,7 +4,7 @@ exports[`yarn outdated --check should return exit code 0 when dependencies are u
 "Checking for outdated dependencies
 --- PROGRESS ---
 --- SEPARATOR ---
-✨ All your dependencies are up to date!
+INFO: ✨ All your dependencies are up to date!
 "
 `;
 
@@ -12,9 +12,9 @@ exports[`yarn outdated --check should return exit code 1 when outdated dependenc
 [Error: Checking for outdated dependencies
 --- PROGRESS ---
 --- SEPARATOR ---
-Package     Current   Latest   Package Type
-package-b   1.1.1     1.3.0    dependencies
-package-c   1.2.0     1.2.1    dependencies
+INFO: Package     Current   Latest   Package Type
+INFO: package-b   1.1.1     1.3.0    dependencies
+INFO: package-c   1.2.0     1.2.1    dependencies
 --- SEPARATOR ---
 ERROR: 2 dependencies are out of date
 ]
