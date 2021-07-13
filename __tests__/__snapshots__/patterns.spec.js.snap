@@ -4,9 +4,10 @@ exports[`can filter by an exact package name 1`] = `
 "Checking for outdated dependencies
 --- PROGRESS ---
 --- SEPARATOR ---
-Package     Current   Latest   Package Type
-package-a   1.0.0     1.1.0    dependencies
+INFO: Package     Current   Latest   Package Type
+INFO: package-a   1.0.0     1.1.0    dependencies
 --- SEPARATOR ---
+WARN: 1 dependency is out of date
 "
 `;
 
@@ -14,9 +15,10 @@ exports[`can filter using a wildcard 1`] = `
 "Checking for outdated dependencies
 --- PROGRESS ---
 --- SEPARATOR ---
-Package                 Current   Latest   Package Type
-@test-scope/package-a   0.0.1     1.0.0    dependencies
-@test-scope/package-b   1.1.0     2.0.0    dependencies
+INFO: Package                 Current   Latest   Package Type
+INFO: @test-scope/package-a   0.0.1     1.0.0    dependencies
+INFO: @test-scope/package-b   1.1.0     2.0.0    dependencies
 --- SEPARATOR ---
+WARN: 2 dependencies are out of date
 "
 `;

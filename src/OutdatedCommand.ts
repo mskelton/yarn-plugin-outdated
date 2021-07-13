@@ -33,6 +33,10 @@ export class OutdatedCommand extends BaseCommand {
         "View outdated dependencies with the `@babel` scope",
         "yarn outdated '@babel/*'",
       ],
+      [
+        "Check for outdated dependencies and return exit code 1 if outdated dependencies are found",
+        "yarn outdated --check",
+      ],
     ],
   })
 
@@ -43,6 +47,11 @@ export class OutdatedCommand extends BaseCommand {
     description: "Include outdated dependencies from all workspaces",
   })
   all = false
+
+  @Command.Boolean("-c,--check", {
+    description: `Exit with exit code 1 when outdated dependencies are found`,
+  })
+  check = false
 
   @Command.Boolean("--json", { description: "Format the output as JSON" })
   json = false
@@ -66,7 +75,7 @@ export class OutdatedCommand extends BaseCommand {
       return
     }
 
-    await StreamReport.start(
+    const report = await StreamReport.start(
       { configuration, stdout: this.context.stdout },
       async (report) => {
         await this.checkOutdatedDependencies(
@@ -77,6 +86,8 @@ export class OutdatedCommand extends BaseCommand {
         )
       }
     )
+
+    return report.exitCode()
   }
 
   async checkOutdatedDependencies(
@@ -111,6 +122,7 @@ export class OutdatedCommand extends BaseCommand {
 
       table.print()
       report.reportSeparator()
+      this.printOutdatedCount(report, outdated.length)
     } else {
       this.printUpToDate(configuration, report)
     }
@@ -242,6 +254,23 @@ export class OutdatedCommand extends BaseCommand {
     return workspace.manifest.name
       ? structUtils.stringifyIdent(workspace.manifest.name)
       : workspace.computeCandidateName()
+  }
+
+  printOutdatedCount(report: StreamReport, count: number) {
+    const args = [
+      MessageName.UNNAMED,
+      count === 1
+        ? "1 dependency is out of date"
+        : `${count} dependencies are out of date`,
+    ] as const
+
+    // If the user passed the `--check` flag, we report the count of outdated
+    // dependencies as an error rather than a warning.
+    if (this.check) {
+      report.reportError(...args)
+    } else {
+      report.reportWarning(...args)
+    }
   }
 
   printUpToDate(configuration: Configuration, report: StreamReport) {
