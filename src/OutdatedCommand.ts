@@ -11,7 +11,7 @@ import {
   structUtils,
   Workspace,
 } from "@yarnpkg/core"
-import { Command, Usage, UsageError } from "clipanion"
+import { Command, Option, Usage, UsageError } from "clipanion"
 import * as micromatch from "micromatch"
 import * as semver from "semver"
 import { DependencyFetcher } from "./DependencyFetcher"
@@ -20,6 +20,8 @@ import { DependencyInfo, OutdatedDependency } from "./types"
 import { excludeFalsey, parseVersion } from "./utils"
 
 export class OutdatedCommand extends BaseCommand {
+  static paths = [["outdated"]]
+
   static usage: Usage = Command.Usage({
     description: "view outdated dependencies",
     details: `
@@ -40,23 +42,20 @@ export class OutdatedCommand extends BaseCommand {
     ],
   })
 
-  @Command.Rest()
-  patterns: string[] = []
+  patterns = Option.Rest()
 
-  @Command.Boolean("-a,--all", {
+  all = Option.Boolean("-a,--all", false, {
     description: "Include outdated dependencies from all workspaces",
   })
-  all = false
 
-  @Command.Boolean("-c,--check", {
+  check = Option.Boolean("-c,--check", false, {
     description: `Exit with exit code 1 when outdated dependencies are found`,
   })
-  check = false
 
-  @Command.Boolean("--json", { description: "Format the output as JSON" })
-  json = false
+  json = Option.Boolean("--json", false, {
+    description: "Format the output as JSON",
+  })
 
-  @Command.Path("outdated")
   async execute() {
     const {
       cache,
