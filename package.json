@@ -13,7 +13,7 @@
     "ts": "tsc"
   },
   "dependencies": {
-    "@types/node": "^16.4.1",
+    "@types/node": "^16.4.3",
     "@yarnpkg/cli": "^3.0.0",
     "@yarnpkg/core": "^3.0.0",
     "@yarnpkg/plugin-essentials": "^3.0.0",
@@ -31,9 +31,9 @@
     "@mskelton/eslint-config": "^6.1.0",
     "@types/jest": "^26.0.24",
     "@types/micromatch": "^4.0.2",
-    "@types/semver": "^7.3.7",
-    "@typescript-eslint/eslint-plugin": "^4.28.4",
-    "@typescript-eslint/parser": "^4.28.4",
+    "@types/semver": "^7.3.8",
+    "@typescript-eslint/eslint-plugin": "^4.28.5",
+    "@typescript-eslint/parser": "^4.28.5",
     "@yarnpkg/builder": "^3.0.0",
     "eslint": "^7.31.0",
     "eslint-plugin-sort": "^1.5.0",
