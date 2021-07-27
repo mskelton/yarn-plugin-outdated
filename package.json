@@ -5,6 +5,7 @@
   "homepage": "https://github.com/mskelton/yarn-plugin-outdated",
   "main": "src/index.ts",
   "license": "ISC",
+  "packageManager": "yarn@3.0.0",
   "scripts": {
     "build": "builder build plugin",
     "lint": "eslint .",
