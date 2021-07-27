@@ -14,10 +14,9 @@
   },
   "dependencies": {
     "@types/node": "^16.4.1",
-    "@yarnpkg/builder": "^3.0.0-rc.12",
-    "@yarnpkg/cli": "^3.0.0-rc.12",
-    "@yarnpkg/core": "^3.0.0-rc.12",
-    "@yarnpkg/plugin-essentials": "^3.0.0-rc.12",
+    "@yarnpkg/cli": "^3.0.0",
+    "@yarnpkg/core": "^3.0.0",
+    "@yarnpkg/plugin-essentials": "^3.0.0",
     "clipanion": "^3.0.1",
     "micromatch": "^4.0.4",
     "semver": "^7.3.5"
@@ -35,6 +34,7 @@
     "@types/semver": "^7.3.7",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.28.4",
+    "@yarnpkg/builder": "^3.0.0",
     "eslint": "^7.31.0",
     "eslint-plugin-sort": "^1.5.0",
     "jest": "^27.0.6",
