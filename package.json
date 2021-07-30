@@ -3,7 +3,7 @@
   "description": "Yarn 2 plugin to show outdated dependencies.",
   "author": "Mark Skelton",
   "homepage": "https://github.com/mskelton/yarn-plugin-outdated",
-  "main": "sources/index.ts",
+  "main": "src/index.ts",
   "license": "ISC",
   "scripts": {
     "build": "builder build plugin",
