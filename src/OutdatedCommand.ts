@@ -17,7 +17,7 @@ import * as semver from "semver"
 import { DependencyFetcher } from "./DependencyFetcher"
 import { DependencyTable } from "./DependencyTable"
 import { DependencyInfo, OutdatedDependency } from "./types"
-import { excludeFalsey, parseVersion } from "./utils"
+import { parseVersion, truthy } from "./utils"
 
 export class OutdatedCommand extends BaseCommand {
   static paths = [["outdated"]]
@@ -57,12 +57,8 @@ export class OutdatedCommand extends BaseCommand {
   })
 
   async execute() {
-    const {
-      cache,
-      configuration,
-      project,
-      workspace,
-    } = await this.loadProject()
+    const { cache, configuration, project, workspace } =
+      await this.loadProject()
 
     const fetcher = new DependencyFetcher(project, workspace, cache)
     const workspaces = this.getWorkspaces(project, workspace)
@@ -245,7 +241,7 @@ export class OutdatedCommand extends BaseCommand {
     )
 
     return (await Promise.all(outdated))
-      .filter(excludeFalsey)
+      .filter(truthy)
       .sort((a, b) => a.name.localeCompare(b.name))
   }
 
