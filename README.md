@@ -24,7 +24,8 @@ yarn outdated '@babel/*'
 
 ### Options
 
-| Definition    | Description                                              |
-| ------------- | -------------------------------------------------------- |
-| `-a`, `--all` | Include outdated dependencies from all workspaces.       |
-| `--json`      | Output in JSON format instead of in the formatted table. |
+| Definition      | Description                                              |
+| --------------- | -------------------------------------------------------- |
+| `-a`, `--all`   | Include outdated dependencies from all workspaces.       |
+| `-c`, `--check` | Return exit code 1 if outdated dependencies are found.   |
+| `--json`        | Output in JSON format instead of in the formatted table. |
