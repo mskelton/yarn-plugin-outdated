@@ -198,7 +198,7 @@ export class OutdatedCommand extends BaseCommand {
 
           // Finally, we can use the locator hash to lookup the stored package
           // in the lockfile.
-          const pkg = workspace.project.storedPackages.get(res)
+          const pkg = project.storedPackages.get(res)
           if (!pkg) this.throw(configuration, dependency)
 
           dependencies.push({
