@@ -1,11 +1,11 @@
-import { Descriptor, Workspace } from "@yarnpkg/core"
+import { Package, Workspace } from "@yarnpkg/core"
 
-export const dependencyTypes = ["dependencies", "devDependencies"]
+export const dependencyTypes = ["dependencies", "devDependencies"] as const
 export type DependencyType = typeof dependencyTypes[number]
 
 export interface DependencyInfo {
   name: string
-  descriptor: Descriptor
+  pkg: Package
   dependencyType: DependencyType
   workspace: Workspace
 }
