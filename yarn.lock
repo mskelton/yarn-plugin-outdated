@@ -2290,7 +2290,7 @@ __metadata:
 
 "@yarnpkg/builder@patch:@yarnpkg/builder@3.0.2-rc.2#./.yarn/patches/builder.patch::locator=yarn-plugin-outdated%40workspace%3A.":
   version: 3.0.2-rc.2
-  resolution: "@yarnpkg/builder@patch:@yarnpkg/builder@npm%3A3.0.2-rc.2#./.yarn/patches/builder.patch::version=3.0.2-rc.2&hash=026a42&locator=yarn-plugin-outdated%40workspace%3A."
+  resolution: "@yarnpkg/builder@patch:@yarnpkg/builder@npm%3A3.0.2-rc.2#./.yarn/patches/builder.patch::version=3.0.2-rc.2&hash=294496&locator=yarn-plugin-outdated%40workspace%3A."
   dependencies:
     "@babel/core": ^7.10.2
     "@yarnpkg/cli": ^3.1.0-rc.1
@@ -2315,7 +2315,7 @@ __metadata:
     typescript: "*"
   bin:
     builder: ./lib/cli.js
-  checksum: 9b1df807b12c37d74e45cae457b025e9cba8f8c0ba3f438fe981c60ca19ab2cc3cf3db1597746444fa5dc5726a3e3077c78e97ef81ef537113cc1e3ec2511e26
+  checksum: bdadc40ccfcfe878c4ce9537fa87dd28eb912c9b9abb59645c513365ea366bf0f278abb3359a4f0b0059feccd2c00e388f49692c6cbbf6b069925f5186d72307
   languageName: node
   linkType: hard
 

@@ -1,23 +1,25 @@
 diff --git a/lib/commands/build/bundle.js b/lib/commands/build/bundle.js
-index 3936054336e96ced678961f32935dd1cc5a6517f..4d48401d7b443d30b80203d13dc5c4cc15698be8 100644
+index 3936054336e96ced678961f32935dd1cc5a6517f..b2b83b45d79b1a0633f4ece9a5ad2fcd57810322 100644
 --- a/lib/commands/build/bundle.js
 +++ b/lib/commands/build/bundle.js
-@@ -92,6 +92,7 @@ class BuildBundleCommand extends clipanion_1.Command {
+@@ -92,6 +92,8 @@ class BuildBundleCommand extends clipanion_1.Command {
                      define: { YARN_VERSION: JSON.stringify(version) },
                      outfile: output,
                      logLevel: `silent`,
++                    format: `iife`,
 +                    platform: `node`,
                      plugins: [valLoader, esbuild_plugin_pnp_1.pnpPlugin()],
                      minify: !this.noMinify,
                      sourcemap: this.sourceMap ? `inline` : false,
 diff --git a/lib/commands/build/plugin.js b/lib/commands/build/plugin.js
-index 530803396b79ef87db7ca415c47cc5161126ef60..53baf6ea498c37abf3a75802ccbfba7e770cd5a1 100644
+index 530803396b79ef87db7ca415c47cc5161126ef60..f428148a6afaa81414f7b159a075d3170a7c0ce3 100644
 --- a/lib/commands/build/plugin.js
 +++ b/lib/commands/build/plugin.js
-@@ -87,6 +87,7 @@ class BuildPluginCommand extends clipanion_1.Command {
+@@ -87,6 +87,8 @@ class BuildPluginCommand extends clipanion_1.Command {
                      bundle: true,
                      outfile: output,
                      logLevel: `silent`,
++                    format: `iife`,
 +                    platform: `node`,
                      plugins: [dynamicLibResolver, esbuild_plugin_pnp_1.pnpPlugin()],
                      minify: !this.noMinify,
