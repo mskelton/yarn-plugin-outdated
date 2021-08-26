@@ -1,11 +1,11 @@
 # Yarn Plugin Outdated
 
-Yarn 2 plugin to show outdated dependencies.
+Yarn plugin to show outdated dependencies.
 
 ## Installation
 
 ```sh
-yarn plugin import https://github.com/mskelton/yarn-plugin-outdated/raw/main/bundles/@yarnpkg/plugin-outdated.js
+yarn plugin import https://github.com/mskelton/yarn-plugin-outdated/raw/v1.2.0/bundles/@yarnpkg/plugin-outdated.js
 ```
 
 ## Examples
