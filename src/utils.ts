@@ -1,6 +1,6 @@
 import * as semver from "semver"
 
-export const excludeFalsey = (Boolean as unknown) as <T>(
+export const truthy = Boolean as unknown as <T>(
   arg: T | undefined | null | false
 ) => arg is T
 
