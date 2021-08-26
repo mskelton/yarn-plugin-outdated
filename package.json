@@ -35,7 +35,7 @@
     "@types/semver": "^7.3.8",
     "@typescript-eslint/eslint-plugin": "^4.28.5",
     "@typescript-eslint/parser": "^4.28.5",
-    "@yarnpkg/builder": "^3.0.2-rc.2",
+    "@yarnpkg/builder": "patch:@yarnpkg/builder@3.0.2-rc.2#./.yarn/patches/builder.patch",
     "eslint": "^7.31.0",
     "eslint-plugin-sort": "^1.5.0",
     "jest": "^27.0.6",
