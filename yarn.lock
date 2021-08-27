@@ -1864,6 +1864,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/klaw@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@types/klaw@npm:3.0.2"
+  dependencies:
+    "@types/node": "*"
+  checksum: 22a1125b394ef2e1081768e18829f3b5726f4af44b4e07aa35aa0b80e245cbab8fde513be6e719234ff882fbd369df0bfc63831581ba8dc2fb90799aacb0efab
+  languageName: node
+  linkType: hard
+
 "@types/lodash@npm:^4.14.165":
   version: 4.14.171
   resolution: "@types/lodash@npm:4.14.171"
@@ -4784,6 +4793,13 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
+"graceful-fs@npm:^4.1.9":
+  version: 4.2.8
+  resolution: "graceful-fs@npm:4.2.8"
+  checksum: 5d224c8969ad0581d551dfabdb06882706b31af2561bd5e2034b4097e67cc27d05232849b8643866585fd0a41c7af152950f8776f4dd5579e9853733f31461c6
+  languageName: node
+  linkType: hard
+
 "grapheme-splitter@npm:^1.0.4":
   version: 1.0.4
   resolution: "grapheme-splitter@npm:1.0.4"
@@ -5939,6 +5955,15 @@ fsevents@^2.3.2:
   dependencies:
     json-buffer: 3.0.1
   checksum: 770134225c5320861748bf65f022e7ce100e465b85b28fe39036ef66f6190bb602aa8a57df365b9c745005d948fc1f0da99306062875a2f52700195e0b4d1033
+  languageName: node
+  linkType: hard
+
+"klaw@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "klaw@npm:3.0.0"
+  dependencies:
+    graceful-fs: ^4.1.9
+  checksum: 1bf9de22392c80d28de8a2babd6f0de29fa52fcdc1654838fd35174b3641c168ec32b8b03022191e3c190efd535c31fce23f85e29cb260245571da7263ef418e
   languageName: node
   linkType: hard
 
@@ -8352,6 +8377,7 @@ typescript@^4.3.5:
     "@babel/preset-typescript": ^7.14.5
     "@mskelton/eslint-config": ^6.1.0
     "@types/jest": ^26.0.24
+    "@types/klaw": ^3.0.2
     "@types/micromatch": ^4.0.2
     "@types/node": ^16.4.3
     "@types/semver": ^7.3.8
@@ -8365,6 +8391,7 @@ typescript@^4.3.5:
     eslint: ^7.31.0
     eslint-plugin-sort: ^1.5.0
     jest: ^27.0.6
+    klaw: ^3.0.0
     micromatch: ^4.0.4
     prettier: ^2.3.2
     semver: ^7.3.5
