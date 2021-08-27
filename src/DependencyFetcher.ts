@@ -17,8 +17,7 @@ export class DependencyFetcher {
   ) {}
 
   async fetch(pkg: Package, range: string) {
-    const ident = structUtils.convertToIdent(pkg)
-    const candidate = await suggestUtils.fetchDescriptorFrom(ident, range, {
+    const candidate = await suggestUtils.fetchDescriptorFrom(pkg, range, {
       cache: this.cache,
       preserveModifier: false,
       project: this.project,
@@ -26,7 +25,7 @@ export class DependencyFetcher {
     })
 
     if (!candidate) {
-      const name = structUtils.prettyIdent(this.configuration, ident)
+      const name = structUtils.prettyIdent(this.configuration, pkg)
       throw new Error(`Could not fetch candidate for ${name}.`)
     }
 
