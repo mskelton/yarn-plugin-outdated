@@ -10,7 +10,6 @@
     "build": "builder build plugin",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "jest",
     "ts": "tsc"
   },
   "dependencies": {
@@ -30,7 +29,6 @@
     "@babel/preset-env": "^7.14.8",
     "@babel/preset-typescript": "^7.14.5",
     "@mskelton/eslint-config": "latest",
-    "@types/jest": "^26.0.24",
     "@types/micromatch": "^4.0.2",
     "@types/semver": "^7.3.8",
     "@typescript-eslint/eslint-plugin": "^4.28.5",
@@ -38,7 +36,6 @@
     "@yarnpkg/builder": "patch:@yarnpkg/builder@3.0.2-rc.2#./.yarn/patches/builder.patch",
     "eslint": "^7.31.0",
     "eslint-plugin-sort": "^1.5.0",
-    "jest": "^27.0.6",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5"
   }

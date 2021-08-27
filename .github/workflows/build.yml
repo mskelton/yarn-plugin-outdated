@@ -7,7 +7,6 @@ jobs:
       - uses: mskelton/setup-yarn@v1
       - run: yarn lint
       - run: yarn ts
-      - run: yarn test
   build:
     if: github.ref == 'refs/heads/main'
     needs: test
