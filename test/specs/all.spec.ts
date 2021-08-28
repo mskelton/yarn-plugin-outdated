@@ -1,7 +1,7 @@
 import { expect, test } from "../fixtures/env"
 
 test.describe("yarn outdated --all", () => {
-  test("should include packages from all workspaces", async ({ env }) => {
+  test("includes packages from all workspaces", async ({ env }) => {
     const { run, writeJSON } = env
 
     await writeJSON("package.json", { workspaces: ["a", "b"] })
@@ -10,18 +10,18 @@ test.describe("yarn outdated --all", () => {
     await run("install")
 
     const { stderr, stdout } = await run("outdated --all")
-    expect(stdout).toMatchSnapshot("stdout.txt")
+    expect(stdout).toMatchSnapshot("all-workspaces.txt")
     expect(stderr).toBe("")
   })
 
-  test("should fallback to computed workspace name", async ({ env }) => {
+  test("falls back to the computed workspace name", async ({ env }) => {
     const { run, writeJSON } = env
 
     await writeJSON("package.json", { dependencies: { patch: "1.0.0" } })
     await run("install")
 
     const { stderr, stdout } = await run("outdated -a")
-    expect(stdout).toMatchSnapshot("stdout.txt")
+    expect(stdout).toMatchSnapshot("computed-workspace-name.txt")
     expect(stderr).toBe("")
   })
 })

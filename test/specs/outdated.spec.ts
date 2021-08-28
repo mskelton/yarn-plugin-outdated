@@ -11,12 +11,12 @@ test.describe("yarn outdated", () => {
     await run("install")
 
     const { code, stderr, stdout } = await run("outdated")
-    expect(stdout).toMatchSnapshot("stdout.txt")
+    expect(stdout).toMatchSnapshot("outdated.txt")
     expect(stderr).toBe("")
     expect(code).toBe(0)
   })
 
-  test("displays empty state if no dependencies are outdated", async ({
+  test("displays an empty state if no dependencies are outdated", async ({
     env,
   }) => {
     const { run, writeJSON } = env
@@ -25,7 +25,7 @@ test.describe("yarn outdated", () => {
     await run("install")
 
     const { stderr, stdout } = await run("outdated")
-    expect(stdout).toMatchSnapshot("stdout.txt")
+    expect(stdout).toMatchSnapshot("empty.txt")
     expect(stderr).toBe("")
   })
 
@@ -43,11 +43,11 @@ test.describe("yarn outdated", () => {
     await run("install")
 
     const { stderr, stdout } = await run("outdated")
-    expect(stdout).toMatchSnapshot("stdout.txt")
+    expect(stdout).toMatchSnapshot("non-semver.txt")
     expect(stderr).toBe("")
   })
 
-  test("properlys format scoped dependencies", async ({ env }) => {
+  test("formats scoped dependencies", async ({ env }) => {
     const { run, writeJSON } = env
 
     await writeJSON("package.json", {
@@ -56,7 +56,7 @@ test.describe("yarn outdated", () => {
     await run("install")
 
     const { stderr, stdout } = await run("outdated")
-    expect(stdout).toMatchSnapshot("stdout.txt")
+    expect(stdout).toMatchSnapshot("scoped.txt")
     expect(stderr).toBe("")
   })
 
