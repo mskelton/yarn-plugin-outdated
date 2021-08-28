@@ -10,7 +10,7 @@
     "build": "builder build plugin",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "folio -c .",
+    "test": "folio",
     "ts": "tsc"
   },
   "dependencies": {
@@ -25,9 +25,6 @@
   "devDependencies": {
     "@babel/core": "^7.14.8",
     "@babel/eslint-parser": "^7.14.7",
-    "@babel/plugin-proposal-class-properties": "^7.14.5",
-    "@babel/preset-env": "^7.14.8",
-    "@babel/preset-typescript": "^7.14.5",
     "@mskelton/eslint-config": "^6.1.0",
     "@types/micromatch": "^4.0.2",
     "@types/semver": "^7.3.8",
@@ -38,7 +35,7 @@
     "@yarnpkg/parsers": "^2.4.1-rc.1",
     "eslint": "^7.31.0",
     "eslint-plugin-sort": "^1.5.0",
-    "folio": "^0.3.18",
+    "folio": "next",
     "glob": "^7.1.7",
     "glob-promise": "^4.2.0",
     "prettier": "^2.3.2",
