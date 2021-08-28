@@ -1,8 +1,8 @@
-import { makeTemporaryEnv } from "./utils/env"
+import { expect, test } from "../fixtures/env"
 
-describe("yarn outdated", () => {
-  it("should show outdated dependencies", async () => {
-    const { run, writeJSON } = await makeTemporaryEnv()
+test.describe("yarn outdated", () => {
+  test("should show outdated dependencies", async () => {
+    const { run, writeJSON } = env
 
     await writeJSON("package.json", {
       dependencies: { patch: "1.0.0" },
@@ -16,8 +16,8 @@ describe("yarn outdated", () => {
     expect(code).toBe(0)
   })
 
-  it("should display empty state if no dependencies are outdated", async () => {
-    const { run, writeJSON } = await makeTemporaryEnv()
+  test("should display empty state if no dependencies are outdated", async () => {
+    const { run, writeJSON } = env
 
     await writeJSON("package.json", { dependencies: { patch: "1.0.1" } })
     await run("install")
@@ -27,8 +27,8 @@ describe("yarn outdated", () => {
     expect(stderr).toBe("")
   })
 
-  it("should ignore non-semver ranges", async () => {
-    const { run, writeJSON } = await makeTemporaryEnv()
+  test("should ignore non-semver ranges", async () => {
+    const { run, writeJSON } = env
 
     await writeJSON("package.json", {
       dependencies: {
@@ -45,8 +45,8 @@ describe("yarn outdated", () => {
     expect(stderr).toBe("")
   })
 
-  it("should properly format scoped dependencies", async () => {
-    const { run, writeJSON } = await makeTemporaryEnv()
+  test("should properly format scoped dependencies", async () => {
+    const { run, writeJSON } = env
 
     await writeJSON("package.json", {
       dependencies: { "@scoped/patch": "1.0.0" },

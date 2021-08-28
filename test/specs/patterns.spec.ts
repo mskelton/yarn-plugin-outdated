@@ -1,4 +1,4 @@
-import { makeTemporaryEnv } from "./utils/env"
+import { expect, test } from "../fixtures/env"
 
 const manifest = {
   dependencies: {
@@ -9,8 +9,8 @@ const manifest = {
   },
 }
 
-it("can filter by an exact package name", async () => {
-  const { run, writeJSON } = await makeTemporaryEnv()
+test("can filter by an exact package name", async () => {
+  const { run, writeJSON } = env
 
   await writeJSON("package.json", manifest)
   await run("install")
@@ -20,8 +20,8 @@ it("can filter by an exact package name", async () => {
   expect(stderr).toBe("")
 })
 
-it("can filter using a wildcard", async () => {
-  const { run, writeJSON } = await makeTemporaryEnv()
+test("can filter using a wildcard", async () => {
+  const { run, writeJSON } = env
 
   await writeJSON("package.json", manifest)
   await run("install")
@@ -31,8 +31,8 @@ it("can filter using a wildcard", async () => {
   expect(stderr).toBe("")
 })
 
-it("should throw an error if the pattern doesn't match any packages", async () => {
-  const { run, writeJSON } = await makeTemporaryEnv()
+test("should throw an error if the pattern doesn't match any packages", async () => {
+  const { run, writeJSON } = env
 
   await writeJSON("package.json", manifest)
   await run("install")

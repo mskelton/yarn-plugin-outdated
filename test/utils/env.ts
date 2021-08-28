@@ -25,6 +25,11 @@ export async function makeTemporaryEnv() {
     registry.start(),
   ])
 
+  const destroy = async () => {
+    await xfs.rmdirPromise(tempDir, { recursive: true })
+    await xfs.rmdirPromise(homeDir, { recursive: true })
+  }
+
   const writeFile = async (target: string, body: string) => {
     const path = target as PortablePath
     await xfs.mkdirpPromise(ppath.join(tempDir, ppath.dirname(path)))
@@ -51,7 +56,7 @@ export async function makeTemporaryEnv() {
       env: {
         HOME: homeDir,
         USERPROFILE: homeDir,
-        // Otherwise snapshots relying on this would break each time it's bumped
+        // Otherwise snapshots relying on thistest(d break each time it's bumped
         YARN_CACHE_KEY_OVERRIDE: "0",
         // Otherwise tests fail on systems where this is globally set to true
         YARN_ENABLE_GLOBAL_CACHE: "false",
@@ -73,6 +78,7 @@ export async function makeTemporaryEnv() {
   await writeFile(".yarnrc.yml", YARN_RC)
 
   return {
+    destroy,
     registry,
     run,
     writeFile,

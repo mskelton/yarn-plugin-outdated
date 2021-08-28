@@ -1,8 +1,8 @@
-import { makeTemporaryEnv } from "./utils/env"
+import { expect, test } from "../fixtures/env"
 
-describe("yarn outdated --all", () => {
-  it("should include packages from all workspaces", async () => {
-    const { run, writeJSON } = await makeTemporaryEnv()
+test.describe("yarn outdated --all", () => {
+  test("should include packages from all workspaces", async ({ env }) => {
+    const { run, writeJSON } = env
 
     await writeJSON("package.json", { workspaces: ["a", "b"] })
     await writeJSON("a/package.json", { dependencies: { patch: "1.0.0" } })
@@ -14,8 +14,8 @@ describe("yarn outdated --all", () => {
     expect(stderr).toBe("")
   })
 
-  it("should fallback to computed workspace name", async () => {
-    const { run, writeJSON } = await makeTemporaryEnv()
+  test("should fallback to computed workspace name", async ({ env }) => {
+    const { run, writeJSON } = env
 
     await writeJSON("package.json", { dependencies: { patch: "1.0.0" } })
     await run("install")
