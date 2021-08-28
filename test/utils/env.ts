@@ -26,8 +26,8 @@ export async function makeTemporaryEnv() {
   ])
 
   const destroy = async () => {
-    await xfs.rmdirPromise(tempDir, { recursive: true })
-    await xfs.rmdirPromise(homeDir, { recursive: true })
+    await xfs.removePromise(tempDir, { recursive: true })
+    await xfs.removePromise(homeDir, { recursive: true })
   }
 
   const writeFile = async (target: string, body: string) => {

@@ -10,7 +10,7 @@ test.describe("yarn outdated --all", () => {
     await run("install")
 
     const { stderr, stdout } = await run("outdated --all")
-    expect(stdout).toMatchSnapshot()
+    expect(stdout).toMatchSnapshot("stdout.txt")
     expect(stderr).toBe("")
   })
 
@@ -21,7 +21,7 @@ test.describe("yarn outdated --all", () => {
     await run("install")
 
     const { stderr, stdout } = await run("outdated -a")
-    expect(stdout).toMatchSnapshot()
+    expect(stdout).toMatchSnapshot("stdout.txt")
     expect(stderr).toBe("")
   })
 })
