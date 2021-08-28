@@ -1,21 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`yarn outdated --check should return exit code 0 when dependencies are up to date 1`] = `
-"Checking for outdated dependencies
---- PROGRESS ---
---- SEPARATOR ---
-INFO: ✨ All your dependencies are up to date!
+"➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
+
+➤ YN0000: ✨ All your dependencies are up to date!
+➤ YN0000: Done
 "
 `;
 
 exports[`yarn outdated --check should return exit code 1 when outdated dependencies are found 1`] = `
-[Error: Checking for outdated dependencies
---- PROGRESS ---
---- SEPARATOR ---
-INFO: Package     Current   Latest   Package Type
-INFO: package-b   1.1.1     1.3.0    dependencies
-INFO: package-c   1.2.0     1.2.1    dependencies
---- SEPARATOR ---
-ERROR: 2 dependencies are out of date
-]
+"➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
+
+➤ YN0000: Package   Current   Latest   Package Type
+➤ YN0000: patch     1.0.0     1.0.1    dependencies
+
+➤ YN0000: 1 dependency is out of date
+➤ YN0000: Failed with errors
+"
 `;

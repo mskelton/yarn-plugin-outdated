@@ -17,7 +17,7 @@ export const execFile = (
   args: string[],
   { cwd, env }: Options
 ): Promise<ExecResult> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     cp.execFile(
       path,
       args,
@@ -35,7 +35,7 @@ export const execFile = (
         }
 
         if (error) {
-          reject(Object.assign(error, { stderr, stdout }))
+          resolve(Object.assign(error, { stderr, stdout }))
         } else {
           resolve({ code: 0, stderr, stdout })
         }
