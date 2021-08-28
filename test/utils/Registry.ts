@@ -70,9 +70,9 @@ export class Registry {
   private async loadPackages() {
     this.packages = new Map()
 
-    // Load the registry packages from the fixtures directory
+    // Load the registry packages from the packages directory
     const manifests = await glob("**/package.json", {
-      cwd: path.join(__dirname, "../fixtures"),
+      cwd: path.join(__dirname, "../packages"),
       realpath: true,
     })
 
