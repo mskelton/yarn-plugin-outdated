@@ -11,7 +11,8 @@ test.describe("yarn outdated --json", () => {
     await run("install")
 
     const { stderr, stdout } = await run("outdated --json")
-    expect(JSON.parse(stdout)).toMatchSnapshot("json.txt")
+    const json = JSON.stringify(JSON.parse(stdout), null, 2)
+    expect(json).toMatchSnapshot("json.txt")
     expect(stderr).toBe("")
   })
 
