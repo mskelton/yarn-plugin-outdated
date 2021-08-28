@@ -1,48 +1,27 @@
 import { makeTemporaryEnv } from "./utils/env"
 
-describe.only("yarn outdated --all", () => {
+describe("yarn outdated --all", () => {
   it("should include packages from all workspaces", async () => {
-    const output = await run("outdated --all", {
-      candidates,
-      manifests: [
-        {
-          dependencies: {
-            "package-a": "1.1.0",
-            "package-b": "^1.1.1",
-            "package-c": "~1.2.0",
-          },
-          name: {
-            name: "workspace-a",
-            scope: null,
-          },
-        },
-        {
-          devDependencies: {
-            "package-c": "~1.2.0",
-            "package-d": "> 1.1.0",
-          },
-          name: {
-            name: "workspace-b",
-            scope: "my-scope",
-          },
-        },
-      ],
-    })
+    const { run, writeJSON } = await makeTemporaryEnv()
 
-    expect(output).toMatchSnapshot()
+    await writeJSON("package.json", { workspaces: ["a", "b"] })
+    await writeJSON("a/package.json", { dependencies: { patch: "1.0.0" } })
+    await writeJSON("b/package.json", { dependencies: { minor: "1.0.0" } })
+    await run("install")
+
+    const { stderr, stdout } = await run("outdated --all")
+    expect(stdout).toMatchSnapshot()
+    expect(stderr).toBe("")
   })
 
-  it.only("should fallback to computed workspace name", async () => {
-    const { run, writeLockfile, writeManifest } = await makeTemporaryEnv()
+  it("should fallback to computed workspace name", async () => {
+    const { run, writeJSON } = await makeTemporaryEnv()
 
-    await writeManifest({
-      dependencies: { patch: "1.0.0" },
-    })
-    await writeLockfile({ patch: "1.0.0" })
-    await run("install --immutable")
+    await writeJSON("package.json", { dependencies: { patch: "1.0.0" } })
+    await run("install")
 
     const { stderr, stdout } = await run("outdated -a")
     expect(stdout).toMatchSnapshot()
-    expect(stderr).toBeNull()
+    expect(stderr).toBe("")
   })
 })

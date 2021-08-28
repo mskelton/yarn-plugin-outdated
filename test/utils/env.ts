@@ -19,7 +19,6 @@ interface RunOptions {
 const registry = new Registry()
 
 export async function makeTemporaryEnv() {
-  const workspace = "foo"
   const [tempDir, homeDir, registryUrl] = await Promise.all([
     xfs.mktempPromise(),
     xfs.mktempPromise(),
@@ -32,15 +31,15 @@ export async function makeTemporaryEnv() {
     await xfs.writeFilePromise(ppath.join(tempDir, path), body)
   }
 
-  const writeManifest = async (body: Record<string, unknown>) => {
-    await writeFile(
-      "package.json",
-      JSON.stringify({ name: workspace, ...body })
-    )
+  const writeJSON = async (target: string, body: Record<string, unknown>) => {
+    await writeFile(target, JSON.stringify(body))
   }
 
-  const writeLockfile = async (packages: Record<string, string>) => {
-    await writeFile("yarn.lock", createLockfile(workspace, packages))
+  const writeLockfile = async (
+    workspaceName: string,
+    packages: Record<string, string>
+  ) => {
+    await writeFile("yarn.lock", createLockfile(workspaceName, packages))
   }
 
   const run = (command: string, { cwd }: RunOptions = {}) => {
@@ -77,7 +76,7 @@ export async function makeTemporaryEnv() {
     registry,
     run,
     writeFile,
+    writeJSON,
     writeLockfile,
-    writeManifest,
   }
 }
