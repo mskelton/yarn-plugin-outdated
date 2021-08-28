@@ -1,14 +1,25 @@
 import { PortablePath, ppath, xfs } from "@yarnpkg/fslib"
+import { stringifySyml } from "@yarnpkg/parsers"
+import path from "path"
 import { URL } from "url"
 import { Registry } from "./Registry"
 import { execFile } from "./exec"
+import { createLockfile } from "./lockfile"
+
+const YARN_RC = stringifySyml({
+  checksumBehavior: "ignore",
+  plugins: [path.join(__dirname, "../../bundles/@yarnpkg/plugin-outdated.js")],
+})
 
 interface RunOptions {
   cwd?: PortablePath
 }
 
+// We only need to setup the registry once
+const registry = new Registry()
+
 export async function makeTemporaryEnv() {
-  const registry = new Registry()
+  const workspace = "foo"
   const [tempDir, homeDir, registryUrl] = await Promise.all([
     xfs.mktempPromise(),
     xfs.mktempPromise(),
@@ -21,8 +32,15 @@ export async function makeTemporaryEnv() {
     await xfs.writeFilePromise(ppath.join(tempDir, path), body)
   }
 
-  const writeJson = async (target: string, body: Record<string, unknown>) => {
-    await writeFile(target, JSON.stringify(body))
+  const writeManifest = async (body: Record<string, unknown>) => {
+    await writeFile(
+      "package.json",
+      JSON.stringify({ name: workspace, ...body })
+    )
+  }
+
+  const writeLockfile = async (packages: Record<string, string>) => {
+    await writeFile("yarn.lock", createLockfile(workspace, packages))
   }
 
   const run = (command: string, { cwd }: RunOptions = {}) => {
@@ -52,10 +70,14 @@ export async function makeTemporaryEnv() {
     })
   }
 
+  // Write the .yarnrc.yml file with some defaults
+  await writeFile(".yarnrc.yml", YARN_RC)
+
   return {
     registry,
     run,
     writeFile,
-    writeJson,
+    writeLockfile,
+    writeManifest,
   }
 }

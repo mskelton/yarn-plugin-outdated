@@ -1,5 +1,5 @@
 import { npath, PortablePath } from "@yarnpkg/fslib"
-import * as cp from "child_process"
+import cp from "child_process"
 
 interface Options {
   cwd: PortablePath
@@ -17,7 +17,6 @@ export const execFile = (
   args: string[],
   { cwd, env }: Options
 ): Promise<ExecResult> => {
-  console.log(cwd)
   return new Promise((resolve, reject) => {
     cp.execFile(
       path,
@@ -29,6 +28,11 @@ export const execFile = (
 
         if (stderr.length > 0 && !stderr.endsWith(`\n`))
           stderr += `<no line return>\n`
+
+        if (error) {
+          error.message += `\n===== stdout:\n${stdout}`
+          error.message += `\n===== stderr:\n${stderr}`
+        }
 
         if (error) {
           reject(Object.assign(error, { stderr, stdout }))

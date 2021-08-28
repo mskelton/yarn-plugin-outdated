@@ -33,25 +33,13 @@ describe.only("yarn outdated --all", () => {
   })
 
   it.only("should fallback to computed workspace name", async () => {
-    const { run, writeFile, writeJson } = await makeTemporaryEnv()
+    const { run, writeLockfile, writeManifest } = await makeTemporaryEnv()
 
-    const packageJSON = { dependencies: { patch: "1.0.0" } }
-    const lockfile = `
-__metadata:
-  version: 4
-  cacheKey: 0
-
-"patch@npm:1.0.0":
-  version: 1.0.0
-  resolution: "patch@npm:1.0.0"
-  checksum: foo
-  languageName: node
-  linkType: hard
-`
-
-    await writeJson("package.json", packageJSON)
-    await writeFile("yarn.lock", lockfile)
-    await run("install")
+    await writeManifest({
+      dependencies: { patch: "1.0.0" },
+    })
+    await writeLockfile({ patch: "1.0.0" })
+    await run("install --immutable")
 
     const { stderr, stdout } = await run("outdated -a")
     expect(stdout).toMatchSnapshot()

@@ -1,47 +1,42 @@
-import { miscUtils } from "@yarnpkg/core"
-import { npath, ppath, xfs } from "@yarnpkg/fslib"
-import { PortablePath } from "@yarnpkg/fslib"
-import { relative } from "path"
-import * as klaw from "klaw"
-// import tarFs from "tar-fs"
-
-export const walk = (
-  source: PortablePath,
-  { filter }: { filter?: string } = {}
-): Promise<PortablePath[]> => {
-  return new Promise((resolve) => {
-    const paths: PortablePath[] = []
-    const walker = klaw(npath.fromPortablePath(source), {
-      filter: (sourcePath: string) => {
-        if (!filter) return true
-
-        const itemPath = npath.toPortablePath(sourcePath)
-        const relativePath = ppath.relative(source, itemPath)
-        console.log(relativePath)
-
-        return relativePath === filter
-      },
-    })
-
-    // walker.on("data", ({ path: sourcePath }) => {
-    //   const itemPath = npath.toPortablePath(sourcePath)
-    //   const relativePath = ppath.relative(source, itemPath)
-
-    //   // if (!filter || miscUtils.filePatternMatch(relativePath, filter))
-    //   //   paths.push(relative ? relativePath : itemPath)
-
-    //   return
-    // })
-
-    walker.on("end", () => resolve(paths))
-  })
-}
+import { npath, PortablePath, ppath, xfs } from "@yarnpkg/fslib"
+import tarFs from "tar-fs"
+import zlib from "zlib"
 
 export async function packToStream(
   source: PortablePath,
   { virtualPath = null }: { virtualPath?: PortablePath | null } = {}
 ) {
-  return ""
+  if (virtualPath) {
+    virtualPath = ppath.resolve(virtualPath)
+  }
+
+  const zipperStream = zlib.createGzip()
+  const packStream = tarFs.pack(npath.fromPortablePath(source), {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    map(header: any) {
+      header.name = npath.toPortablePath(header.name)
+      header.name = ppath.resolve(PortablePath.root, header.name)
+      header.name = ppath.relative(PortablePath.root, header.name)
+
+      if (virtualPath) {
+        header.name = ppath.resolve(PortablePath.root, virtualPath, header.name)
+        header.name = ppath.relative(PortablePath.root, header.name)
+      }
+
+      header.uid = 1
+      header.gid = 1
+      header.mtime = new Date(1589272747277)
+
+      return header
+    },
+  })
+
+  packStream.pipe(zipperStream)
+  packStream.on("error", (err) => {
+    zipperStream.emit("error", err)
+  })
+
+  return zipperStream
 }
 
 export async function readJson(source: PortablePath) {

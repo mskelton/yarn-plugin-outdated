@@ -1,8 +1,11 @@
 import { npath } from "@yarnpkg/fslib"
-import * as http from "http"
+import crypto from "crypto"
+import glob from "glob-promise"
+import http from "http"
 import { AddressInfo } from "net"
-import * as path from "path"
-import * as semver from "semver"
+import path from "path"
+import semver from "semver"
+import { Gzip } from "zlib"
 import * as fsUtils from "./fs"
 
 type Request =
@@ -19,7 +22,8 @@ type Request =
     }
 
 interface PackageEntry {
-  versions: string[]
+  packageJson: Record<string, unknown>
+  path: string
 }
 
 export class Registry {
@@ -28,53 +32,65 @@ export class Registry {
     tarball: /^\/(?:(@[^/]+)\/)?([^@/][^/]*)\/-\/\2-(.*)\.tgz$/,
   }
 
-  private packages: Map<string, PackageEntry> = new Map()
+  private packages: Map<string, Map<string, PackageEntry>> = null!
+  private serverUrl: Promise<string> = null!
 
   async start() {
-    return new Promise<string>((resolve) => {
-      const server = http.createServer((req, res) => {
-        const request = this.parseRequest(req.url!.replace(/%2f/g, "/"))
-        if (!request) {
-          return this.sendError(res, 404, `Invalid route: ${req.url}`)
-        }
+    // Packages on the regsitry don't change from test to test,
+    // so we only load them once
+    if (!this.packages) {
+      await this.loadPackages()
+    }
 
-        this.process(request, req, res).catch((error) => {
-          this.sendError(res, 500, error.stack)
+    if (!this.serverUrl) {
+      this.serverUrl = new Promise<string>((resolve) => {
+        const server = http.createServer((req, res) => {
+          const request = this.parseRequest(req.url!.replace(/%2f/g, "/"))
+          if (!request) {
+            return this.sendError(res, 404, `Invalid route: ${req.url}`)
+          }
+
+          this.process(request, req, res).catch((error) => {
+            this.sendError(res, 500, error.stack)
+          })
         })
-      })
 
-      // We don't want the server to prevent the process from exiting
-      server.unref()
-      server.listen(() => {
-        const { port } = server.address() as AddressInfo
-        resolve(`http://localhost:${port}`)
-      })
-    })
-  }
-
-  private async loadPackages() {
-    const packages = new Map()
-    const manifests = await fsUtils.walk(
-      npath.toPortablePath(npath.join(__dirname, "../fixtures")),
-      { filter: "package.json" }
-    )
-
-    for (const pkg of manifests) {
-      const packageJson = await fsUtils.readJson(pkg)
-
-      const { name, version } = packageJson
-      if (name.startsWith(`git-`)) continue
-
-      let packageEntry = packages.get(name)
-      if (!packageEntry) packages.set(name, (packageEntry = new Map()))
-
-      packageEntry.set(version, {
-        packageJson,
-        path: path.dirname(pkg),
+        // We don't want the server to prevent the process from exiting
+        server.unref()
+        server.listen(() => {
+          const { port } = server.address() as AddressInfo
+          resolve(`http://localhost:${port}`)
+        })
       })
     }
 
-    return packages
+    return this.serverUrl
+  }
+
+  private async loadPackages() {
+    this.packages = new Map()
+
+    // Load the registry packages from the fixtures directory
+    const manifests = await glob("**/package.json", {
+      cwd: path.join(__dirname, "../fixtures"),
+      realpath: true,
+    })
+
+    for (const manifest of manifests) {
+      const packageJson = await fsUtils.readJson(npath.toPortablePath(manifest))
+      const { name, version } = packageJson
+
+      // Create the package entry if it doesn't exist
+      let packageEntry = this.packages.get(name)
+      if (!packageEntry) {
+        this.packages.set(name, (packageEntry = new Map()))
+      }
+
+      packageEntry.set(version, {
+        packageJson,
+        path: path.dirname(manifest),
+      })
+    }
   }
 
   private async process(
@@ -85,30 +101,29 @@ export class Registry {
     const { localName, scope } = request
     const name = scope ? `${scope}/${localName}` : localName
 
-    const pkg = this.packages.get(name)
-    if (!pkg) {
+    const packageEntry = this.packages.get(name)
+    if (!packageEntry) {
       return this.sendError(res, 404, `Package not found: ${name}`)
     }
 
     switch (request.type) {
       case "packageInfo": {
-        const data = {
-          "dist-tags": {
-            latest: semver.maxSatisfying(pkg.versions, "*"),
+        const versions = Array.from(packageEntry.keys())
+        const versionEntries = versions.map(async (version) => ({
+          [version]: {
+            dist: {
+              shasum: await this.getPackageArchiveHash(name, version),
+              tarball: await this.getPackageHttpArchivePath(name, version),
+            },
+            name,
+            version,
           },
+        }))
+
+        const data = {
+          "dist-tags": { latest: semver.maxSatisfying(versions, "*") },
           name,
-          versions: await Promise.all(
-            pkg.versions.map(async (version) => ({
-              [version]: {
-                dist: {
-                  shasum: "foo",
-                  // tarball: await getPackageHttpArchivePath(name, version),
-                },
-                name,
-                version,
-              },
-            }))
-          ),
+          versions: Object.assign({}, ...(await Promise.all(versionEntries))),
         }
 
         res.writeHead(200, { "Content-Type": "application/json" })
@@ -117,19 +132,84 @@ export class Registry {
       }
 
       case "packageTarball": {
+        const version = request.version!
+        const packageVersionEntry = packageEntry.get(version)
+
+        if (!packageVersionEntry) {
+          const message = `Package not found: ${name}@${version}`
+          return this.sendError(res, 404, message)
+        }
+
         res.writeHead(200, {
           "Content-Type": "application/octet-stream",
           "Transfer-Encoding": "chunked",
         })
 
-        const packStream = fsUtils.packToStream(
-          npath.toPortablePath(packageVersionEntry.path),
-          { virtualPath: npath.toPortablePath("/package") }
-        )
+        const packPath = npath.toPortablePath(packageVersionEntry.path)
+        const packStream = await fsUtils.packToStream(packPath, {
+          virtualPath: npath.toPortablePath("/package"),
+        })
+
         packStream.pipe(res)
         break
       }
     }
+  }
+
+  async getPackageArchiveStream(name: string, version: string): Promise<Gzip> {
+    const packageEntry = this.packages.get(name)
+    if (!packageEntry) {
+      throw new Error(`Unknown package "${name}"`)
+    }
+
+    const packageVersionEntry = packageEntry.get(version)
+    if (!packageVersionEntry)
+      throw new Error(`Unknown version "${version}" for package "${name}"`)
+
+    return fsUtils.packToStream(
+      npath.toPortablePath(packageVersionEntry.path),
+      { virtualPath: npath.toPortablePath(`/package`) }
+    )
+  }
+
+  async getPackageArchiveHash(
+    name: string,
+    version: string
+  ): Promise<string | Buffer> {
+    const stream = await this.getPackageArchiveStream(name, version)
+
+    return new Promise((resolve) => {
+      const hash = crypto.createHash("sha1")
+      hash.setEncoding("hex")
+
+      // Send the archive to the hash function
+      stream.pipe(hash)
+      stream.on("end", () => {
+        const finalHash = hash.read()
+        if (!finalHash) {
+          throw new Error("The hash should have been computated")
+        }
+
+        resolve(finalHash)
+      })
+    })
+  }
+
+  async getPackageHttpArchivePath(name: string, version: string) {
+    const packageEntry = this.packages.get(name)
+    if (!packageEntry) {
+      throw new Error(`Unknown package "${name}"`)
+    }
+
+    const packageVersionEntry = packageEntry.get(version)
+    if (!packageVersionEntry) {
+      throw new Error(`Unknown version "${version}" for package "${name}"`)
+    }
+
+    const localName = name.replace(/^@[^/]+\//, ``)
+    const serverUrl = await this.serverUrl
+
+    return `${serverUrl}/${name}/-/${localName}-${version}.tgz`
   }
 
   private parseRequest(url: string): Request | null {
