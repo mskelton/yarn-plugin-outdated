@@ -2,11 +2,11 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "module": "commonjs",
-    "target": "es2018",
-    "lib": ["es2018"],
+    "target": "esnext",
+    "lib": ["esnext"],
     "noEmit": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
     "strict": true
-  },
-  "include": ["src/**/*.ts"]
+  }
 }

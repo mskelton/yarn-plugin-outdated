@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`yarn outdated should display empty state if no dependencies are outdated 1`] = `
+"➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
+
+➤ YN0000: ✨ All your dependencies are up to date!
+➤ YN0000: Done
+"
+`;
+
+exports[`yarn outdated should ignore non-semver ranges 1`] = `
+"➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
+
+➤ YN0000: Package   Current   Latest   Package Type
+➤ YN0000: patch     1.0.0     1.0.1    dependencies
+
+➤ YN0000: 1 dependency is out of date
+➤ YN0000: Done with warnings
+"
+`;
+
+exports[`yarn outdated should properly format scoped dependencies 1`] = `
+"➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
+
+➤ YN0000: Package         Current   Latest   Package Type
+➤ YN0000: @scoped/patch   1.0.0     1.0.1    dependencies
+
+➤ YN0000: 1 dependency is out of date
+➤ YN0000: Done with warnings
+"
+`;
+
+exports[`yarn outdated should show outdated dependencies 1`] = `
+"➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
+
+➤ YN0000: Package   Current   Latest   Package Type   
+➤ YN0000: minor     1.0.0     1.1.0    devDependencies
+➤ YN0000: patch     1.0.0     1.0.1    dependencies   
+
+➤ YN0000: 2 dependencies are out of date
+➤ YN0000: Done with warnings
+"
+`;

@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`can filter by an exact package name 1`] = `
+"➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
+
+➤ YN0000: Package   Current   Latest   Package Type
+➤ YN0000: patch     1.0.0     1.0.1    dependencies
+
+➤ YN0000: 1 dependency is out of date
+➤ YN0000: Done with warnings
+"
+`;
+
+exports[`can filter using a wildcard 1`] = `
+"➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
+
+➤ YN0000: Package         Current   Latest   Package Type
+➤ YN0000: @scoped/minor   1.0.0     1.1.0    dependencies
+➤ YN0000: @scoped/patch   1.0.0     1.0.1    dependencies
+
+➤ YN0000: 2 dependencies are out of date
+➤ YN0000: Done with warnings
+"
+`;
+
+exports[`should throw an error if the pattern doesn't match any packages 1`] = `
+"Usage Error: Pattern not-a-package doesn't match any packages referenced by any workspace
+
+$ yarn outdated [-a,--all] [-c,--check] [--json] ...
+"
+`;

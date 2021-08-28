@@ -1,3 +1,3 @@
 module.exports = {
-  testRegex: "__tests__\\/.*\\.spec\\.js$",
+  testRegex: "test\\/.*\\.spec\\.[jt]s$",
 }
