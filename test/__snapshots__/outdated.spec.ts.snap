@@ -1,69 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`yarn outdated should display empty state if no dependencies are outdated 1`] = `
-"Checking for outdated dependencies
---- PROGRESS ---
---- SEPARATOR ---
-INFO: ✨ All your dependencies are up to date!
-"
-`;
+"➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
 
-exports[`yarn outdated should highlight package names and version ranges 1`] = `
-"Checking for outdated dependencies
---- PROGRESS ---
---- SEPARATOR ---
-INFO: {bold}Package  {bold}   {bold}Current{bold}   {bold}Latest{bold}   {bold}Package Type{bold}
-INFO: {yellow}package-b{yellow}   1.1.1     1.{bold}{yellow}3.0 {yellow}{bold}   dependencies
-INFO: {green}package-c{green}   1.2.0     1.2.{bold}{green}1 {green}{bold}   dependencies
-INFO: {red}package-d{red}   1.0.0     {bold}{red}2.0.0 {red}{bold}   dependencies
---- SEPARATOR ---
-WARN: 3 dependencies are out of date
+➤ YN0000: ✨ All your dependencies are up to date!
+➤ YN0000: Done
 "
 `;
 
 exports[`yarn outdated should ignore non-semver ranges 1`] = `
-"Checking for outdated dependencies
---- PROGRESS ---
---- SEPARATOR ---
-INFO: Package     Current   Latest   Package Type   
-INFO: package-b   1.1.1     1.3.0    devDependencies
-INFO: package-d   1.2.3     2.0.0    devDependencies
---- SEPARATOR ---
-WARN: 2 dependencies are out of date
+"➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
+
+➤ YN0000: Package   Current   Latest   Package Type
+➤ YN0000: patch     1.0.0     1.0.1    dependencies
+
+➤ YN0000: 1 dependency is out of date
+➤ YN0000: Done with warnings
 "
 `;
 
 exports[`yarn outdated should properly format scoped dependencies 1`] = `
-"Checking for outdated dependencies
---- PROGRESS ---
---- SEPARATOR ---
-INFO: Package                 Current   Latest   Package Type   
-INFO: @test-scope/package-a   3.0.1     3.4.0    dependencies   
-INFO: package-a               1.0.1     1.1.0    devDependencies
---- SEPARATOR ---
-WARN: 2 dependencies are out of date
+"➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
+
+➤ YN0000: Package         Current   Latest   Package Type
+➤ YN0000: @scoped/patch   1.0.0     1.0.1    dependencies
+
+➤ YN0000: 1 dependency is out of date
+➤ YN0000: Done with warnings
 "
 `;
 
 exports[`yarn outdated should show outdated dependencies 1`] = `
-"Checking for outdated dependencies
---- PROGRESS ---
---- SEPARATOR ---
-INFO: Package     Current   Latest   Package Type
-INFO: package-b   1.1.1     1.3.0    dependencies
-INFO: package-c   1.2.0     1.2.1    dependencies
---- SEPARATOR ---
-WARN: 2 dependencies are out of date
-"
-`;
+"➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
 
-exports[`yarn outdated should show outdated devDependencies 1`] = `
-"Checking for outdated dependencies
---- PROGRESS ---
---- SEPARATOR ---
-INFO: Package     Current   Latest   Package Type   
-INFO: package-b   1.1.1     1.3.0    devDependencies
---- SEPARATOR ---
-WARN: 1 dependency is out of date
+➤ YN0000: Package   Current   Latest   Package Type   
+➤ YN0000: minor     1.0.0     1.1.0    devDependencies
+➤ YN0000: patch     1.0.0     1.0.1    dependencies   
+
+➤ YN0000: 2 dependencies are out of date
+➤ YN0000: Done with warnings
 "
 `;
