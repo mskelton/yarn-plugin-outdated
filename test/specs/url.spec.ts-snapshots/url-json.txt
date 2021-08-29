@@ -1,9 +1,22 @@
 [
   {
     "current": "1.0.0",
+    "latest": "2.0.0",
+    "name": "major",
+    "type": "dependencies",
+    "url": "https://github.com/mskelton/major"
+  },
+  {
+    "current": "1.0.0",
+    "latest": "1.1.0",
+    "name": "minor",
+    "type": "dependencies"
+  },
+  {
+    "current": "1.0.0",
     "latest": "1.0.1",
     "name": "patch",
     "type": "dependencies",
-    "url": "http://google.com"
+    "url": "https://github.com/mskelton/patch#readme"
   }
 ]

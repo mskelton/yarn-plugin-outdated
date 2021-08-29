@@ -1,9 +1,11 @@
 import {
   Cache,
   Configuration,
+  Manifest,
   Package,
   Project,
   structUtils,
+  ThrowReport,
   Workspace,
 } from "@yarnpkg/core"
 import { suggestUtils } from "@yarnpkg/plugin-essentials"
@@ -45,6 +47,29 @@ export class DependencyFetcher {
   }
 
   private async fetchURL(pkg: Package) {
-    return "http://google.com"
+    const fetcher = this.configuration.makeFetcher()
+    const fetchResult = await fetcher.fetch(pkg, {
+      cache: this.cache,
+      checksums: this.project.storedChecksums,
+      fetcher,
+      project: this.project,
+      report: new ThrowReport(),
+      skipIntegrityCheck: true,
+    })
+
+    let manifest: Manifest | undefined
+    try {
+      manifest = await Manifest.find(fetchResult.prefixPath, {
+        baseFs: fetchResult.packageFs,
+      })
+    } finally {
+      fetchResult.releaseFs?.()
+    }
+
+    return this.getHomepageURL(manifest)
+  }
+
+  private getHomepageURL(manifest: Manifest) {
+    return manifest.raw.homepage ?? manifest.raw.repository?.url
   }
 }
