@@ -60,7 +60,14 @@ test.describe("yarn outdated", () => {
     expect(stderr).toBe("")
   })
 
-  // test.fixme("properlys colorize the output", () => {})
-  // test.fixme("throws an error when a package is not found", () => {})
-  // test.fixme("throws an error when a package version is not found", () => {})
+  test("throws an error when a package is not found", async ({ env }) => {
+    const { registry, run, writeJSON } = env
+    await writeJSON("package.json", { dependencies: { foo: "1.0.0" } })
+
+    const { code, stderr, stdout } = await run("outdated")
+    const output = stdout.replace(registry.port.toString(), "<registry port>")
+    expect(output).toMatchSnapshot("not-found.txt")
+    expect(stderr).toBe("")
+    expect(code).toBe(1)
+  })
 })

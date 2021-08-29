@@ -32,6 +32,7 @@ export class Registry {
     tarball: /^\/(?:(@[^/]+)\/)?([^@/][^/]*)\/-\/\2-(.*)\.tgz$/,
   }
 
+  public port: number = null!
   private packages: Map<string, Map<string, PackageEntry>> = null!
   private serverUrl: Promise<string> = null!
 
@@ -58,8 +59,8 @@ export class Registry {
         // We don't want the server to prevent the process from exiting
         server.unref()
         server.listen(() => {
-          const { port } = server.address() as AddressInfo
-          resolve(`http://localhost:${port}`)
+          this.port = (server.address() as AddressInfo).port
+          resolve(`http://localhost:${this.port}`)
         })
       })
     }
