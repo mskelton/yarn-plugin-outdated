@@ -112,17 +112,19 @@ test.describe("yarn outdated", () => {
   test("skips private packages", async ({ env }) => {
     const { run, writeJSON } = env
 
-    await writeJSON("package.json", {
-      dependencies: { private: "1.0.0" },
-      workspaces: ["private"],
-    })
-    await writeJSON("private/package.json", {
+    await writeJSON("package.json", { workspaces: ["packages/*"] })
+    await writeJSON("packages/a/package.json", {
+      name: "a",
       private: true,
       version: "1.1.0",
     })
+    await writeJSON("packages/b/package.json", {
+      dependencies: { a: "1.1.0", patch: "1.0.0" },
+      name: "b",
+    })
     await run("install")
 
-    const { stderr, stdout } = await run("outdated")
+    const { stderr, stdout } = await run("outdated --all")
     expect(stdout).toMatchSnapshot("private.txt")
     expect(stderr).toBe("")
   })
