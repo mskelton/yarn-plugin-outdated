@@ -1,4 +1,5 @@
 import { expect, test } from "../fixtures/env"
+import { prettyJSON } from "../utils/format"
 
 test.describe("yarn outdated --json", () => {
   test("shows outdated dependencies", async ({ env }) => {
@@ -11,8 +12,7 @@ test.describe("yarn outdated --json", () => {
     await run("install")
 
     const { stderr, stdout } = await run("outdated --json")
-    const json = JSON.stringify(JSON.parse(stdout), null, 2)
-    expect(json).toMatchSnapshot("json.txt")
+    expect(prettyJSON(stdout)).toMatchSnapshot("json.txt")
     expect(stderr).toBe("")
   })
 

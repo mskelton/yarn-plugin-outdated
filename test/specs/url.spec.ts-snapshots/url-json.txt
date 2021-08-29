@@ -1,0 +1,8 @@
+[
+  {
+    "current": "1.0.0",
+    "latest": "1.0.1",
+    "name": "patch",
+    "type": "dependencies"
+  }
+]
