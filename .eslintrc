@@ -1,6 +1,11 @@
 {
   "extends": ["@mskelton", "@mskelton/eslint-config/typescript"],
-  "env": {
-    "jest": true
-  }
+  "overrides": [
+    {
+      "files": "test/fixtures/**",
+      "rules": {
+        "no-empty-pattern": "off"
+      }
+    }
+  ]
 }

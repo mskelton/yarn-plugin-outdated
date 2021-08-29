@@ -25,6 +25,11 @@ export async function makeTemporaryEnv() {
     registry.start(),
   ])
 
+  const destroy = async () => {
+    await xfs.removePromise(tempDir, { recursive: true })
+    await xfs.removePromise(homeDir, { recursive: true })
+  }
+
   const writeFile = async (target: string, body: string) => {
     const path = target as PortablePath
     await xfs.mkdirpPromise(ppath.join(tempDir, ppath.dirname(path)))
@@ -73,6 +78,7 @@ export async function makeTemporaryEnv() {
   await writeFile(".yarnrc.yml", YARN_RC)
 
   return {
+    destroy,
     registry,
     run,
     writeFile,

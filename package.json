@@ -10,7 +10,7 @@
     "build": "builder build plugin",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "jest",
+    "test": "folio",
     "ts": "tsc"
   },
   "dependencies": {
@@ -25,12 +25,7 @@
   "devDependencies": {
     "@babel/core": "^7.14.8",
     "@babel/eslint-parser": "^7.14.7",
-    "@babel/plugin-proposal-class-properties": "^7.14.5",
-    "@babel/plugin-proposal-decorators": "^7.14.5",
-    "@babel/preset-env": "^7.14.8",
-    "@babel/preset-typescript": "^7.14.5",
     "@mskelton/eslint-config": "^6.1.0",
-    "@types/jest": "^26.0.24",
     "@types/micromatch": "^4.0.2",
     "@types/semver": "^7.3.8",
     "@types/tar-fs": "^2.0.1",
@@ -40,9 +35,9 @@
     "@yarnpkg/parsers": "^2.4.1-rc.1",
     "eslint": "^7.31.0",
     "eslint-plugin-sort": "^1.5.0",
+    "folio": "next",
     "glob": "^7.1.7",
     "glob-promise": "^4.2.0",
-    "jest": "^27.0.6",
     "prettier": "^2.3.2",
     "tar-fs": "^2.1.1",
     "typescript": "^4.3.5"

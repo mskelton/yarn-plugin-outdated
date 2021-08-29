@@ -1,4 +1,4 @@
-import { makeTemporaryEnv } from "./utils/env"
+import { expect, test } from "../fixtures/env"
 
 const manifest = {
   dependencies: {
@@ -9,35 +9,37 @@ const manifest = {
   },
 }
 
-it("can filter by an exact package name", async () => {
-  const { run, writeJSON } = await makeTemporaryEnv()
+test("filters by an exact package name", async ({ env }) => {
+  const { run, writeJSON } = env
 
   await writeJSON("package.json", manifest)
   await run("install")
 
   const { stderr, stdout } = await run("outdated patch")
-  expect(stdout).toMatchSnapshot()
+  expect(stdout).toMatchSnapshot("exact.txt")
   expect(stderr).toBe("")
 })
 
-it("can filter using a wildcard", async () => {
-  const { run, writeJSON } = await makeTemporaryEnv()
+test("filters using a wildcard", async ({ env }) => {
+  const { run, writeJSON } = env
 
   await writeJSON("package.json", manifest)
   await run("install")
 
   const { stderr, stdout } = await run("outdated @scoped/*")
-  expect(stdout).toMatchSnapshot()
+  expect(stdout).toMatchSnapshot("wildcard.txt")
   expect(stderr).toBe("")
 })
 
-it("should throw an error if the pattern doesn't match any packages", async () => {
-  const { run, writeJSON } = await makeTemporaryEnv()
+test("throws an error if the pattern doesn't match any packages", async ({
+  env,
+}) => {
+  const { run, writeJSON } = env
 
   await writeJSON("package.json", manifest)
   await run("install")
 
   const { stderr, stdout } = await run("outdated not-a-package")
-  expect(stdout).toMatchSnapshot()
+  expect(stdout).toMatchSnapshot("no-match.txt")
   expect(stderr).toBe("")
 })

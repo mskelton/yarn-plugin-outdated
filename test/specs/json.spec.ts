@@ -1,8 +1,8 @@
-import { makeTemporaryEnv } from "./utils/env"
+import { expect, test } from "../fixtures/env"
 
-describe("yarn outdated --json", () => {
-  it("should show outdated dependencies", async () => {
-    const { run, writeJSON } = await makeTemporaryEnv()
+test.describe("yarn outdated --json", () => {
+  test("shows outdated dependencies", async ({ env }) => {
+    const { run, writeJSON } = env
 
     await writeJSON("package.json", {
       dependencies: { patch: "1.0.0" },
@@ -11,12 +11,15 @@ describe("yarn outdated --json", () => {
     await run("install")
 
     const { stderr, stdout } = await run("outdated --json")
-    expect(JSON.parse(stdout)).toMatchSnapshot()
+    const json = JSON.stringify(JSON.parse(stdout), null, 2)
+    expect(json).toMatchSnapshot("json.txt")
     expect(stderr).toBe("")
   })
 
-  it("should display empty state if no dependencies are outdated", async () => {
-    const { run, writeJSON } = await makeTemporaryEnv()
+  test("displays an empty state if no dependencies are outdated", async ({
+    env,
+  }) => {
+    const { run, writeJSON } = env
 
     await writeJSON("package.json", { dependencies: { patch: "1.0.1" } })
     await run("install")
