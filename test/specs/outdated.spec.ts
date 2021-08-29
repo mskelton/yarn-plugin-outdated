@@ -79,4 +79,51 @@ test.describe("yarn outdated", () => {
     expect(stderr).toBe("")
     expect(code).toBe(1)
   })
+
+  test("defers to lockfile over manifest to check if a package is outdated", async ({
+    env,
+  }) => {
+    const { run, writeJSON } = env
+
+    await writeJSON("package.json", { dependencies: { patch: "^1.0.0" } })
+    await run("install")
+
+    const { stderr, stdout } = await run("outdated")
+    expect(stdout).toMatchSnapshot("lockfile.txt")
+    expect(stderr).toBe("")
+  })
+
+  test("respects resolutions to determine if a package is outdated", async ({
+    env,
+  }) => {
+    const { run, writeJSON } = env
+
+    await writeJSON("package.json", {
+      dependencies: { minor: "1.0.0" },
+      resolutions: { minor: "1.0.1" },
+    })
+    await run("install")
+
+    const { stderr, stdout } = await run("outdated")
+    expect(stdout).toMatchSnapshot("resolutions.txt")
+    expect(stderr).toBe("")
+  })
+
+  test("skips private packages", async ({ env }) => {
+    const { run, writeJSON } = env
+
+    await writeJSON("package.json", {
+      dependencies: { private: "1.0.0" },
+      workspaces: ["private"],
+    })
+    await writeJSON("private/package.json", {
+      private: true,
+      version: "1.1.0",
+    })
+    await run("install")
+
+    const { stderr, stdout } = await run("outdated")
+    expect(stdout).toMatchSnapshot("private.txt")
+    expect(stderr).toBe("")
+  })
 })
