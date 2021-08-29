@@ -6,10 +6,9 @@ test.describe("Resolutions", () => {
   }) => {
     const { run, writeJSON } = env
 
-    await writeJSON("package.json", {
-      dependencies: { patch: "1.0.0" },
-      resolutions: { patch: "1.1.0" },
-    })
+    await writeJSON("package.json", { workspaces: ["a"] })
+    await writeJSON("a/package.json", { dependencies: { patch: "1.0.0" } })
+    await run("set resolution patch 1.1.0")
     await run("install")
 
     const { stderr, stdout } = await run("outdated")
