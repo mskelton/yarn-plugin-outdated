@@ -1,10 +1,17 @@
 {
   "name": "yarn-plugin-outdated",
-  "description": "Yarn 2 plugin to show outdated dependencies.",
+  "description": "Yarn plugin to show outdated dependencies.",
   "author": "Mark Skelton",
-  "homepage": "https://github.com/mskelton/yarn-plugin-outdated",
-  "main": "src/index.ts",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mskelton/yarn-plugin-outdated"
+  },
+  "homepage": "https://github.com/mskelton/yarn-plugin-outdated#readme",
+  "bugs": {
+    "url": "https://github.com/mskelton/yarn-plugin-outdated/issues"
+  },
+  "main": "src/index.ts",
   "packageManager": "yarn@3.0.1",
   "scripts": {
     "build": "builder build plugin",
@@ -32,6 +39,7 @@
     "@typescript-eslint/eslint-plugin": "^4.28.5",
     "@typescript-eslint/parser": "^4.28.5",
     "@yarnpkg/builder": "patch:@yarnpkg/builder@3.0.2-rc.2#./.yarn/patches/builder.patch",
+    "@yarnpkg/fslib": "^2.6.0-rc.1",
     "@yarnpkg/parsers": "^2.4.1-rc.1",
     "eslint": "^7.31.0",
     "eslint-plugin-sort": "^1.5.0",
@@ -40,6 +48,7 @@
     "glob-promise": "^4.2.0",
     "prettier": "^2.3.2",
     "tar-fs": "^2.1.1",
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "zlib": "^1.0.5"
   }
 }
