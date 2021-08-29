@@ -207,7 +207,7 @@ export class Registry {
       throw new Error(`Unknown version "${version}" for package "${name}"`)
     }
 
-    const localName = name.replace(/^@[^/]+\//, ``)
+    const localName = name.replace(/^@[^/]+\//, "")
     const serverUrl = await this.serverUrl
 
     return `${serverUrl}/${name}/-/${localName}-${version}.tgz`

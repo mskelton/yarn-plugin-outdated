@@ -23,11 +23,11 @@ export const execFile = (
       args,
       { cwd: npath.fromPortablePath(cwd), env },
       (error, stdout, stderr) => {
-        if (stdout.length > 0 && !stdout.endsWith(`\n`))
-          stdout += `<no line return>\n`
+        if (stdout.length > 0 && !stdout.endsWith("\n"))
+          stdout += "<no line return>\n"
 
-        if (stderr.length > 0 && !stderr.endsWith(`\n`))
-          stderr += `<no line return>\n`
+        if (stderr.length > 0 && !stderr.endsWith("\n"))
+          stderr += "<no line return>\n"
 
         if (error) {
           error.message += `\n===== stdout:\n${stdout}`
