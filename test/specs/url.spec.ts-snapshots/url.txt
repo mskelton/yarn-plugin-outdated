@@ -1,9 +1,9 @@
 ➤ YN0000: ┌ Checking for outdated dependencies
 ➤ YN0000: └ Completed
 
-➤ YN0000: Package   Current   Latest   Package Type   URL                                     
+➤ YN0000: Package   Current   Latest   Package Type   URL
 ➤ YN0000: major     1.0.0     2.0.0    dependencies   https://github.com/mskelton/major
-➤ YN0000: minor     1.0.0     1.1.0    dependencies   
+➤ YN0000: minor     1.0.0     1.1.0    dependencies   https://github.com/mskelton/minor
 ➤ YN0000: patch     1.0.0     1.0.1    dependencies   https://github.com/mskelton/patch#readme
 
 ➤ YN0000: 3 dependencies are out of date
