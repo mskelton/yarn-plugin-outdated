@@ -4,7 +4,6 @@ import path from "path"
 import { URL } from "url"
 import { Registry } from "./Registry"
 import { execFile } from "./exec"
-import { createLockfile } from "./lockfile"
 
 const YARN_RC = stringifySyml({
   checksumBehavior: "ignore",
@@ -38,13 +37,6 @@ export async function makeTemporaryEnv() {
 
   const writeJSON = async (target: string, body: Record<string, unknown>) => {
     await writeFile(target, JSON.stringify(body))
-  }
-
-  const writeLockfile = async (
-    workspaceName: string,
-    packages: Record<string, string>
-  ) => {
-    await writeFile("yarn.lock", createLockfile(workspaceName, packages))
   }
 
   const run = (command: string, { cwd }: RunOptions = {}) => {
@@ -83,6 +75,5 @@ export async function makeTemporaryEnv() {
     run,
     writeFile,
     writeJSON,
-    writeLockfile,
   }
 }
