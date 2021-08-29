@@ -9,6 +9,7 @@ import {
   Workspace,
 } from "@yarnpkg/core"
 import { suggestUtils } from "@yarnpkg/plugin-essentials"
+import { getHomepageURL } from "./utils"
 
 interface FetchOptions {
   pkg: Package
@@ -66,10 +67,6 @@ export class DependencyFetcher {
       fetchResult.releaseFs?.()
     }
 
-    return this.getHomepageURL(manifest)
-  }
-
-  private getHomepageURL(manifest: Manifest) {
-    return manifest.raw.homepage ?? manifest.raw.repository?.url
+    return getHomepageURL(manifest)
   }
 }

@@ -1,3 +1,5 @@
+import { Manifest } from "@yarnpkg/core"
+import { getHomepageURL } from "../../src/utils"
 import { expect, test } from "../fixtures/env"
 import { prettyJSON } from "../utils/format"
 
@@ -30,5 +32,25 @@ test.describe("yarn outdated --url", () => {
     const { stderr, stdout } = await run("outdated --url --json")
     expect(prettyJSON(stdout)).toMatchSnapshot("url-json.txt")
     expect(stderr).toBe("")
+  })
+
+  test.only("determines the homepage URL correctly", () => {
+    const getURL = (raw: Record<string, unknown>) =>
+      getHomepageURL({ raw } as Manifest)
+
+    expect(getURL({ homepage: "http://foo.com" })).toBe("http://foo.com")
+    expect(getURL({ repository: "npm/npm" })).toBe("https://github.com/npm/npm")
+    expect(getURL({ repository: "github:mskelton/yarn-plugin-outdated" })).toBe(
+      "https://github.com/mskelton/yarn-plugin-outdated"
+    )
+    expect(getURL({ repository: "bitbucket:user/repo" })).toBe(
+      "https://bitbucket.org/user/repo"
+    )
+    expect(getURL({ repository: "gitlab:user/repo" })).toBe(
+      "https://gitlab.com/user/repo"
+    )
+    expect(getURL({ repository: { url: "http://foo.com" } })).toBe(
+      "http://foo.com"
+    )
   })
 })
