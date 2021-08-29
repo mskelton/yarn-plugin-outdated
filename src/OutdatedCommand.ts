@@ -256,9 +256,9 @@ export class OutdatedCommand extends BaseCommand {
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
       async ({ dependencyType, name, pkg, workspace }) => {
-        // If the dependency is a workspace, then we don't need to check
-        // if it is outdated.
-        if (workspace.project.tryWorkspaceByLocator(pkg)) {
+        // If the dependency is a private workspace, then we don't need to check
+        // if it is outdated because it is not published to the registry.
+        if (workspace.project.tryWorkspaceByLocator(pkg)?.manifest.private) {
           return
         }
 
