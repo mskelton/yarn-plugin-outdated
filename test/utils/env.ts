@@ -29,6 +29,11 @@ export async function makeTemporaryEnv() {
     await xfs.removePromise(homeDir, { recursive: true })
   }
 
+  const readFile = (source: string) => {
+    const path = ppath.join(tempDir, source as PortablePath)
+    return xfs.readFilePromise(path, "utf8")
+  }
+
   const writeFile = async (target: string, body: string) => {
     const path = target as PortablePath
     await xfs.mkdirpPromise(ppath.join(tempDir, ppath.dirname(path)))
@@ -71,6 +76,7 @@ export async function makeTemporaryEnv() {
 
   return {
     destroy,
+    readFile,
     registry,
     run,
     writeFile,
