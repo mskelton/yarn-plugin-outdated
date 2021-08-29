@@ -2,8 +2,11 @@ import { BaseCommand, WorkspaceRequiredError } from "@yarnpkg/cli"
 import {
   Cache,
   Configuration,
+  Descriptor,
   FormatType,
   formatUtils,
+  Ident,
+  Locator,
   MessageName,
   Project,
   Report,
@@ -13,11 +16,10 @@ import {
 } from "@yarnpkg/core"
 import { Command, Option, Usage, UsageError } from "clipanion"
 import * as micromatch from "micromatch"
-import * as semver from "semver"
 import { DependencyFetcher } from "./DependencyFetcher"
 import { DependencyTable } from "./DependencyTable"
-import { DependencyInfo, OutdatedDependency } from "./types"
-import { parseVersion, truthy } from "./utils"
+import { DependencyInfo, dependencyTypes, OutdatedDependency } from "./types"
+import { truthy } from "./utils"
 
 export class OutdatedCommand extends BaseCommand {
   static paths = [["outdated"]]
@@ -60,7 +62,12 @@ export class OutdatedCommand extends BaseCommand {
     const { cache, configuration, project, workspace } =
       await this.loadProject()
 
-    const fetcher = new DependencyFetcher(project, workspace, cache)
+    const fetcher = new DependencyFetcher(
+      configuration,
+      project,
+      workspace,
+      cache
+    )
     const workspaces = this.getWorkspaces(project, workspace)
     const dependencies = this.getDependencies(configuration, workspaces)
 
@@ -137,6 +144,10 @@ export class OutdatedCommand extends BaseCommand {
       Project.find(configuration, this.context.cwd),
     ])
 
+    // Certain project fields (e.g. storedPackages) can only be accessed after
+    // restoring the install state of the project.
+    await project.restoreInstallState()
+
     if (!workspace) {
       throw new WorkspaceRequiredError(project.cwd, this.context.cwd)
     }
@@ -163,21 +174,39 @@ export class OutdatedCommand extends BaseCommand {
    */
   getDependencies(configuration: Configuration, workspaces: Workspace[]) {
     const dependencies: DependencyInfo[] = []
-    const dependencyTypes = ["dependencies", "devDependencies"] as const
 
     for (const workspace of workspaces) {
+      const { anchoredLocator, project } = workspace
+
+      // First, we load the packages for the given workspace
+      const root = project.storedPackages.get(anchoredLocator.locatorHash)
+      if (!root) this.throw(configuration, anchoredLocator)
+
       for (const dependencyType of dependencyTypes) {
         for (const descriptor of workspace.manifest[dependencyType].values()) {
-          // Only include valid semver ranges. Non-semver ranges such as tags
-          // (e.g. `next`) or protocols (e.g. `workspace:*`) should be ignored.
-          if (semver.coerce(descriptor.range)) {
-            dependencies.push({
-              dependencyType,
-              descriptor,
-              name: structUtils.stringifyIdent(descriptor),
-              workspace,
-            })
-          }
+          // To find the resolution for a dependency, we first need to convert
+          // the package descriptor in the manifest to the package descriptor
+          // in the project as the descriptor hash in the manifest differs
+          // from the descriptor hash in the project.
+          const dependency = root.dependencies.get(descriptor.identHash)
+          if (!dependency) this.throw(configuration, descriptor)
+
+          // For each dependency, we lookup the stored resolution to get the
+          // locator hash.
+          const res = project.storedResolutions.get(dependency.descriptorHash)
+          if (!res) this.throw(configuration, dependency)
+
+          // Finally, we can use the locator hash to lookup the stored package
+          // in the lockfile.
+          const pkg = project.storedPackages.get(res)
+          if (!pkg) this.throw(configuration, dependency)
+
+          dependencies.push({
+            dependencyType,
+            name: structUtils.stringifyIdent(pkg as Ident),
+            pkg,
+            workspace,
+          })
         }
       }
     }
@@ -210,6 +239,11 @@ export class OutdatedCommand extends BaseCommand {
     return filteredDependencies
   }
 
+  throw(configuration: Configuration, item: Descriptor | Locator): never {
+    const name = structUtils.prettyIdent(configuration, item)
+    throw new Error(`Package for ${name} not found in the project`)
+  }
+
   /**
    * Iterates through the dependencies to find the outdated dependencies and
    * sort them in ascending order.
@@ -220,17 +254,15 @@ export class OutdatedCommand extends BaseCommand {
     progress?: ReturnType<typeof Report["progressViaCounter"]>
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
-      async ({ dependencyType, descriptor, name, workspace }) => {
-        const latest = await fetcher.fetch(descriptor, "latest")
-        const current = parseVersion(descriptor.range)
+      async ({ dependencyType, name, pkg, workspace }) => {
+        const latest = await fetcher.fetch(pkg, "latest")
 
-        // JSON reports don't use progress, so this only applies for non-JSON
-        // cases.
+        // JSON reports don't use progress, so this only applies for non-JSON cases.
         progress?.tick()
 
-        if (current !== latest) {
+        if (pkg.version !== latest) {
           return {
-            current,
+            current: pkg.version,
             latest,
             name,
             type: dependencyType,

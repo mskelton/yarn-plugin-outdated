@@ -61,8 +61,17 @@ test.describe("yarn outdated", () => {
   })
 
   test("throws an error when a package is not found", async ({ env }) => {
-    const { registry, run, writeJSON } = env
-    await writeJSON("package.json", { dependencies: { foo: "1.0.0" } })
+    const { readFile, registry, run, writeFile, writeJSON } = env
+    await writeJSON("package.json", { dependencies: { patch: "1.0.0" } })
+    await run("install")
+
+    // Read the current content of the manifest and lockfile
+    const manifest = await readFile("package.json")
+    const lockfile = await readFile("yarn.lock")
+
+    // Write the manifest and lockfile with a missing package
+    await writeFile("package.json", manifest.replace("patch", "not-found"))
+    await writeFile("yarn.lock", lockfile.replace(/patch/g, "not-found"))
 
     const { code, stderr, stdout } = await run("outdated")
     const output = stdout.replace(registry.port.toString(), "<registry port>")

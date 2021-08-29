@@ -2,6 +2,6 @@
 ➤ YN0035: │ The remote server failed to provide the requested resource
 ➤ YN0035: │   Response Code: 404 (Not Found)
 ➤ YN0035: │   Request Method: GET
-➤ YN0035: │   Request URL: http://localhost:<registry port>/foo
+➤ YN0035: │   Request URL: http://localhost:<registry port>/not-found
 ➤ YN0000: └ Completed
 ➤ YN0000: Failed with errors
