@@ -15,5 +15,6 @@ export interface OutdatedDependency {
   current: string
   latest: string
   type: DependencyType
+  url?: string
   workspace?: string
 }

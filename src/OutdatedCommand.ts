@@ -37,10 +37,6 @@ export class OutdatedCommand extends BaseCommand {
         "View outdated dependencies with the `@babel` scope",
         "yarn outdated '@babel/*'",
       ],
-      [
-        "Check for outdated dependencies and return exit code 1 if outdated dependencies are found",
-        "yarn outdated --check",
-      ],
     ],
   })
 
@@ -51,7 +47,11 @@ export class OutdatedCommand extends BaseCommand {
   })
 
   check = Option.Boolean("-c,--check", false, {
-    description: `Exit with exit code 1 when outdated dependencies are found`,
+    description: "Exit with exit code 1 when outdated dependencies are found",
+  })
+
+  url = Option.Boolean("--url", false, {
+    description: "Include the homepage URL of each package in the output",
   })
 
   json = Option.Boolean("--json", false, {
@@ -119,6 +119,7 @@ export class OutdatedCommand extends BaseCommand {
 
     if (outdated.length) {
       const table = new DependencyTable(report, configuration, outdated, {
+        url: this.url,
         workspace: this.all,
       })
 
@@ -255,19 +256,24 @@ export class OutdatedCommand extends BaseCommand {
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
       async ({ dependencyType, name, pkg, workspace }) => {
-        const latest = await fetcher.fetch(pkg, "latest")
+        const { url, version: latest } = await fetcher.fetch({
+          pkg,
+          range: "latest",
+          url: this.url,
+        })
 
         // JSON reports don't use progress, so this only applies for non-JSON cases.
         progress?.tick()
 
         if (pkg.version !== latest) {
           return {
-            current: pkg.version,
+            current: pkg.version!,
             latest,
             name,
             type: dependencyType,
+            url,
             workspace: this.all ? this.getWorkspaceName(workspace) : undefined,
-          } as OutdatedDependency
+          }
         }
       }
     )

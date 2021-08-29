@@ -1,4 +1,5 @@
 {
   "name": "minor",
-  "version": "1.0.1"
+  "version": "1.0.1",
+  "repository": "github:mskelton/minor"
 }
