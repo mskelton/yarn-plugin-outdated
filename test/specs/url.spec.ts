@@ -34,7 +34,7 @@ test.describe("yarn outdated --url", () => {
     expect(stderr).toBe("")
   })
 
-  test.only("determines the homepage URL correctly", () => {
+  test("determines the homepage URL correctly", () => {
     const getURL = (raw: Record<string, unknown>) =>
       getHomepageURL({ raw } as Manifest)
 
