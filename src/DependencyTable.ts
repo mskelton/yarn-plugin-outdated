@@ -3,7 +3,14 @@ import * as semver from "semver"
 import { OutdatedDependency } from "./types"
 
 const semverRegex = /^([0-9]+\.)([0-9]+\.)(.+)$/
-const columns = ["name", "current", "latest", "workspace", "type"] as const
+const columns = [
+  "name",
+  "current",
+  "latest",
+  "workspace",
+  "type",
+  "url",
+] as const
 
 type TableColumn = typeof columns[number]
 
@@ -14,6 +21,7 @@ export class DependencyTable {
     latest: "Latest",
     name: "Package",
     type: "Package Type",
+    url: "URL",
     workspace: "Workspace",
   }
 
@@ -36,6 +44,7 @@ export class DependencyTable {
         latest: this.formatVersion(dependency, "latest", color),
         name: this.applyColor(dependency.name.padEnd(this.sizes.name), color),
         type: dependency.type.padEnd(this.sizes.type),
+        url: dependency.url,
         workspace: dependency.workspace?.padEnd(this.sizes.workspace),
       })
     })
@@ -88,6 +97,7 @@ export class DependencyTable {
       latest: this.headers.latest.length,
       name: this.headers.name.length,
       type: this.headers.type.length,
+      url: this.headers.url.length,
       workspace: this.headers.workspace.length,
     }
 
@@ -117,6 +127,7 @@ export class DependencyTable {
       latest: this.formatColumnHeader("latest"),
       name: this.formatColumnHeader("name"),
       type: this.formatColumnHeader("type"),
+      url: this.formatColumnHeader("url"),
       workspace: this.formatColumnHeader("workspace"),
     })
   }

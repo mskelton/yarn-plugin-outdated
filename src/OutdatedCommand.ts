@@ -255,19 +255,24 @@ export class OutdatedCommand extends BaseCommand {
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
       async ({ dependencyType, name, pkg, workspace }) => {
-        const latest = await fetcher.fetch(pkg, "latest")
+        const { url, version: latest } = await fetcher.fetch({
+          pkg,
+          range: "latest",
+          url: this.url,
+        })
 
         // JSON reports don't use progress, so this only applies for non-JSON cases.
         progress?.tick()
 
         if (pkg.version !== latest) {
           return {
-            current: pkg.version,
+            current: pkg.version!,
             latest,
             name,
             type: dependencyType,
+            url,
             workspace: this.all ? this.getWorkspaceName(workspace) : undefined,
-          } as OutdatedDependency
+          }
         }
       }
     )
