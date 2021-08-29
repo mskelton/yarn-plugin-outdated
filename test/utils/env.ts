@@ -56,7 +56,7 @@ export async function makeTemporaryEnv() {
       env: {
         HOME: homeDir,
         USERPROFILE: homeDir,
-        // Otherwise snapshots relying on thistest(d break each time it's bumped
+        // Otherwise snapshots relying on this would break each time it's bumped
         YARN_CACHE_KEY_OVERRIDE: "0",
         // Otherwise tests fail on systems where this is globally set to true
         YARN_ENABLE_GLOBAL_CACHE: "false",
