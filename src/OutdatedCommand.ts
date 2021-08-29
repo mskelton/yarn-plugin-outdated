@@ -119,6 +119,7 @@ export class OutdatedCommand extends BaseCommand {
 
     if (outdated.length) {
       const table = new DependencyTable(report, configuration, outdated, {
+        url: this.url,
         workspace: this.all,
       })
 

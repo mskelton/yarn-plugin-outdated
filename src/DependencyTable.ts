@@ -44,7 +44,7 @@ export class DependencyTable {
         latest: this.formatVersion(dependency, "latest", color),
         name: this.applyColor(dependency.name.padEnd(this.sizes.name), color),
         type: dependency.type.padEnd(this.sizes.type),
-        url: dependency.url,
+        url: dependency.url?.padEnd(this.sizes.url),
         workspace: dependency.workspace?.padEnd(this.sizes.workspace),
       })
     })
