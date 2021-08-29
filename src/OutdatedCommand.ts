@@ -256,6 +256,12 @@ export class OutdatedCommand extends BaseCommand {
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
       async ({ dependencyType, name, pkg, workspace }) => {
+        // If the dependency is a workspace, then we don't need to check
+        // if it is outdated.
+        if (workspace.project.tryWorkspaceByLocator(pkg)) {
+          return
+        }
+
         const { url, version: latest } = await fetcher.fetch({
           pkg,
           range: "latest",
