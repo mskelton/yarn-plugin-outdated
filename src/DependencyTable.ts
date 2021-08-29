@@ -137,6 +137,7 @@ export class DependencyTable {
       .filter((column) => this.extraColumns[column] ?? true)
       .map((column) => row[column])
       .join("   ")
+      .trim()
 
     this.report.reportInfo(MessageName.UNNAMED, output)
   }
