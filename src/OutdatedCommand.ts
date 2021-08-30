@@ -4,16 +4,17 @@ import {
   Configuration,
   Descriptor,
   FormatType,
-  formatUtils, Locator,
+  formatUtils,
+  Locator,
   MessageName,
   Project,
   Report,
   StreamReport,
   structUtils,
-  Workspace
+  Workspace,
 } from "@yarnpkg/core"
 import { Command, Option, Usage, UsageError } from "clipanion"
-import * as micromatch from "micromatch"
+import micromatch from "micromatch"
 import { DependencyFetcher } from "./DependencyFetcher"
 import { DependencyTable } from "./DependencyTable"
 import { DependencyInfo, dependencyTypes, OutdatedDependency } from "./types"
@@ -183,6 +184,14 @@ export class OutdatedCommand extends BaseCommand {
 
       for (const dependencyType of dependencyTypes) {
         for (const descriptor of workspace.manifest[dependencyType].values()) {
+          const { range } = descriptor
+
+          // Only include dependencies that are semver-compatible or are
+          // package aliases (npm protocol).
+          if (range.includes(":") && !range.startsWith("npm:")) {
+            continue
+          }
+
           // To find the resolution for a dependency, we first need to convert
           // the package descriptor in the manifest to the package descriptor
           // in the project as the descriptor hash in the manifest differs

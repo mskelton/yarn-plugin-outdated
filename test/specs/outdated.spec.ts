@@ -98,12 +98,14 @@ test.describe("yarn outdated", () => {
     await writeJSON("package.json", {
       dependencies: {
         alias: "npm:patch@1.0.0",
+        file: "file:./file-dep",
         major: "*",
         minor: ">1.0.0 <2.0.0",
         patch: "latest",
       },
       name: "foo",
     })
+    await writeJSON("file-dep/package.json", { version: "1.1.0" })
     await writeFile("yarn.lock", readLockfile("non-semver.lock"))
     await run("install --immutable")
 
