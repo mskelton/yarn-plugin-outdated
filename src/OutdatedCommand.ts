@@ -4,16 +4,17 @@ import {
   Configuration,
   Descriptor,
   FormatType,
-  formatUtils, Locator,
+  formatUtils,
+  Locator,
   MessageName,
   Project,
   Report,
   StreamReport,
   structUtils,
-  Workspace
+  Workspace,
 } from "@yarnpkg/core"
 import { Command, Option, Usage, UsageError } from "clipanion"
-import * as micromatch from "micromatch"
+import micromatch from "micromatch"
 import { DependencyFetcher } from "./DependencyFetcher"
 import { DependencyTable } from "./DependencyTable"
 import { DependencyInfo, dependencyTypes, OutdatedDependency } from "./types"

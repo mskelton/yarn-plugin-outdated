@@ -1,5 +1,5 @@
 import { Configuration, formatUtils, MessageName, Report } from "@yarnpkg/core"
-import * as semver from "semver"
+import semver from "semver"
 import { OutdatedDependency } from "./types"
 
 const semverRegex = /^([0-9]+\.)([0-9]+\.)(.+)$/
