@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.head_ref }}
+          ref: refs/heads/main
       - name: Update version
         run: sed -i -E "s/v([0-9]\.?)+/${{ github.release.tag_name }}/" README.md
       - name: Commit changes
