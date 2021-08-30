@@ -26,6 +26,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"file@file:./file-dep::locator=foo%40workspace%3A.":
+  version: 1.1.0
+  resolution: "file@file:./file-dep#./file-dep::hash=e1d8a7&locator=foo%40workspace%3A."
+  checksum: 48b1a389c5d385395414409e2515f68d0c308c3928966784f9bd5b4488956101113bffc78dd83a72a84c691d2449b53caa8ca2e3b39894325c0bc87adb299c7f
+  languageName: node
+  linkType: hard
+
 "foo@workspace:.":
   version: 0.0.0-use.local
   resolution: "foo@workspace:."

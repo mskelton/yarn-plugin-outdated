@@ -184,6 +184,14 @@ export class OutdatedCommand extends BaseCommand {
 
       for (const dependencyType of dependencyTypes) {
         for (const descriptor of workspace.manifest[dependencyType].values()) {
+          const { range } = descriptor
+
+          // Only include dependencies that are semver-compatible or are
+          // package aliases (npm protocol).
+          if (range.includes(":") && !range.startsWith("npm:")) {
+            continue
+          }
+
           // To find the resolution for a dependency, we first need to convert
           // the package descriptor in the manifest to the package descriptor
           // in the project as the descriptor hash in the manifest differs
