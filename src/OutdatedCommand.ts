@@ -4,15 +4,13 @@ import {
   Configuration,
   Descriptor,
   FormatType,
-  formatUtils,
-  Ident,
-  Locator,
+  formatUtils, Locator,
   MessageName,
   Project,
   Report,
   StreamReport,
   structUtils,
-  Workspace,
+  Workspace
 } from "@yarnpkg/core"
 import { Command, Option, Usage, UsageError } from "clipanion"
 import * as micromatch from "micromatch"
