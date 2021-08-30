@@ -28,4 +28,5 @@ yarn outdated '@babel/*'
 | --------------- | -------------------------------------------------------- |
 | `-a`, `--all`   | Include outdated dependencies from all workspaces.       |
 | `-c`, `--check` | Return exit code 1 if outdated dependencies are found.   |
+| `--url`         | Include the homepage URL of each package in the output.  |
 | `--json`        | Output in JSON format instead of in the formatted table. |
