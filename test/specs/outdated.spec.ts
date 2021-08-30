@@ -1,4 +1,5 @@
 import { expect, test } from "../fixtures/env"
+import { readLockfile } from "../utils/lockfile"
 
 test.describe("yarn outdated", () => {
   test("shows outdated dependencies", async ({ env }) => {
@@ -26,24 +27,6 @@ test.describe("yarn outdated", () => {
 
     const { stderr, stdout } = await run("outdated")
     expect(stdout).toMatchSnapshot("empty.txt")
-    expect(stderr).toBe("")
-  })
-
-  test("ignores non-semver ranges", async ({ env }) => {
-    const { run, writeJSON } = env
-
-    await writeJSON("package.json", {
-      dependencies: {
-        // TODO: Add tests for all non-semver ranges
-        // major: "workspace:^1.2.3",
-        minor: "latest",
-        patch: "1.0.0",
-      },
-    })
-    await run("install")
-
-    const { stderr, stdout } = await run("outdated")
-    expect(stdout).toMatchSnapshot("non-semver.txt")
     expect(stderr).toBe("")
   })
 
@@ -109,23 +92,23 @@ test.describe("yarn outdated", () => {
     expect(stderr).toBe("")
   })
 
-  test("skips private packages", async ({ env }) => {
-    const { run, writeJSON } = env
+  test("handles non-semver ranges", async ({ env }) => {
+    const { run, writeFile, writeJSON } = env
 
-    await writeJSON("package.json", { workspaces: ["packages/*"] })
-    await writeJSON("packages/a/package.json", {
-      name: "a",
-      private: true,
-      version: "1.1.0",
+    await writeJSON("package.json", {
+      dependencies: {
+        alias: "npm:patch@1.0.0",
+        major: "*",
+        minor: ">1.0.0 <2.0.0",
+        patch: "latest",
+      },
+      name: "foo",
     })
-    await writeJSON("packages/b/package.json", {
-      dependencies: { a: "1.1.0", patch: "1.0.0" },
-      name: "b",
-    })
-    await run("install")
+    await writeFile("yarn.lock", readLockfile("non-semver.lock"))
+    await run("install --immutable")
 
-    const { stderr, stdout } = await run("outdated --all")
-    expect(stdout).toMatchSnapshot("private.txt")
+    const { stderr, stdout } = await run("outdated")
+    expect(stdout).toMatchSnapshot("non-semver.txt")
     expect(stderr).toBe("")
   })
 })
