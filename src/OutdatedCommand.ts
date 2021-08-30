@@ -204,7 +204,7 @@ export class OutdatedCommand extends BaseCommand {
 
           dependencies.push({
             dependencyType,
-            name: structUtils.stringifyIdent(pkg as Ident),
+            name: structUtils.stringifyIdent(descriptor),
             pkg,
             workspace,
           })
