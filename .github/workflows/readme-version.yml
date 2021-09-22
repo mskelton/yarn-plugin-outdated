@@ -10,9 +10,9 @@ jobs:
         with:
           ref: refs/heads/main
       - name: Update version
-        run: sed -i -E "s/v([0-9]\.?)+/${{ github.release.tag_name }}/" README.md
+        run: sed -i -E "s/v([0-9]\.?)+/${{ github.event.release.tag_name }}/" README.md
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: Update readme version to ${{ github.release.tag_name }}
+          commit_message: Update readme version to ${{ github.event.release.tag_name }}
           branch: ${{ github.head_ref }}
