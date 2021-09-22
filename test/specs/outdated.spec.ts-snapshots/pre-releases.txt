@@ -1,0 +1,5 @@
+➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
+
+➤ YN0000: ✨ All your dependencies are up to date!
+➤ YN0000: Done

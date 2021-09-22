@@ -18,7 +18,7 @@ import micromatch from "micromatch"
 import { DependencyFetcher } from "./DependencyFetcher"
 import { DependencyTable } from "./DependencyTable"
 import { DependencyInfo, dependencyTypes, OutdatedDependency } from "./types"
-import { truthy } from "./utils"
+import { isVersionOutdated, truthy } from "./utils"
 
 export class OutdatedCommand extends BaseCommand {
   static paths = [["outdated"]]
@@ -279,7 +279,7 @@ export class OutdatedCommand extends BaseCommand {
         // JSON reports don't use progress, so this only applies for non-JSON cases.
         progress?.tick()
 
-        if (pkg.version !== latest) {
+        if (isVersionOutdated(pkg.version!, latest)) {
           return {
             current: pkg.version!,
             latest,

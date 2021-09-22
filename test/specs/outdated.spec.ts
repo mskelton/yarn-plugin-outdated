@@ -113,4 +113,17 @@ test.describe("yarn outdated", () => {
     expect(stdout).toMatchSnapshot("non-semver.txt")
     expect(stderr).toBe("")
   })
+
+  test("ignores pre-release versions", async ({ env }) => {
+    const { run, writeJSON } = env
+
+    await writeJSON("package.json", {
+      dependencies: { patch: "1.0.1-alpha.1" },
+    })
+    await run("install")
+
+    const { stderr, stdout } = await run("outdated")
+    expect(stdout).toMatchSnapshot("pre-releases.txt")
+    expect(stderr).toBe("")
+  })
 })
