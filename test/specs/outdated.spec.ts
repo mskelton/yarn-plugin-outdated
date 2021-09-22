@@ -118,7 +118,7 @@ test.describe("yarn outdated", () => {
     const { run, writeJSON } = env
 
     await writeJSON("package.json", {
-      dependencies: { patch: "1.0.0-alpha.1" },
+      dependencies: { patch: "1.0.1-alpha.1" },
     })
     await run("install")
 
