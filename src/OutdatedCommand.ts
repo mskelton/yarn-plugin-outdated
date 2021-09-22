@@ -15,11 +15,10 @@ import {
 } from "@yarnpkg/core"
 import { Command, Option, Usage, UsageError } from "clipanion"
 import micromatch from "micromatch"
-import semver from "semver"
 import { DependencyFetcher } from "./DependencyFetcher"
 import { DependencyTable } from "./DependencyTable"
 import { DependencyInfo, dependencyTypes, OutdatedDependency } from "./types"
-import { truthy } from "./utils"
+import { isVersionOutdated, truthy } from "./utils"
 
 export class OutdatedCommand extends BaseCommand {
   static paths = [["outdated"]]
@@ -280,7 +279,7 @@ export class OutdatedCommand extends BaseCommand {
         // JSON reports don't use progress, so this only applies for non-JSON cases.
         progress?.tick()
 
-        if (semver.lt(semver.coerce(pkg.version)!, latest)) {
+        if (isVersionOutdated(pkg.version!, latest)) {
           return {
             current: pkg.version!,
             latest,
