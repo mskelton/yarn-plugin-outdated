@@ -15,9 +15,17 @@ import {
 } from "@yarnpkg/core"
 import { Command, Option, Usage, UsageError } from "clipanion"
 import micromatch from "micromatch"
+import semver from "semver"
+import t from "typanion"
 import { DependencyFetcher } from "./DependencyFetcher"
 import { DependencyTable } from "./DependencyTable"
-import { DependencyInfo, dependencyTypes, OutdatedDependency } from "./types"
+import {
+  DependencyInfo,
+  dependencyTypes,
+  OutdatedDependency,
+  severities,
+  Severity,
+} from "./types"
 import { isVersionOutdated, truthy } from "./utils"
 
 export class OutdatedCommand extends BaseCommand {
@@ -36,6 +44,14 @@ export class OutdatedCommand extends BaseCommand {
         "View outdated dependencies with the `@babel` scope",
         "yarn outdated '@babel/*'",
       ],
+      [
+        "Filter results to only include devDependencies",
+        "yarn outdated --type devDependencies",
+      ],
+      [
+        "Filter results to only include major version updates",
+        "yarn outdated --severity major",
+      ],
     ],
   })
 
@@ -49,12 +65,22 @@ export class OutdatedCommand extends BaseCommand {
     description: "Exit with exit code 1 when outdated dependencies are found",
   })
 
-  url = Option.Boolean("--url", false, {
-    description: "Include the homepage URL of each package in the output",
-  })
-
   json = Option.Boolean("--json", false, {
     description: "Format the output as JSON",
+  })
+
+  severity = Option.String("-s,--severity", {
+    description: "Filter results based on the severity of the update",
+    validator: t.isEnum(severities),
+  })
+
+  type = Option.String("-t,--type", {
+    description: "Filter results based on the dependency type",
+    validator: t.isEnum(dependencyTypes),
+  })
+
+  url = Option.Boolean("--url", false, {
+    description: "Include the homepage URL of each package in the output",
   })
 
   async execute() {
@@ -168,6 +194,10 @@ export class OutdatedCommand extends BaseCommand {
     return this.all ? project.workspaces : [workspace]
   }
 
+  get dependencyTypes() {
+    return this.type ? [this.type] : dependencyTypes
+  }
+
   /**
    * Collect all dependencies and devDependencies from all workspaces into an
    * array which we can process more easily.
@@ -182,7 +212,7 @@ export class OutdatedCommand extends BaseCommand {
       const root = project.storedPackages.get(anchoredLocator.locatorHash)
       if (!root) this.throw(configuration, anchoredLocator)
 
-      for (const dependencyType of dependencyTypes) {
+      for (const dependencyType of this.dependencyTypes) {
         for (const descriptor of workspace.manifest[dependencyType].values()) {
           const { range } = descriptor
 
@@ -252,6 +282,17 @@ export class OutdatedCommand extends BaseCommand {
     throw new Error(`Package for ${name} not found in the project`)
   }
 
+  getSeverity(currentVersion: string, latestVersion: string): Severity {
+    const current = semver.coerce(currentVersion)!
+    const latest = semver.coerce(latestVersion)!
+
+    return latest.major > current.major
+      ? "major"
+      : latest.minor > current.minor
+      ? "minor"
+      : "patch"
+  }
+
   /**
    * Iterates through the dependencies to find the outdated dependencies and
    * sort them in ascending order.
@@ -284,6 +325,7 @@ export class OutdatedCommand extends BaseCommand {
             current: pkg.version!,
             latest,
             name,
+            severity: this.getSeverity(pkg.version!, latest),
             type: dependencyType,
             url,
             workspace: this.all ? this.getWorkspaceName(workspace) : undefined,
@@ -294,6 +336,7 @@ export class OutdatedCommand extends BaseCommand {
 
     return (await Promise.all(outdated))
       .filter(truthy)
+      .filter(({ severity }) => !this.severity || severity === this.severity)
       .sort((a, b) => a.name.localeCompare(b.name))
   }
 
