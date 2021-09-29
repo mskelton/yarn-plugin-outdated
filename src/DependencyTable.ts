@@ -1,5 +1,4 @@
 import { Configuration, formatUtils, MessageName, Report } from "@yarnpkg/core"
-import semver from "semver"
 import { OutdatedDependency } from "./types"
 
 const semverRegex = /^([0-9]+\.)([0-9]+\.)(.+)$/
@@ -81,14 +80,8 @@ export class DependencyTable {
   }
 
   private getDiffColor(dependency: OutdatedDependency) {
-    const current = semver.coerce(dependency.current)!
-    const latest = semver.coerce(dependency.latest)!
-
-    return latest.major > current.major
-      ? "red"
-      : latest.minor > current.minor
-      ? "yellow"
-      : "green"
+    const colors = { major: "red", minor: "yellow", patch: "green" }
+    return colors[dependency.severity]
   }
 
   private getColumnSizes(): Record<TableColumn, number> {

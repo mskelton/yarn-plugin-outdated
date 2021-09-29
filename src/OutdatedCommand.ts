@@ -15,10 +15,17 @@ import {
 } from "@yarnpkg/core"
 import { Command, Option, Usage, UsageError } from "clipanion"
 import micromatch from "micromatch"
-import * as t from "typanion"
+import semver from "semver"
+import t from "typanion"
 import { DependencyFetcher } from "./DependencyFetcher"
 import { DependencyTable } from "./DependencyTable"
-import { DependencyInfo, dependencyTypes, OutdatedDependency } from "./types"
+import {
+  DependencyInfo,
+  dependencyTypes,
+  OutdatedDependency,
+  severities,
+  Severity,
+} from "./types"
 import { isVersionOutdated, truthy } from "./utils"
 
 export class OutdatedCommand extends BaseCommand {
@@ -64,7 +71,7 @@ export class OutdatedCommand extends BaseCommand {
 
   severity = Option.String("-s,--severity", {
     description: "Filter results based on the severity of the update",
-    validator: t.isEnum(["major", "minor", "patch"]),
+    validator: t.isEnum(severities),
   })
 
   type = Option.String("-t,--type", {
@@ -275,6 +282,17 @@ export class OutdatedCommand extends BaseCommand {
     throw new Error(`Package for ${name} not found in the project`)
   }
 
+  getSeverity(currentVersion: string, latestVersion: string): Severity {
+    const current = semver.coerce(currentVersion)!
+    const latest = semver.coerce(latestVersion)!
+
+    return latest.major > current.major
+      ? "major"
+      : latest.minor > current.minor
+      ? "minor"
+      : "patch"
+  }
+
   /**
    * Iterates through the dependencies to find the outdated dependencies and
    * sort them in ascending order.
@@ -307,6 +325,7 @@ export class OutdatedCommand extends BaseCommand {
             current: pkg.version!,
             latest,
             name,
+            severity: this.getSeverity(pkg.version!, latest),
             type: dependencyType,
             url,
             workspace: this.all ? this.getWorkspaceName(workspace) : undefined,
@@ -317,6 +336,7 @@ export class OutdatedCommand extends BaseCommand {
 
     return (await Promise.all(outdated))
       .filter(truthy)
+      .filter(({ severity }) => !this.severity || severity === this.severity)
       .sort((a, b) => a.name.localeCompare(b.name))
   }
 

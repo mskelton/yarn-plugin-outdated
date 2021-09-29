@@ -3,6 +3,9 @@ import { Package, Workspace } from "@yarnpkg/core"
 export const dependencyTypes = ["dependencies", "devDependencies"] as const
 export type DependencyType = typeof dependencyTypes[number]
 
+export const severities = ["major", "minor", "patch"] as const
+export type Severity = typeof severities[number]
+
 export interface DependencyInfo {
   name: string
   pkg: Package
@@ -14,6 +17,7 @@ export interface OutdatedDependency {
   name: string
   current: string
   latest: string
+  severity: Severity
   type: DependencyType
   url?: string
   workspace?: string
