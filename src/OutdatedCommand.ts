@@ -36,6 +36,14 @@ export class OutdatedCommand extends BaseCommand {
         "View outdated dependencies with the `@babel` scope",
         "yarn outdated '@babel/*'",
       ],
+      [
+        "Filter results to only include devDependencies",
+        "yarn outdated --filter=devDependencies",
+      ],
+      [
+        "Filter results to only include major version updates",
+        "yarn outdated --filter=major",
+      ],
     ],
   })
 
@@ -47,6 +55,10 @@ export class OutdatedCommand extends BaseCommand {
 
   check = Option.Boolean("-c,--check", false, {
     description: "Exit with exit code 1 when outdated dependencies are found",
+  })
+
+  filter = Option.String("-f,--filter", {
+    description: "Filter results based on dependency type or update severity",
   })
 
   url = Option.Boolean("--url", false, {
