@@ -1,0 +1,11 @@
+name: Update latest tag
+on:
+  push:
+    tags: ["v*"]
+jobs:
+  update-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: nowactions/update-majorver@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
