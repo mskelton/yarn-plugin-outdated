@@ -4,8 +4,16 @@ Yarn plugin to show outdated dependencies.
 
 ## Installation
 
+### Yarn 3
+
 ```sh
 yarn plugin import https://mskelton.dev/yarn-outdated/v2
+```
+
+### Yarn 2
+
+```sh
+yarn plugin import https://mskelton.dev/yarn-outdated/v1.2.0
 ```
 
 ## Examples
