@@ -1,0 +1,11 @@
+diff --git a/package.json b/package.json
+index ce0f2d99044712d15a94d48287077f5486e63281..d517dd0f3e183d0aea82112ebca97ea468196ebb 100644
+--- a/package.json
++++ b/package.json
+@@ -1,4 +1,5 @@
+ {
+   "name": "@scoped/patch",
+-  "version": "1.0.0"
++  "version": "1.0.0",
++  "author": "Me"
+ }

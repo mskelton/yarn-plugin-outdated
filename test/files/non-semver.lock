@@ -5,6 +5,20 @@ __metadata:
   version: 4
   cacheKey: 0
 
+"@scoped/patch@1.0.0":
+  version: 1.0.0
+  resolution: "@scoped/patch@npm:1.0.0"
+  checksum: a66cf4ff65e1170614fddfcab8fed08b15d7fedb785a94e4e1845076841bd18a80e0b2bd1461e3a184e44a329b4513fc12f7bbd69114943370aa6edd9ae59524
+  languageName: node
+  linkType: hard
+
+"@scoped/patch@patch:@scoped/patch@1.0.0#./alias.patch::locator=foo%40workspace%3A.":
+  version: 1.0.0
+  resolution: "@scoped/patch@patch:@scoped/patch@npm%3A1.0.0#./alias.patch::version=1.0.0&hash=958e67&locator=foo%40workspace%3A."
+  checksum: cd04881d496e3e1583ee6ae50994b2535d287acfb3267a287b07fa5564d9da2f70cb57030920a631a2f302eddf31db390c37618982e00e6d0ba7a2112759a5eb
+  languageName: node
+  linkType: hard
+
 "alias@npm:patch@1.0.0, patch@npm:latest":
   version: 1.0.0
   resolution: "patch@npm:1.0.0"
@@ -37,6 +51,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "foo@workspace:."
   dependencies:
+    "@scoped/patch": "patch:@scoped/patch@1.0.0#./alias.patch"
     alias: "npm:patch@1.0.0"
     major: "*"
     minor: ">1.0.0 <2.0.0"

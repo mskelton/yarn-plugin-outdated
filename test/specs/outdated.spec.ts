@@ -1,5 +1,5 @@
 import { expect, test } from "../fixtures/env"
-import { readLockfile } from "../utils/lockfile"
+import { readSupplementalFile } from "../utils/files"
 
 test.describe("yarn outdated", () => {
   test("shows outdated dependencies", async ({ env }) => {
@@ -97,6 +97,7 @@ test.describe("yarn outdated", () => {
 
     await writeJSON("package.json", {
       dependencies: {
+        "@scoped/patch": "patch:@scoped/patch@1.0.0#./alias.patch",
         alias: "npm:patch@1.0.0",
         file: "file:./file-dep",
         major: "*",
@@ -106,7 +107,8 @@ test.describe("yarn outdated", () => {
       name: "foo",
     })
     await writeJSON("file-dep/package.json", { version: "1.1.0" })
-    await writeFile("yarn.lock", readLockfile("non-semver.lock"))
+    await writeFile("alias.patch", readSupplementalFile("alias.patch"))
+    await writeFile("yarn.lock", readSupplementalFile("non-semver.lock"))
     await run("install --immutable")
 
     const { stderr, stdout } = await run("outdated")

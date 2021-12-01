@@ -216,9 +216,9 @@ export class OutdatedCommand extends BaseCommand {
         for (const descriptor of workspace.manifest[dependencyType].values()) {
           const { range } = descriptor
 
-          // Only include dependencies that are semver-compatible or are
-          // package aliases (npm protocol).
-          if (range.includes(":") && !range.startsWith("npm:")) {
+          // Only include dependencies that are semver-compatible, package
+          // aliases (npm protocol), or patches.
+          if (range.includes(":") && !/(npm|patch):/.test(range)) {
             continue
           }
 
