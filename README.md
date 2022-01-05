@@ -2,6 +2,8 @@
 
 Yarn plugin to show outdated dependencies.
 
+![screenshot](https://user-images.githubusercontent.com/25914066/148265983-aa3c88d4-6b94-4289-ab28-926a0b32741c.png)
+
 ## Installation
 
 ### Yarn 3
