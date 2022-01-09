@@ -10,14 +10,14 @@ import * as fsUtils from "./fs"
 
 type Request =
   | {
-      type: "packageInfo"
-      scope?: string
       localName: string
+      scope?: string
+      type: "packageInfo"
     }
   | {
-      type: "packageTarball"
-      scope?: string
       localName: string
+      scope?: string
+      type: "packageTarball"
       version?: string
     }
 

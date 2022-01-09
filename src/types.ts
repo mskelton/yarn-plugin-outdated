@@ -7,16 +7,16 @@ export const severities = ["major", "minor", "patch"] as const
 export type Severity = typeof severities[number]
 
 export interface DependencyInfo {
+  dependencyType: DependencyType
   name: string
   pkg: Package
-  dependencyType: DependencyType
   workspace: Workspace
 }
 
 export interface OutdatedDependency {
-  name: string
   current: string
   latest: string
+  name: string
   severity: Severity
   type: DependencyType
   url?: string

@@ -2,8 +2,8 @@ import { PortablePath, ppath, xfs } from "@yarnpkg/fslib"
 import { stringifySyml } from "@yarnpkg/parsers"
 import path from "path"
 import { URL } from "url"
-import { Registry } from "./Registry"
 import { execFile } from "./exec"
+import { Registry } from "./Registry"
 
 const YARN_RC = stringifySyml({
   checksumBehavior: "ignore",
