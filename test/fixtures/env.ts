@@ -1,4 +1,4 @@
-import { test as base } from "folio"
+import { test as base } from "@playwright/test"
 import { makeTemporaryEnv } from "../utils/env"
 
 type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
@@ -9,7 +9,11 @@ interface EnvironmentFixtures {
 }
 
 export const test = base.extend<EnvironmentFixtures>({
-  env: async ({}, use) => {
+  env: async ({}, use, testInfo) => {
+    // Will be moved to the global config after v1.19
+    // https://github.com/microsoft/playwright/pull/11132
+    testInfo.snapshotSuffix = ""
+
     const { destroy, ...env } = await makeTemporaryEnv()
     await use(env)
     await destroy()

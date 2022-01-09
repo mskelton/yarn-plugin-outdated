@@ -1,4 +1,4 @@
-import { Config } from "folio"
+import { Config } from "@playwright/test"
 import path from "path"
 
 const config: Config = {

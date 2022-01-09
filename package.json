@@ -3,10 +3,7 @@
   "description": "Yarn plugin to show outdated dependencies.",
   "author": "Mark Skelton",
   "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mskelton/yarn-plugin-outdated"
-  },
+  "repository": "github:mskelton/yarn-plugin-outdated",
   "homepage": "https://github.com/mskelton/yarn-plugin-outdated#readme",
   "bugs": {
     "url": "https://github.com/mskelton/yarn-plugin-outdated/issues"
@@ -17,7 +14,7 @@
     "build": "builder build plugin",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "folio",
+    "test": "playwright test",
     "ts": "tsc"
   },
   "dependencies": {
@@ -25,6 +22,7 @@
     "@yarnpkg/cli": "^3.2.0-rc.10",
     "@yarnpkg/core": "^3.2.0-rc.10",
     "@yarnpkg/plugin-essentials": "^3.2.0-rc.8",
+    "@yarnpkg/plugin-git": "^2.6.0-rc.10",
     "clipanion": "^3.2.0-rc.4",
     "micromatch": "^4.0.4",
     "semver": "^7.3.5",
@@ -34,6 +32,7 @@
     "@babel/core": "^7.16.7",
     "@babel/eslint-parser": "^7.16.5",
     "@mskelton/eslint-config": "^7.1.0",
+    "@playwright/test": "^1.17.1",
     "@types/micromatch": "^4.0.2",
     "@types/semver": "^7.3.9",
     "@types/tar-fs": "^2.0.1",
@@ -44,7 +43,6 @@
     "@yarnpkg/parsers": "^2.5.0-rc.8",
     "eslint": "^8.6.0",
     "eslint-plugin-sort": "^2.3.0",
-    "folio": "^0.3.18",
     "glob": "^7.2.0",
     "glob-promise": "^4.2.2",
     "prettier": "^2.5.1",
