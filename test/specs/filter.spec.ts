@@ -1,6 +1,6 @@
 import { expect, test } from "../fixtures/env"
 
-test.describe("yarn outdated", () => {
+test.describe.parallel("yarn outdated", () => {
   test("filters based on dependency type", async ({ env }) => {
     const { run, writeJSON } = env
 

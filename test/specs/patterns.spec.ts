@@ -9,7 +9,7 @@ const manifest = {
   },
 }
 
-test.describe("Filtering patterns", () => {
+test.describe.parallel("Filtering patterns", () => {
   test("filters by an exact package name", async ({ env }) => {
     const { run, writeJSON } = env
 

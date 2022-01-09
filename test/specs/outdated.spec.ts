@@ -1,7 +1,7 @@
 import { expect, test } from "../fixtures/env"
 import { readSupplementalFile } from "../utils/files"
 
-test.describe("yarn outdated", () => {
+test.describe.parallel("yarn outdated", () => {
   test("shows outdated dependencies", async ({ env }) => {
     const { run, writeJSON } = env
 

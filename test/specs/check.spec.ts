@@ -1,6 +1,6 @@
 import { expect, test } from "../fixtures/env"
 
-test.describe("yarn outdated --check", () => {
+test.describe.parallel("yarn outdated --check", () => {
   test("returns exit code 0 when dependencies are up to date", async ({
     env,
   }) => {

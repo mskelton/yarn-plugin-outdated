@@ -1,7 +1,7 @@
 import { expect, test } from "../fixtures/env"
 import { prettyJSON } from "../utils/format"
 
-test.describe("yarn outdated --json", () => {
+test.describe.parallel("yarn outdated --json", () => {
   test("shows outdated dependencies", async ({ env }) => {
     const { run, writeJSON } = env
 
