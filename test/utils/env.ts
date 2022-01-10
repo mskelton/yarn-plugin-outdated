@@ -45,7 +45,7 @@ export async function makeTemporaryEnv() {
   }
 
   const run = (command: string, { cwd }: RunOptions = {}) => {
-    const yarnPath = `${__dirname}/../../.yarn/releases/yarn-3.0.1.cjs`
+    const yarnPath = `${__dirname}/../../.yarn/releases/yarn-3.1.1.cjs`
     const yarnBinary = require.resolve(yarnPath)
 
     return execFile(process.execPath, [yarnBinary, ...command.split(" ")], {

@@ -9,7 +9,7 @@
     "url": "https://github.com/mskelton/yarn-plugin-outdated/issues"
   },
   "main": "src/index.ts",
-  "packageManager": "yarn@3.0.1",
+  "packageManager": "yarn@3.1.1",
   "scripts": {
     "build": "builder build plugin",
     "lint": "eslint .",
