@@ -2,7 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 4
+  version: 5
   cacheKey: 0
 
 "@scoped/patch@1.0.0":
@@ -14,8 +14,8 @@ __metadata:
 
 "@scoped/patch@patch:@scoped/patch@1.0.0#./alias.patch::locator=foo%40workspace%3A.":
   version: 1.0.0
-  resolution: "@scoped/patch@patch:@scoped/patch@npm%3A1.0.0#./alias.patch::version=1.0.0&hash=958e67&locator=foo%40workspace%3A."
-  checksum: cd04881d496e3e1583ee6ae50994b2535d287acfb3267a287b07fa5564d9da2f70cb57030920a631a2f302eddf31db390c37618982e00e6d0ba7a2112759a5eb
+  resolution: "@scoped/patch@patch:@scoped/patch@npm%3A1.0.0#./alias.patch::version=1.0.0&hash=fa294a&locator=foo%40workspace%3A."
+  checksum: f9f05a295803f5847f002f8c5d1829b98438c028f6dd898923ea2a2b28baa2eff252596ed206a3d76bbe3e045ae2e2ddc93956da74e66b5c918f386e08bf72b2
   languageName: node
   linkType: hard
 
@@ -42,8 +42,8 @@ __metadata:
 
 "file@file:./file-dep::locator=foo%40workspace%3A.":
   version: 1.1.0
-  resolution: "file@file:./file-dep#./file-dep::hash=e1d8a7&locator=foo%40workspace%3A."
-  checksum: 48b1a389c5d385395414409e2515f68d0c308c3928966784f9bd5b4488956101113bffc78dd83a72a84c691d2449b53caa8ca2e3b39894325c0bc87adb299c7f
+  resolution: "file@file:./file-dep#./file-dep::hash=8329ff&locator=foo%40workspace%3A."
+  checksum: bb77f2bc993514a0f2a712fb920584c6be7f6cad8b72969a697afd09b1b7615237d843514491025c22e0ec7bb059123bdcd8659f33ce5133dfeb5ae63267b9f0
   languageName: node
   linkType: hard
 
@@ -53,6 +53,7 @@ __metadata:
   dependencies:
     "@scoped/patch": "patch:@scoped/patch@1.0.0#./alias.patch"
     alias: "npm:patch@1.0.0"
+    file: "file:./file-dep"
     major: "*"
     minor: ">1.0.0 <2.0.0"
     patch: latest
