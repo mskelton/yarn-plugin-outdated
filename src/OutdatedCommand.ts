@@ -84,14 +84,11 @@ export class OutdatedCommand extends BaseCommand {
   })
 
   async execute() {
-    const { cache, configuration, project, workspace } =
+    const { configuration, project, workspace } =
       await this.loadProject()
 
     const fetcher = new DependencyFetcher(
       configuration,
-      project,
-      workspace,
-      cache
     )
     const workspaces = this.getWorkspaces(project, workspace)
     const dependencies = this.getDependencies(configuration, workspaces)
@@ -311,23 +308,30 @@ export class OutdatedCommand extends BaseCommand {
           return
         }
 
-        const { url, version: latest } = await fetcher.fetch({
+        const { npmResult } = await fetcher.fetch({
           pkg,
-          range: "latest",
           url: this.url,
         })
 
         // JSON reports don't use progress, so this only applies for non-JSON cases.
         progress?.tick()
 
+        const versions = Object.keys(npmResult.versions);
+
+        const latest = semver.maxSatisfying(versions, "*")!;
+        const minor = semver.maxSatisfying(versions, `^${pkg.version!}`)!;
+        const patch = semver.maxSatisfying(versions, `~${pkg.version!}`)!;
+
         if (isVersionOutdated(pkg.version!, latest)) {
           return {
             current: pkg.version!,
             latest,
+            minor,
             name,
+            patch,
             severity: this.getSeverity(pkg.version!, latest),
             type: dependencyType,
-            url,
+            url: npmResult.homepage,
             workspace: this.all ? this.getWorkspaceName(workspace) : undefined,
           }
         }

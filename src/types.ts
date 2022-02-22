@@ -16,7 +16,9 @@ export interface DependencyInfo {
 export interface OutdatedDependency {
   current: string
   latest: string
+  minor: string
   name: string
+  patch: string
   severity: Severity
   type: DependencyType
   url?: string

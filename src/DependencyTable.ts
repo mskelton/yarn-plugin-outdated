@@ -5,6 +5,8 @@ const semverRegex = /^([0-9]+\.)([0-9]+\.)(.+)$/
 const columns = [
   "name",
   "current",
+  "patch",
+  "minor",
   "latest",
   "workspace",
   "type",
@@ -18,7 +20,9 @@ export class DependencyTable {
   private headers: Record<TableColumn, string> = {
     current: "Current",
     latest: "Latest",
+    minor: "Minor",
     name: "Package",
+    patch: "Patch",
     type: "Package Type",
     url: "URL",
     workspace: "Workspace",
@@ -41,7 +45,9 @@ export class DependencyTable {
       this.printRow({
         current: dependency.current.padEnd(this.sizes.current),
         latest: this.formatVersion(dependency, "latest", color),
+        minor: this.formatVersion(dependency, "minor", color),
         name: this.applyColor(dependency.name.padEnd(this.sizes.name), color),
+        patch: this.formatVersion(dependency, "patch", color),
         type: dependency.type.padEnd(this.sizes.type),
         url: dependency.url?.padEnd(this.sizes.url),
         workspace: dependency.workspace?.padEnd(this.sizes.workspace),
@@ -88,7 +94,9 @@ export class DependencyTable {
     const sizes = {
       current: this.headers.current.length,
       latest: this.headers.latest.length,
+      minor: this.headers.minor.length,
       name: this.headers.name.length,
+      patch: this.headers.patch.length,
       type: this.headers.type.length,
       url: this.headers.url.length,
       workspace: this.headers.workspace.length,
@@ -118,7 +126,9 @@ export class DependencyTable {
     this.printRow({
       current: this.formatColumnHeader("current"),
       latest: this.formatColumnHeader("latest"),
+      minor: this.formatColumnHeader("minor"),
       name: this.formatColumnHeader("name"),
+      patch: this.formatColumnHeader("patch"),
       type: this.formatColumnHeader("type"),
       url: this.formatColumnHeader("url"),
       workspace: this.formatColumnHeader("workspace"),
