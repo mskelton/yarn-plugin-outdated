@@ -286,7 +286,7 @@ export class OutdatedCommand extends BaseCommand {
     const current = semver.coerce(currentVersion)!
     const latest = semver.coerce(latestVersion)!
 
-    return latest.major > current.major
+    return current.major === 0 || latest.major > current.major
       ? "major"
       : latest.minor > current.minor
       ? "minor"
