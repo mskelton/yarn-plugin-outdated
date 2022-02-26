@@ -12,9 +12,7 @@ const manifest = {
 }
 
 test.describe.parallel("yarn outdated --url", () => {
-  test("displays the package homepage URL", async ({ env }) => {
-    const { run, writeJSON } = env
-
+  test("displays the package homepage URL", async ({ run, writeJSON }) => {
     await writeJSON("package.json", manifest)
     await run("install")
 
@@ -23,9 +21,7 @@ test.describe.parallel("yarn outdated --url", () => {
     expect(stderr).toBe("")
   })
 
-  test("includes the URL in the json output", async ({ env }) => {
-    const { run, writeJSON } = env
-
+  test("includes the URL in the json output", async ({ run, writeJSON }) => {
     await writeJSON("package.json", manifest)
     await run("install")
 

@@ -2,9 +2,7 @@ import { expect, test } from "../fixtures/env"
 import { readSupplementalFile } from "../utils/files"
 
 test.describe.parallel("yarn outdated", () => {
-  test("shows outdated dependencies", async ({ env }) => {
-    const { run, writeJSON } = env
-
+  test("shows outdated dependencies", async ({ run, writeJSON }) => {
     await writeJSON("package.json", {
       dependencies: { patch: "1.0.0" },
       devDependencies: { minor: "1.0.0" },
@@ -18,10 +16,9 @@ test.describe.parallel("yarn outdated", () => {
   })
 
   test("displays an empty state if no dependencies are outdated", async ({
-    env,
+    run,
+    writeJSON,
   }) => {
-    const { run, writeJSON } = env
-
     await writeJSON("package.json", { dependencies: { patch: "1.0.1" } })
     await run("install")
 
@@ -30,9 +27,7 @@ test.describe.parallel("yarn outdated", () => {
     expect(stderr).toBe("")
   })
 
-  test("formats scoped dependencies", async ({ env }) => {
-    const { run, writeJSON } = env
-
+  test("formats scoped dependencies", async ({ run, writeJSON }) => {
     await writeJSON("package.json", {
       dependencies: { "@scoped/patch": "1.0.0" },
     })
@@ -43,8 +38,13 @@ test.describe.parallel("yarn outdated", () => {
     expect(stderr).toBe("")
   })
 
-  test("throws an error when a package is not found", async ({ env }) => {
-    const { readFile, registry, run, writeFile, writeJSON } = env
+  test("throws an error when a package is not found", async ({
+    readFile,
+    registry,
+    run,
+    writeFile,
+    writeJSON,
+  }) => {
     await writeJSON("package.json", { dependencies: { patch: "1.0.0" } })
     await run("install")
 
@@ -64,10 +64,9 @@ test.describe.parallel("yarn outdated", () => {
   })
 
   test("defers to lockfile over manifest to check if a package is outdated", async ({
-    env,
+    run,
+    writeJSON,
   }) => {
-    const { run, writeJSON } = env
-
     await writeJSON("package.json", { dependencies: { patch: "^1.0.0" } })
     await run("install")
 
@@ -77,10 +76,9 @@ test.describe.parallel("yarn outdated", () => {
   })
 
   test("respects resolutions to determine if a package is outdated", async ({
-    env,
+    run,
+    writeJSON,
   }) => {
-    const { run, writeJSON } = env
-
     await writeJSON("package.json", {
       dependencies: { minor: "1.0.0" },
       resolutions: { minor: "1.0.1" },
@@ -92,9 +90,7 @@ test.describe.parallel("yarn outdated", () => {
     expect(stderr).toBe("")
   })
 
-  test("handles non-semver ranges", async ({ env }) => {
-    const { run, writeFile, writeJSON } = env
-
+  test("handles non-semver ranges", async ({ run, writeFile, writeJSON }) => {
     await writeJSON("package.json", {
       dependencies: {
         "@scoped/patch": "patch:@scoped/patch@1.0.0#./alias.patch",
@@ -116,9 +112,7 @@ test.describe.parallel("yarn outdated", () => {
     expect(stderr).toBe("")
   })
 
-  test("ignores pre-release versions", async ({ env }) => {
-    const { run, writeJSON } = env
-
+  test("ignores pre-release versions", async ({ run, writeJSON }) => {
     await writeJSON("package.json", {
       dependencies: { patch: "1.0.1-alpha.1" },
     })

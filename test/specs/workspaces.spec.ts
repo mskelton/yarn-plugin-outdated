@@ -1,9 +1,7 @@
 import { expect, test } from "../fixtures/env"
 
 test.describe.parallel("workspaces", () => {
-  test("includes packages from all workspaces", async ({ env }) => {
-    const { run, writeJSON } = env
-
+  test("includes packages from all workspaces", async ({ run, writeJSON }) => {
     await writeJSON("package.json", { workspaces: ["a", "b"] })
     await writeJSON("a/package.json", { dependencies: { patch: "1.0.0" } })
     await writeJSON("b/package.json", { dependencies: { minor: "1.0.0" } })
@@ -14,9 +12,10 @@ test.describe.parallel("workspaces", () => {
     expect(stderr).toBe("")
   })
 
-  test("falls back to the computed workspace name", async ({ env }) => {
-    const { run, writeJSON } = env
-
+  test("falls back to the computed workspace name", async ({
+    run,
+    writeJSON,
+  }) => {
     await writeJSON("package.json", {
       dependencies: { patch: "1.0.0" },
       workspaces: ["a"],
@@ -29,9 +28,7 @@ test.describe.parallel("workspaces", () => {
     expect(stderr).toBe("")
   })
 
-  test("skips private packages", async ({ env }) => {
-    const { run, writeJSON } = env
-
+  test("skips private packages", async ({ run, writeJSON }) => {
     await writeJSON("package.json", { workspaces: ["packages/*"] })
     await writeJSON("packages/a/package.json", {
       name: "a",
@@ -50,9 +47,10 @@ test.describe.parallel("workspaces", () => {
   })
 
   test.describe("--workspace", () => {
-    test("only includes packages in the current workspace", async ({ env }) => {
-      const { run, writeJSON } = env
-
+    test("only includes packages in the current workspace", async ({
+      run,
+      writeJSON,
+    }) => {
       const deps = { patch: "1.0.0" }
       await writeJSON("package.json", { dependencies: deps, workspaces: ["a"] })
       await writeJSON("a/package.json", { dependencies: deps })

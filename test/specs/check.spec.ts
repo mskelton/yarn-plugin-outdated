@@ -2,10 +2,9 @@ import { expect, test } from "../fixtures/env"
 
 test.describe.parallel("yarn outdated --check", () => {
   test("returns exit code 0 when dependencies are up to date", async ({
-    env,
+    run,
+    writeJSON,
   }) => {
-    const { run, writeJSON } = env
-
     await writeJSON("package.json", { dependencies: { patch: "1.0.1" } })
     await run("install")
 
@@ -16,10 +15,9 @@ test.describe.parallel("yarn outdated --check", () => {
   })
 
   test("returns exit code 1 when outdated dependencies are found", async ({
-    env,
+    run,
+    writeJSON,
   }) => {
-    const { run, writeJSON } = env
-
     await writeJSON("package.json", { dependencies: { patch: "1.0.0" } })
     await run("install")
 

@@ -10,9 +10,7 @@ const manifest = {
 }
 
 test.describe.parallel("Filtering patterns", () => {
-  test("filters by an exact package name", async ({ env }) => {
-    const { run, writeJSON } = env
-
+  test("filters by an exact package name", async ({ run, writeJSON }) => {
     await writeJSON("package.json", manifest)
     await run("install")
 
@@ -21,9 +19,7 @@ test.describe.parallel("Filtering patterns", () => {
     expect(stderr).toBe("")
   })
 
-  test("filters using a wildcard", async ({ env }) => {
-    const { run, writeJSON } = env
-
+  test("filters using a wildcard", async ({ run, writeJSON }) => {
     await writeJSON("package.json", manifest)
     await run("install")
 
@@ -33,10 +29,9 @@ test.describe.parallel("Filtering patterns", () => {
   })
 
   test("throws an error if the pattern doesn't match any packages", async ({
-    env,
+    run,
+    writeJSON,
   }) => {
-    const { run, writeJSON } = env
-
     await writeJSON("package.json", manifest)
     await run("install")
 

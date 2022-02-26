@@ -1,11 +1,10 @@
 import { test as base } from "@playwright/test"
 import { makeTemporaryEnv } from "../utils/env"
 
-type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
-type Environment = Omit<ThenArg<ReturnType<typeof makeTemporaryEnv>>, "destroy">
+type Environment = Awaited<ReturnType<typeof makeTemporaryEnv>>
 
-interface EnvironmentFixtures {
-  env: Environment
+interface EnvironmentFixtures extends Omit<Environment, "destroy"> {
+  env: Omit<Environment, "destroy">
 }
 
 export const test = base.extend<EnvironmentFixtures>({
@@ -18,6 +17,11 @@ export const test = base.extend<EnvironmentFixtures>({
     await use(env)
     await destroy()
   },
+  readFile: ({ env }, use) => use(env.readFile),
+  registry: ({ env }, use) => use(env.registry),
+  run: ({ env }, use) => use(env.run),
+  writeFile: ({ env }, use) => use(env.writeFile),
+  writeJSON: ({ env }, use) => use(env.writeJSON),
 })
 
 export const expect = test.expect
