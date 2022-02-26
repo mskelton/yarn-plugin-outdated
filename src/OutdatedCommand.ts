@@ -57,8 +57,8 @@ export class OutdatedCommand extends BaseCommand {
 
   patterns = Option.Rest()
 
-  all = Option.Boolean("-a,--all", false, {
-    description: "Include outdated dependencies from all workspaces",
+  workspace = Option.Boolean("-w,--workspace", false, {
+    description: "Only include outdated dependencies in the current workspace",
   })
 
   check = Option.Boolean("-c,--check", false, {
@@ -97,7 +97,12 @@ export class OutdatedCommand extends BaseCommand {
     const dependencies = this.getDependencies(configuration, workspaces)
 
     if (this.json) {
-      const outdated = await this.getOutdatedDependencies(fetcher, dependencies)
+      const outdated = await this.getOutdatedDependencies(
+        project,
+        fetcher,
+        dependencies
+      )
+
       this.context.stdout.write(JSON.stringify(outdated) + "\n")
       return
     }
@@ -107,6 +112,7 @@ export class OutdatedCommand extends BaseCommand {
       async (report) => {
         await this.checkOutdatedDependencies(
           configuration,
+          project,
           dependencies,
           fetcher,
           report
@@ -119,6 +125,7 @@ export class OutdatedCommand extends BaseCommand {
 
   async checkOutdatedDependencies(
     configuration: Configuration,
+    project: Project,
     dependencies: DependencyInfo[],
     fetcher: DependencyFetcher,
     report: StreamReport
@@ -133,6 +140,7 @@ export class OutdatedCommand extends BaseCommand {
         report.reportProgress(progress)
 
         outdated = await this.getOutdatedDependencies(
+          project,
           fetcher,
           dependencies,
           progress
@@ -145,7 +153,7 @@ export class OutdatedCommand extends BaseCommand {
     if (outdated.length) {
       const table = new DependencyTable(report, configuration, outdated, {
         url: this.url,
-        workspace: this.all,
+        workspace: this.includeWorkspace(project),
       })
 
       table.print()
@@ -191,9 +199,19 @@ export class OutdatedCommand extends BaseCommand {
    * from all workspaces instead of just the current workspace.
    */
   getWorkspaces(project: Project, workspace: Workspace) {
-    return this.all ? project.workspaces : [workspace]
+    return this.workspace ? [workspace] : project.workspaces
   }
 
+  /**
+   * Whether to include the workspace column in the output.
+   */
+  includeWorkspace(project: Project) {
+    return !this.workspace && project.workspaces.length > 1
+  }
+
+  /**
+   * Get the dependency types that should be included in the output.
+   */
   get dependencyTypes() {
     return this.type ? [this.type] : dependencyTypes
   }
@@ -298,6 +316,7 @@ export class OutdatedCommand extends BaseCommand {
    * sort them in ascending order.
    */
   async getOutdatedDependencies(
+    project: Project,
     fetcher: DependencyFetcher,
     dependencies: DependencyInfo[],
     progress?: ReturnType<typeof Report["progressViaCounter"]>
@@ -328,7 +347,9 @@ export class OutdatedCommand extends BaseCommand {
             severity: this.getSeverity(pkg.version!, latest),
             type: dependencyType,
             url,
-            workspace: this.all ? this.getWorkspaceName(workspace) : undefined,
+            workspace: this.includeWorkspace(project)
+              ? this.getWorkspaceName(workspace)
+              : undefined,
           }
         }
       }
