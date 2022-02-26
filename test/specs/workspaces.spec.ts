@@ -10,7 +10,7 @@ test.describe.parallel("workspaces", () => {
     await run("install")
 
     const { stderr, stdout } = await run("outdated")
-    expect(stdout).toMatchSnapshot("all-workspaces.txt")
+    expect(stdout).toMatchSnapshot("workspaces.txt")
     expect(stderr).toBe("")
   })
 
