@@ -195,8 +195,8 @@ export class OutdatedCommand extends BaseCommand {
   }
 
   /**
-   * If the user passed the `--all` CLI flag, then we will load dependencies
-   * from all workspaces instead of just the current workspace.
+   * If the user passed the `--workspace` CLI flag, then we only include
+   * outdated dependencies in the current workspace.
    */
   getWorkspaces(project: Project, workspace: Workspace) {
     return this.workspace ? [workspace] : project.workspaces
