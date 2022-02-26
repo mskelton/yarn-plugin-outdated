@@ -53,9 +53,9 @@ test.describe.parallel("workspaces", () => {
     test("only includes packages in the current workspace", async ({ env }) => {
       const { run, writeJSON } = env
 
-      await writeJSON("package.json", { workspaces: ["a", "b"] })
-      await writeJSON("a/package.json", { dependencies: { patch: "1.0.0" } })
-      await writeJSON("b/package.json", { dependencies: { minor: "1.0.0" } })
+      const deps = { patch: "1.0.0" }
+      await writeJSON("package.json", { dependencies: deps, workspaces: ["a"] })
+      await writeJSON("a/package.json", { dependencies: deps })
       await run("install")
 
       const { stderr, stdout } = await run("outdated --workspace")
