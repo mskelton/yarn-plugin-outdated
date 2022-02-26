@@ -2,9 +2,7 @@ import { expect, test } from "../fixtures/env"
 import { prettyJSON } from "../utils/format"
 
 test.describe.parallel("yarn outdated --json", () => {
-  test("shows outdated dependencies", async ({ env }) => {
-    const { run, writeJSON } = env
-
+  test("shows outdated dependencies", async ({ run, writeJSON }) => {
     await writeJSON("package.json", {
       dependencies: { patch: "1.0.0" },
       devDependencies: { minor: "1.0.0" },
@@ -17,10 +15,9 @@ test.describe.parallel("yarn outdated --json", () => {
   })
 
   test("displays an empty state if no dependencies are outdated", async ({
-    env,
+    run,
+    writeJSON,
   }) => {
-    const { run, writeJSON } = env
-
     await writeJSON("package.json", { dependencies: { patch: "1.0.1" } })
     await run("install")
 
