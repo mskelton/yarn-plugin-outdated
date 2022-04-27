@@ -1166,10 +1166,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^17.0.8":
-  version: 17.0.8
-  resolution: "@types/node@npm:17.0.8"
-  checksum: 5519be9c22b70c2cfe28c818f19a5a6e65fcb1bf20405e84bd61c23de0bdcb0bcbc655e1e47340aa66af4c1b3ca6df36f5bb85c732c9efe47bfaedc3d85d6528
+"@types/node@npm:^17.0.29":
+  version: 17.0.29
+  resolution: "@types/node@npm:17.0.29"
+  checksum: cda1c6e4d1ec12bb3c98f090acaf3737846c6ec525153dc8a6fa7e5413581d9ce242a886eac562c4164a5cba26db57f4008c5c185cd12b374ad9258a1b8fa1c3
   languageName: node
   linkType: hard
 
@@ -2150,7 +2150,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"braces@npm:^3.0.1":
+"braces@npm:^3.0.1, braces@npm:^3.0.2":
   version: 3.0.2
   resolution: "braces@npm:3.0.2"
   dependencies:
@@ -2347,17 +2347,6 @@ __metadata:
   peerDependencies:
     typanion: "*"
   checksum: d3b6454c9e9a4e41691c9f371a1474acf9fe5d3c4efe52921692fd6e1121c5e9795245a198f7dc1665d84841cfc90ff70358d4c74740d5363f0d05d36a5f5f78
-  languageName: node
-  linkType: hard
-
-"clipanion@npm:^3.2.0-rc.4":
-  version: 3.2.0-rc.4
-  resolution: "clipanion@npm:3.2.0-rc.4"
-  dependencies:
-    typanion: "npm:^3.3.1"
-  peerDependencies:
-    typanion: "*"
-  checksum: 15d96fc0dc0c6972d61c616db0077a3e505bc3e4dac2627543fe939c65e67762f37104560cdc9446a4fcb1fd36e93d6cd4fbd74303e3695ce5b9d3a9b87e898b
   languageName: node
   linkType: hard
 
@@ -3729,6 +3718,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"micromatch@npm:^4.0.5":
+  version: 4.0.5
+  resolution: "micromatch@npm:4.0.5"
+  dependencies:
+    braces: "npm:^3.0.2"
+    picomatch: "npm:^2.3.1"
+  checksum: 260305ba8cb1f073a39bbaa31edc93f7587399a094417541dc771402f83c78819ed76743c810c9fcf1c449f09bfb4de263dad8507d532e4e86063a87158a2ad6
+  languageName: node
+  linkType: hard
+
 "mime@npm:3.0.0":
   version: 3.0.0
   resolution: "mime@npm:3.0.0"
@@ -4051,6 +4050,13 @@ __metadata:
   version: 2.3.0
   resolution: "picomatch@npm:2.3.0"
   checksum: d4faab222672fe1742c07aa4126e57f77236f51ac02f1ff7b698344dc1cf043b31ee70105317b42a889a6c19dd244cf99a9ba143ec85b863eed318652d0e6afb
+  languageName: node
+  linkType: hard
+
+"picomatch@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "picomatch@npm:2.3.1"
+  checksum: 6ba5938c24af2c5918e94b39aa0ad48d71f2c30634de69d46e0bd32feb666de4e909406db6ffb78f98d39ef450d6a41b6fa3954dc3659d7b2b750766c1261e5e
   languageName: node
   linkType: hard
 
@@ -4443,6 +4449,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"semver@npm:^7.3.7":
+  version: 7.3.7
+  resolution: "semver@npm:7.3.7"
+  dependencies:
+    lru-cache: "npm:^6.0.0"
+  bin:
+    semver: bin/semver.js
+  checksum: 67bcf24790dcba9c20b2cd4c8ade19eebbcb10c8868453570749b47b77bd5c7da503478997a7a3f663d5b2976ac39c545f38d2d9e7dfcc693cb87f4068f93f8e
+  languageName: node
+  linkType: hard
+
 "shebang-command@npm:^2.0.0":
   version: 2.0.0
   resolution: "shebang-command@npm:2.0.0"
@@ -4771,10 +4788,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typanion@npm:^3.7.1":
-  version: 3.7.1
-  resolution: "typanion@npm:3.7.1"
-  checksum: bc310f5b6762bf4c061fc7223cfc0515aa51e6be37dc101e3f3259ec07575275804662a603ec0c142e66e5a6d0e5b0547a2d3fecedbac3a08997f01649e638a2
+"typanion@npm:^3.8.0":
+  version: 3.8.0
+  resolution: "typanion@npm:3.8.0"
+  checksum: b01d8df8e71ef95e3e56019eb1756895c0bc52f0534fd4a55e6456a7d22e947b7ae6b85f8d98ca916b4d0c36f9a48845d3b69a07176cc83ee78547b9b64cc8d2
   languageName: node
   linkType: hard
 
@@ -4949,7 +4966,7 @@ __metadata:
     "@mskelton/eslint-config": "npm:^7.1.0"
     "@playwright/test": "npm:^1.19.1"
     "@types/micromatch": "npm:^4.0.2"
-    "@types/node": "npm:^17.0.8"
+    "@types/node": "npm:^17.0.29"
     "@types/semver": "npm:^7.3.9"
     "@types/tar-fs": "npm:^2.0.1"
     "@typescript-eslint/eslint-plugin": "npm:^5.9.0"
@@ -4961,16 +4978,16 @@ __metadata:
     "@yarnpkg/parsers": "npm:^3.0.0-rc.3"
     "@yarnpkg/plugin-essentials": "npm:^4.0.0-rc.3"
     "@yarnpkg/plugin-git": "npm:^3.0.0-rc.3"
-    clipanion: "npm:^3.2.0-rc.4"
+    clipanion: "npm:^3.2.0-rc.10"
     eslint: "npm:^8.6.0"
     eslint-plugin-sort: "npm:^2.3.1"
     glob: "npm:^7.2.0"
     glob-promise: "npm:^4.2.2"
-    micromatch: "npm:^4.0.4"
+    micromatch: "npm:^4.0.5"
     prettier: "npm:^2.5.1"
-    semver: "npm:^7.3.5"
+    semver: "npm:^7.3.7"
     tar-fs: "npm:^2.1.1"
-    typanion: "npm:^3.7.1"
+    typanion: "npm:^3.8.0"
     typescript: "npm:^4.5.4"
     zlib: "npm:^1.0.5"
   languageName: unknown
