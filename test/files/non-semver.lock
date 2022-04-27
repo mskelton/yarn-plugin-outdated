@@ -2,10 +2,10 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 5
+  version: 7
   cacheKey: 0
 
-"@scoped/patch@1.0.0":
+"@scoped/patch@npm:1.0.0":
   version: 1.0.0
   resolution: "@scoped/patch@npm:1.0.0"
   checksum: a66cf4ff65e1170614fddfcab8fed08b15d7fedb785a94e4e1845076841bd18a80e0b2bd1461e3a184e44a329b4513fc12f7bbd69114943370aa6edd9ae59524
@@ -54,8 +54,8 @@ __metadata:
     "@scoped/patch": "patch:@scoped/patch@1.0.0#./alias.patch"
     alias: "npm:patch@1.0.0"
     file: "file:./file-dep"
-    major: "*"
-    minor: ">1.0.0 <2.0.0"
-    patch: latest
+    major: "npm:*"
+    minor: "npm:>1.0.0 <2.0.0"
+    patch: "npm:latest"
   languageName: unknown
   linkType: soft
