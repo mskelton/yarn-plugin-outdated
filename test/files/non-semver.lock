@@ -26,20 +26,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"major@npm:*":
-  version: 1.0.0
-  resolution: "major@npm:1.0.0"
-  checksum: 1d6bda91b0cfdf6d5ca9c167a0daa2f6fb859b434ecb6e95155fcbe051c3ff5d44489592767117e7818ae24799c90aac710fa4bde0d2e83e816170d2695bfcea
-  languageName: node
-  linkType: hard
-
-"minor@npm:>1.0.0 <2.0.0":
-  version: 1.0.0
-  resolution: "minor@npm:1.0.0"
-  checksum: 38465fcac78151415aa8d5bcc7572678fb6bc14477ef1e3b659cba9a1f4e886c19509336ad21b35d18b430477a19e3e57b3d46cd3a46b7465117da435f32ef6a
-  languageName: node
-  linkType: hard
-
 "file@file:./file-dep::locator=foo%40workspace%3A.":
   version: 1.1.0
   resolution: "file@file:./file-dep#./file-dep::hash=8329ff&locator=foo%40workspace%3A."
@@ -59,3 +45,17 @@ __metadata:
     patch: "npm:latest"
   languageName: unknown
   linkType: soft
+
+"major@npm:*":
+  version: 1.0.0
+  resolution: "major@npm:1.0.0"
+  checksum: 1d6bda91b0cfdf6d5ca9c167a0daa2f6fb859b434ecb6e95155fcbe051c3ff5d44489592767117e7818ae24799c90aac710fa4bde0d2e83e816170d2695bfcea
+  languageName: node
+  linkType: hard
+
+"minor@npm:>1.0.0 <2.0.0":
+  version: 1.0.0
+  resolution: "minor@npm:1.0.0"
+  checksum: 38465fcac78151415aa8d5bcc7572678fb6bc14477ef1e3b659cba9a1f4e886c19509336ad21b35d18b430477a19e3e57b3d46cd3a46b7465117da435f32ef6a
+  languageName: node
+  linkType: hard
