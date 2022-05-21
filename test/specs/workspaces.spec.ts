@@ -47,17 +47,52 @@ test.describe.parallel("workspaces", () => {
   })
 
   test.describe("--workspace", () => {
-    test("only includes packages in the current workspace", async ({
+    test("only includes packages in the current workspace when no argument provided", async ({
       run,
       writeJSON,
     }) => {
-      const deps = { patch: "1.0.0" }
-      await writeJSON("package.json", { dependencies: deps, workspaces: ["a"] })
-      await writeJSON("a/package.json", { dependencies: deps })
+      const dependencies = { patch: "1.0.0" }
+      await writeJSON("package.json", { dependencies, workspaces: ["a"] })
+      await writeJSON("a/package.json", { dependencies })
       await run("install")
 
       const { stderr, stdout } = await run("outdated --workspace")
       expect(stdout).toMatchSnapshot("current-workspace.txt")
+      expect(stderr).toBe("")
+    })
+
+    test("filters workspaces using glob pattern", async ({
+      run,
+      writeJSON,
+    }) => {
+      const dependencies = { patch: "1.0.0" }
+      await writeJSON("package.json", {
+        dependencies,
+        workspaces: ["name-a", "name-b", "other"],
+      })
+      await writeJSON("name-a/package.json", { dependencies })
+      await writeJSON("name-b/package.json", { dependencies })
+      await writeJSON("other/package.json", { dependencies })
+      await run("install")
+
+      const { stderr, stdout } = await run("outdated --workspace=name-*")
+      expect(stdout).toMatchSnapshot("workspace-glob.txt")
+      expect(stderr).toBe("")
+    })
+
+    test("can specify multiple glob patterns", async ({ run, writeJSON }) => {
+      const dependencies = { patch: "1.0.0" }
+      await writeJSON("package.json", {
+        dependencies,
+        workspaces: ["a", "b", "c"],
+      })
+      await writeJSON("a/package.json", { dependencies })
+      await writeJSON("b/package.json", { dependencies })
+      await writeJSON("c/package.json", { dependencies })
+      await run("install")
+
+      const { stderr, stdout } = await run("outdated --workspace=a,b")
+      expect(stdout).toMatchSnapshot("multiple-workspace-globs.txt")
       expect(stderr).toBe("")
     })
   })

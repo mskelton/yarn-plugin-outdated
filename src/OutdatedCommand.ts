@@ -57,8 +57,9 @@ export class OutdatedCommand extends BaseCommand {
 
   patterns = Option.Rest()
 
-  workspace = Option.Boolean("-w,--workspace", false, {
-    description: "Only include outdated dependencies in the current workspace",
+  workspace = Option.String("-w,--workspace", {
+    description: `Only search for dependencies in the specified workspaces. If no workspaces are specified, only searches for outdated dependencies in the current workspace.`,
+    tolerateBoolean: true,
   })
 
   check = Option.Boolean("-c,--check", false, {
@@ -195,18 +196,27 @@ export class OutdatedCommand extends BaseCommand {
   }
 
   /**
-   * If the user passed the `--workspace` CLI flag, then we only include
-   * outdated dependencies in the current workspace.
+   * If the user passed the `--workspace` CLI flag, then we filter the
+   * workspaces. If no argument was provided, that indicates the current
+   * workspace, otherwise we split the pattern as a list of micromatch globs.
    */
   getWorkspaces(project: Project, workspace: Workspace) {
-    return this.workspace ? [workspace] : project.workspaces
+    const pattern = this.workspace
+
+    return typeof pattern === "string"
+      ? project.workspaces.filter((w) =>
+          micromatch.isMatch(this.getWorkspaceName(w), pattern.split(","))
+        )
+      : pattern
+      ? [workspace]
+      : project.workspaces
   }
 
   /**
    * Whether to include the workspace column in the output.
    */
   includeWorkspace(project: Project) {
-    return !this.workspace && project.workspaces.length > 1
+    return this.workspace !== true && project.workspaces.length > 1
   }
 
   /**
