@@ -9,7 +9,7 @@
     "url": "https://github.com/mskelton/yarn-plugin-outdated/issues"
   },
   "main": "src/index.ts",
-  "packageManager": "yarn@3.1.1",
+  "packageManager": "yarn@3.2.1",
   "scripts": {
     "build": "builder build plugin",
     "lint": "eslint .",
@@ -23,7 +23,7 @@
     "@yarnpkg/core": "^3.2.0-rc.10",
     "@yarnpkg/plugin-essentials": "^3.2.0-rc.8",
     "@yarnpkg/plugin-git": "^2.6.0-rc.10",
-    "clipanion": "^3.2.0-rc.4",
+    "clipanion": "^3.2.0-rc.11",
     "micromatch": "^4.0.4",
     "semver": "^7.3.5",
     "typanion": "^3.7.1"

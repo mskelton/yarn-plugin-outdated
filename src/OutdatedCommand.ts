@@ -70,9 +70,9 @@ export class OutdatedCommand extends BaseCommand {
     description: "Format the output as JSON",
   })
 
-  severity = Option.String("-s,--severity", {
+  severity = Option.Array("-s,--severity", {
     description: "Filter results based on the severity of the update",
-    validator: t.isEnum(severities),
+    validator: t.isArray(t.isEnum(severities)),
   })
 
   type = Option.String("-t,--type", {
@@ -367,7 +367,7 @@ export class OutdatedCommand extends BaseCommand {
 
     return (await Promise.all(outdated))
       .filter(truthy)
-      .filter(({ severity }) => !this.severity || severity === this.severity)
+      .filter(({ severity }) => this.severity?.includes(severity) ?? true)
       .sort((a, b) => a.name.localeCompare(b.name))
   }
 
