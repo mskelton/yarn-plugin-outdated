@@ -23,6 +23,7 @@ import {
   DependencyInfo,
   dependencyTypes,
   OutdatedDependency,
+  severities,
   Severity,
 } from "./types"
 import { isVersionOutdated, truthy } from "./utils"
@@ -71,6 +72,7 @@ export class OutdatedCommand extends BaseCommand {
 
   severity = Option.Array("-s,--severity", {
     description: "Filter results based on the severity of the update",
+    validator: t.isArray(t.isEnum(severities)),
   })
 
   type = Option.String("-t,--type", {
