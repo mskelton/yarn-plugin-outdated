@@ -23,4 +23,17 @@ test.describe.parallel("yarn outdated", () => {
     expect(stdout).toMatchSnapshot("severity.txt")
     expect(stderr).toBe("")
   })
+
+  test("can include multiple severity filters", async ({ run, writeJSON }) => {
+    await writeJSON("package.json", {
+      dependencies: { major: "1.0.0", minor: "1.0.0", patch: "1.0.0" },
+    })
+    await run("install")
+
+    const { stderr, stdout } = await run(
+      "outdated --severity=patch --severity=minor"
+    )
+    expect(stdout).toMatchSnapshot("multiple-severities.txt")
+    expect(stderr).toBe("")
+  })
 })
