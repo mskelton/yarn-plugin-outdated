@@ -1,3 +1,4 @@
+import { ppath, toFilename } from "@yarnpkg/fslib"
 import { expect, test } from "../fixtures/env"
 
 test.describe.parallel("workspaces", () => {
@@ -47,7 +48,8 @@ test.describe.parallel("workspaces", () => {
   })
 
   test.describe("--workspace", () => {
-    test("only includes packages in the current workspace when no argument provided", async ({
+    test("filters in the current workspace when a period is specified", async ({
+      env,
       run,
       writeJSON,
     }) => {
@@ -56,8 +58,51 @@ test.describe.parallel("workspaces", () => {
       await writeJSON("a/package.json", { dependencies })
       await run("install")
 
-      const { stderr, stdout } = await run("outdated --workspace")
-      expect(stdout).toMatchSnapshot("current-workspace.txt")
+      const { stderr, stdout } = await run("outdated --workspace .", {
+        cwd: ppath.join(env.cwd, toFilename("a")),
+      })
+      expect(stdout).toMatchSnapshot("period.txt")
+      expect(stderr).toBe("")
+    })
+
+    test("filters by absolute directory", async ({ env, run, writeJSON }) => {
+      const dependencies = { patch: "1.0.0" }
+      await writeJSON("package.json", { dependencies, workspaces: ["a"] })
+      await writeJSON("a/package.json", { dependencies })
+      await writeJSON("b/package.json", { dependencies })
+      await run("install")
+
+      const { stderr, stdout } = await run(
+        `outdated --workspace ${env.cwd}/a --workspace ${env.cwd}`
+      )
+      expect(stdout).toMatchSnapshot("directory-absolute.txt")
+      expect(stderr).toBe("")
+    })
+
+    test("filters by relative directory", async ({ run, writeJSON }) => {
+      const dependencies = { patch: "1.0.0" }
+      await writeJSON("package.json", {
+        dependencies,
+        workspaces: ["packages/*"],
+      })
+      await writeJSON("packages/a/package.json", { dependencies })
+      await writeJSON("packages/b/package.json", { dependencies })
+      await run("install")
+
+      const { stderr, stdout } = await run("outdated --workspace packages/a")
+      expect(stdout).toMatchSnapshot("directory-relative.txt")
+      expect(stderr).toBe("")
+    })
+
+    test("filters workspaces by name", async ({ run, writeJSON }) => {
+      const dependencies = { patch: "1.0.0" }
+      await writeJSON("package.json", { dependencies, workspaces: ["a", "b"] })
+      await writeJSON("a/package.json", { dependencies, name: "one" })
+      await writeJSON("b/package.json", { dependencies, name: "two" })
+      await run("install")
+
+      const { stderr, stdout } = await run("outdated --workspace two")
+      expect(stdout).toMatchSnapshot("name.txt")
       expect(stderr).toBe("")
     })
 
@@ -75,8 +120,8 @@ test.describe.parallel("workspaces", () => {
       await writeJSON("other/package.json", { dependencies })
       await run("install")
 
-      const { stderr, stdout } = await run("outdated --workspace=name-*")
-      expect(stdout).toMatchSnapshot("workspace-glob.txt")
+      const { stderr, stdout } = await run("outdated --workspace name-*")
+      expect(stdout).toMatchSnapshot("glob.txt")
       expect(stderr).toBe("")
     })
 
@@ -91,8 +136,10 @@ test.describe.parallel("workspaces", () => {
       await writeJSON("c/package.json", { dependencies })
       await run("install")
 
-      const { stderr, stdout } = await run("outdated --workspace=a,b")
-      expect(stdout).toMatchSnapshot("multiple-workspace-globs.txt")
+      const { stderr, stdout } = await run(
+        "outdated --workspace a --workspace b"
+      )
+      expect(stdout).toMatchSnapshot("multiple-globs.txt")
       expect(stderr).toBe("")
     })
   })
