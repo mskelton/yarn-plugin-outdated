@@ -19,7 +19,7 @@ jobs:
           ref: ${{ github.head_ref }}
       - run: yarn build
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4.1.2
+        uses: stefanzweifel/git-auto-commit-action@v4.14.1
         with:
           commit_message: Update plugin artifact
           file_pattern: bundles/*.js
