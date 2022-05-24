@@ -15,6 +15,7 @@ import {
 } from "@yarnpkg/core"
 import { Command, Option, Usage, UsageError } from "clipanion"
 import micromatch from "micromatch"
+import path from "path"
 import semver from "semver"
 import t from "typanion"
 import { DependencyFetcher } from "./DependencyFetcher"
@@ -57,9 +58,9 @@ export class OutdatedCommand extends BaseCommand {
 
   patterns = Option.Rest()
 
-  workspace = Option.String("-w,--workspace", {
+  workspace = Option.Array("-w,--workspace", {
     description: `Only search for dependencies in the specified workspaces. If no workspaces are specified, only searches for outdated dependencies in the current workspace.`,
-    tolerateBoolean: true,
+    validator: t.isArray(t.isString()),
   })
 
   check = Option.Boolean("-c,--check", false, {
@@ -94,7 +95,7 @@ export class OutdatedCommand extends BaseCommand {
       workspace,
       cache
     )
-    const workspaces = this.getWorkspaces(project, workspace)
+    const workspaces = this.getWorkspaces(project)
     const dependencies = this.getDependencies(configuration, workspaces)
 
     if (this.json) {
@@ -197,26 +198,35 @@ export class OutdatedCommand extends BaseCommand {
 
   /**
    * If the user passed the `--workspace` CLI flag, then we filter the
-   * workspaces. If no argument was provided, that indicates the current
-   * workspace, otherwise we split the pattern as a list of micromatch globs.
+   * workspaces.
    */
-  getWorkspaces(project: Project, workspace: Workspace) {
-    const pattern = this.workspace
+  getWorkspaces(project: Project) {
+    const patterns = this.workspace
 
-    return typeof pattern === "string"
-      ? project.workspaces.filter((w) =>
-          micromatch.isMatch(this.getWorkspaceName(w), pattern.split(","))
-        )
-      : pattern
-      ? [workspace]
-      : project.workspaces
+    return !patterns
+      ? project.workspaces
+      : patterns[0] === "."
+      ? project.workspaces.filter((w) => w.cwd === this.context.cwd)
+      : project.workspaces.filter((w) => {
+          // For each pattern provided by the user, we include a copy of the
+          // pattern with the current working directory prepended to allow
+          // easily searching by relative paths.
+          const globs = [
+            ...patterns,
+            ...patterns.map((p) => path.join(this.context.cwd, p)),
+          ]
+
+          // The globs are matched against the workspace name and working
+          // directory to allow both directory and name filtering.
+          return micromatch.some([this.getWorkspaceName(w), w.cwd], globs)
+        })
   }
 
   /**
    * Whether to include the workspace column in the output.
    */
   includeWorkspace(project: Project) {
-    return this.workspace !== true && project.workspaces.length > 1
+    return project.workspaces.length > 1
   }
 
   /**
