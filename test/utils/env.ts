@@ -75,6 +75,7 @@ export async function makeTemporaryEnv() {
   await writeFile(".yarnrc.yml", YARN_RC)
 
   return {
+    cwd: tempDir,
     destroy,
     readFile,
     registry,
