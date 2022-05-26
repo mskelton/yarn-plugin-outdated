@@ -109,7 +109,13 @@ export class OutdatedCommand extends BaseCommand {
         dependencies
       )
 
-      this.context.stdout.write(JSON.stringify(outdated) + "\n")
+      // Convert the data to the minimal JSON format
+      const json = outdated.map((dep) => ({
+        ...dep,
+        severity: dep.severity.latest,
+      }))
+
+      this.context.stdout.write(JSON.stringify(json) + "\n")
       return
     }
 
