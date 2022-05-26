@@ -87,6 +87,21 @@ The final means of filtering outdated dependencies is by dependency type. For ex
 yarn outdated --type devDependencies
 ```
 
+### Include the wanted range
+
+By default, only the latest version of dependencies are displayed. However, in some cases you may wish to know both the latest version and the version that satisfies the range specified in your manifest.
+
+```sh
+yarn outdated --range
+```
+
+For example if you have `"glob": "^7.2.0"` in your manifest, the output with this flag might look something like this.
+
+```sh
+➤ YN0000: Package   Current   Range   Latest   Package Type
+➤ YN0000: glob      7.2.0     7.2.3   8.0.3    devDependencies
+```
+
 ### Check mode (`--check`, `-c`)
 
 By default, this plugin will always return an exit code 0 even if there are outdated dependencies. While this is perfect for normal use, if you want to use this plugin with scripts and fail if there are outdated dependencies, you can add the `--check` flag.
