@@ -1,6 +1,7 @@
 import {
   Cache,
   Configuration,
+  Descriptor,
   Manifest,
   Package,
   Project,
@@ -12,9 +13,10 @@ import { suggestUtils } from "@yarnpkg/plugin-essentials"
 import { getHomepageURL } from "./utils"
 
 interface FetchOptions {
+  descriptor: Descriptor
+  includeRange: boolean
+  includeURL: boolean
   pkg: Package
-  range: string
-  url: boolean
 }
 
 export class DependencyFetcher {
@@ -25,26 +27,32 @@ export class DependencyFetcher {
     private cache: Cache
   ) {}
 
-  async fetch({ pkg, range, url }: FetchOptions) {
-    const candidatePromise = suggestUtils.fetchDescriptorFrom(pkg, range, {
+  async fetch({ descriptor, includeRange, includeURL, pkg }: FetchOptions) {
+    const [latest, range, homepageURL] = await Promise.all([
+      this.suggest(pkg, "latest"),
+      includeRange ? this.suggest(pkg, descriptor.range) : Promise.resolve(),
+      includeURL ? this.fetchURL(pkg) : Promise.resolve(),
+    ])
+
+    if (!latest) {
+      const name = structUtils.prettyIdent(this.configuration, pkg)
+      throw new Error(`Could not fetch candidate for ${name}.`)
+    }
+
+    return {
+      latest: latest.range,
+      range: range?.range,
+      url: homepageURL,
+    }
+  }
+
+  private suggest(pkg: Package, range: string) {
+    return suggestUtils.fetchDescriptorFrom(pkg, range, {
       cache: this.cache,
       preserveModifier: false,
       project: this.project,
       workspace: this.workspace,
     })
-
-    const urlPromise = url ? this.fetchURL(pkg) : Promise.resolve(undefined)
-    const [candidate, homepageURL] = await Promise.all([
-      candidatePromise,
-      urlPromise,
-    ])
-
-    if (!candidate) {
-      const name = structUtils.prettyIdent(this.configuration, pkg)
-      throw new Error(`Could not fetch candidate for ${name}.`)
-    }
-
-    return { url: homepageURL, version: candidate.range }
   }
 
   private async fetchURL(pkg: Package) {

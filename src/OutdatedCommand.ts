@@ -81,8 +81,12 @@ export class OutdatedCommand extends BaseCommand {
     validator: t.isEnum(dependencyTypes),
   })
 
-  url = Option.Boolean("--url", false, {
+  includeURL = Option.Boolean("--url", false, {
     description: "Include the homepage URL of each package in the output",
+  })
+
+  includeRange = Option.Boolean("--range", false, {
+    description: `Include the latest version of the package which satisfies the current range specified in the manifest.`,
   })
 
   async execute() {
@@ -154,7 +158,8 @@ export class OutdatedCommand extends BaseCommand {
 
     if (outdated.length) {
       const table = new DependencyTable(report, configuration, outdated, {
-        url: this.url,
+        range: this.includeRange,
+        url: this.includeURL,
         workspace: this.includeWorkspace(project),
       })
 
@@ -279,6 +284,7 @@ export class OutdatedCommand extends BaseCommand {
 
           dependencies.push({
             dependencyType,
+            descriptor,
             name: structUtils.stringifyIdent(descriptor),
             pkg,
             workspace,
@@ -342,7 +348,7 @@ export class OutdatedCommand extends BaseCommand {
     progress?: ReturnType<typeof Report["progressViaCounter"]>
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
-      async ({ dependencyType, name, pkg, workspace }) => {
+      async ({ dependencyType, descriptor, name, pkg, workspace }) => {
         // If the dependency is a workspace, then we don't need to check
         // if it is outdated. These type of packages tend to be versioned with
         // a tool like Lerna or they are private.
@@ -350,10 +356,11 @@ export class OutdatedCommand extends BaseCommand {
           return
         }
 
-        const { url, version: latest } = await fetcher.fetch({
+        const { latest, range, url } = await fetcher.fetch({
+          descriptor,
+          includeRange: this.includeRange,
+          includeURL: this.includeURL,
           pkg,
-          range: "latest",
-          url: this.url,
         })
 
         // JSON reports don't use progress, so this only applies for non-JSON cases.
@@ -364,7 +371,11 @@ export class OutdatedCommand extends BaseCommand {
             current: pkg.version!,
             latest,
             name,
-            severity: this.getSeverity(pkg.version!, latest),
+            range,
+            severity: {
+              latest: this.getSeverity(pkg.version!, latest),
+              range: range ? this.getSeverity(pkg.version!, range) : undefined,
+            },
             type: dependencyType,
             url,
             workspace: this.includeWorkspace(project)
@@ -377,7 +388,7 @@ export class OutdatedCommand extends BaseCommand {
 
     return (await Promise.all(outdated))
       .filter(truthy)
-      .filter(({ severity }) => this.severity?.includes(severity) ?? true)
+      .filter((dep) => this.severity?.includes(dep.severity.latest) ?? true)
       .sort((a, b) => a.name.localeCompare(b.name))
   }
 
