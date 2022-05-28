@@ -53,20 +53,20 @@ export class DependencyTable {
     })
   }
 
-  private applyColor(value: string, color: string) {
-    return formatUtils.pretty(this.configuration, value, color)
+  private applyColor(value: string, color: string | null) {
+    return color ? formatUtils.pretty(this.configuration, value, color) : value
   }
 
   private formatVersion(
     dependency: OutdatedDependency,
     column: TableColumn,
-    color: string
+    color: string | null
   ) {
     const value = dependency[column]?.padEnd(this.sizes[column])
     if (!value) return
 
     const matches = value.match(semverRegex)
-    if (!matches) return value
+    if (!matches || !color) return value
 
     const index = ["red", "yellow", "green"].indexOf(color) + 1
     const start = matches.slice(1, index).join("")
@@ -82,8 +82,10 @@ export class DependencyTable {
     )
   }
 
-  private getDiffColor(severity: Severity = "patch") {
-    return { major: "red", minor: "yellow", patch: "green" }[severity]
+  private getDiffColor(severity: Severity) {
+    return severity
+      ? { major: "red", minor: "yellow", patch: "green" }[severity]
+      : null
   }
 
   private getColumnSizes(): Record<TableColumn, number> {

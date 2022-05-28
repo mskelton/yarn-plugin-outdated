@@ -4,7 +4,7 @@ export const dependencyTypes = ["dependencies", "devDependencies"] as const
 export type DependencyType = typeof dependencyTypes[number]
 
 export const severities = ["major", "minor", "patch"] as const
-export type Severity = typeof severities[number]
+export type Severity = typeof severities[number] | null
 
 export interface DependencyInfo {
   dependencyType: DependencyType
@@ -21,7 +21,7 @@ export interface OutdatedDependency {
   range?: string
   severity: {
     latest: Severity
-    range?: Severity
+    range: Severity
   }
   type: DependencyType
   url?: string
