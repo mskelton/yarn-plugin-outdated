@@ -336,7 +336,9 @@ export class OutdatedCommand extends BaseCommand {
     const current = semver.coerce(currentVersion)!
     const latest = semver.coerce(latestVersion)!
 
-    return current.major === 0 || latest.major > current.major
+    return current === latest
+      ? null
+      : current.major === 0 || latest.major > current.major
       ? "major"
       : latest.minor > current.minor
       ? "minor"
@@ -379,8 +381,8 @@ export class OutdatedCommand extends BaseCommand {
             name,
             range,
             severity: {
-              latest: this.getSeverity(pkg.version!, latest),
-              range: range ? this.getSeverity(pkg.version!, range) : undefined,
+              latest: this.getSeverity(pkg.version!, latest)!,
+              range: range ? this.getSeverity(pkg.version!, range) : null,
             },
             type: dependencyType,
             url,
