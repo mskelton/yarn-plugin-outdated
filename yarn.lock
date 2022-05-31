@@ -4788,17 +4788,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typanion@npm:^3.8.0":
-  version: 3.8.0
-  resolution: "typanion@npm:3.8.0"
-  checksum: b01d8df8e71ef95e3e56019eb1756895c0bc52f0534fd4a55e6456a7d22e947b7ae6b85f8d98ca916b4d0c36f9a48845d3b69a07176cc83ee78547b9b64cc8d2
-  languageName: node
-  linkType: hard
-
-"typanion@npm:^3.8.0":
+"typanion@npm:^3.9.0":
   version: 3.9.0
   resolution: "typanion@npm:3.9.0"
-  checksum: db635975e86c50399fe019010e489a9adb24a74cd19b15efb1d0f434c7dccd842a9402a6a6d60e8ab6d9f7949fd8604a019802a022427e78dbbe2e74f143527b
+  checksum: 87f118cf057016b22dec63056dd2a65bb330c9fcdcd7efc021e1921376b4c864b407e845addf628b9c61724affdaefd2fee79f6e6b272de07aded299abf12b09
   languageName: node
   linkType: hard
 
@@ -4839,23 +4832,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.5.4":
-  version: 4.5.4
-  resolution: "typescript@npm:4.5.4"
+"typescript@npm:^4.6.4":
+  version: 4.7.2
+  resolution: "typescript@npm:4.7.2"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: dedb90109429602e25ace99f982890f77f6f30e6334b5ee644a8ab4281a2ab1a5ae1ce6285d224c4ad2a86376b72382e24411d356f06d65a620530c1a66b9156
+  checksum: f841f230723cda583d1a564fb38fa85abfc28e534d7db933329ee06047a8b4cee84697e2e01f348aff760f6d18da753063c51f4d80763c7b284e78abe8569d82
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^4.5.4#optional!builtin<compat/typescript>":
-  version: 4.5.4
-  resolution: "typescript@patch:typescript@npm%3A4.5.4#optional!builtin<compat/typescript>::version=4.5.4&hash=7ad353"
+"typescript@patch:typescript@npm%3A^4.6.4#optional!builtin<compat/typescript>":
+  version: 4.7.2
+  resolution: "typescript@patch:typescript@npm%3A4.7.2#optional!builtin<compat/typescript>::version=4.7.2&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 80d14e99136c82ca8b4badbd64cf16d5b803d8061e297af3efed277db8c50a9d81c06ad08b97012bb7569e02ee8cc1290b05ca58690d6da0c95c9840943ecb68
+  checksum: ff28751fd5ca4c0741d73e00513799fb58bce01b69e5e701caf9f8e0245687cd1e7c966479d6af321fba162bb4edc02924ed7dd7f847e633925605659e6510dc
   languageName: node
   linkType: hard
 
@@ -4994,8 +4987,8 @@ __metadata:
     prettier: "npm:^2.5.1"
     semver: "npm:^7.3.7"
     tar-fs: "npm:^2.1.1"
-    typanion: "npm:^3.8.0"
-    typescript: "npm:^4.5.4"
+    typanion: "npm:^3.9.0"
+    typescript: "npm:^4.6.4"
     zlib: "npm:^1.0.5"
   languageName: unknown
   linkType: soft
