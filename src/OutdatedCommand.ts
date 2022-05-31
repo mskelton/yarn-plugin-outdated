@@ -15,6 +15,7 @@ import {
 } from "@yarnpkg/core"
 import { Command, Option, Usage, UsageError } from "clipanion"
 import micromatch from "micromatch"
+import path from "path"
 import semver from "semver"
 import t from "typanion"
 import { DependencyFetcher } from "./DependencyFetcher"
@@ -57,8 +58,9 @@ export class OutdatedCommand extends BaseCommand {
 
   patterns = Option.Rest()
 
-  workspace = Option.Boolean("-w,--workspace", false, {
-    description: "Only include outdated dependencies in the current workspace",
+  workspace = Option.Array("-w,--workspace", {
+    description: `Only search for dependencies in the specified workspaces. If no workspaces are specified, only searches for outdated dependencies in the current workspace.`,
+    validator: t.isArray(t.isString()),
   })
 
   check = Option.Boolean("-c,--check", false, {
@@ -69,9 +71,9 @@ export class OutdatedCommand extends BaseCommand {
     description: "Format the output as JSON",
   })
 
-  severity = Option.String("-s,--severity", {
+  severity = Option.Array("-s,--severity", {
     description: "Filter results based on the severity of the update",
-    validator: t.isEnum(severities),
+    validator: t.isArray(t.isEnum(severities)),
   })
 
   type = Option.String("-t,--type", {
@@ -79,8 +81,12 @@ export class OutdatedCommand extends BaseCommand {
     validator: t.isEnum(dependencyTypes),
   })
 
-  url = Option.Boolean("--url", false, {
+  includeURL = Option.Boolean("--url", false, {
     description: "Include the homepage URL of each package in the output",
+  })
+
+  includeRange = Option.Boolean("--range", false, {
+    description: `Include the latest version of the package which satisfies the current range specified in the manifest.`,
   })
 
   async execute() {
@@ -93,7 +99,7 @@ export class OutdatedCommand extends BaseCommand {
       workspace,
       cache
     )
-    const workspaces = this.getWorkspaces(project, workspace)
+    const workspaces = this.getWorkspaces(project)
     const dependencies = this.getDependencies(configuration, workspaces)
 
     if (this.json) {
@@ -103,7 +109,13 @@ export class OutdatedCommand extends BaseCommand {
         dependencies
       )
 
-      this.context.stdout.write(JSON.stringify(outdated) + "\n")
+      // Convert the data to the minimal JSON format
+      const json = outdated.map((dep) => ({
+        ...dep,
+        severity: dep.severity.latest,
+      }))
+
+      this.context.stdout.write(JSON.stringify(json) + "\n")
       return
     }
 
@@ -152,7 +164,8 @@ export class OutdatedCommand extends BaseCommand {
 
     if (outdated.length) {
       const table = new DependencyTable(report, configuration, outdated, {
-        url: this.url,
+        range: this.includeRange,
+        url: this.includeURL,
         workspace: this.includeWorkspace(project),
       })
 
@@ -195,18 +208,36 @@ export class OutdatedCommand extends BaseCommand {
   }
 
   /**
-   * If the user passed the `--workspace` CLI flag, then we only include
-   * outdated dependencies in the current workspace.
+   * If the user passed the `--workspace` CLI flag, then we filter the
+   * workspaces.
    */
-  getWorkspaces(project: Project, workspace: Workspace) {
-    return this.workspace ? [workspace] : project.workspaces
+  getWorkspaces(project: Project) {
+    const patterns = this.workspace
+
+    return !patterns
+      ? project.workspaces
+      : patterns[0] === "."
+      ? project.workspaces.filter((w) => w.cwd === this.context.cwd)
+      : project.workspaces.filter((w) => {
+          // For each pattern provided by the user, we include a copy of the
+          // pattern with the current working directory prepended to allow
+          // easily searching by relative paths.
+          const globs = [
+            ...patterns,
+            ...patterns.map((p) => path.join(this.context.cwd, p)),
+          ]
+
+          // The globs are matched against the workspace name and working
+          // directory to allow both directory and name filtering.
+          return micromatch.some([this.getWorkspaceName(w), w.cwd], globs)
+        })
   }
 
   /**
    * Whether to include the workspace column in the output.
    */
   includeWorkspace(project: Project) {
-    return !this.workspace && project.workspaces.length > 1
+    return project.workspaces.length > 1
   }
 
   /**
@@ -259,6 +290,7 @@ export class OutdatedCommand extends BaseCommand {
 
           dependencies.push({
             dependencyType,
+            descriptor,
             name: structUtils.stringifyIdent(descriptor),
             pkg,
             workspace,
@@ -304,7 +336,9 @@ export class OutdatedCommand extends BaseCommand {
     const current = semver.coerce(currentVersion)!
     const latest = semver.coerce(latestVersion)!
 
-    return current.major === 0 || latest.major > current.major
+    return semver.eq(current, latest)
+      ? null
+      : current.major === 0 || latest.major > current.major
       ? "major"
       : latest.minor > current.minor
       ? "minor"
@@ -322,7 +356,7 @@ export class OutdatedCommand extends BaseCommand {
     progress?: ReturnType<typeof Report["progressViaCounter"]>
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
-      async ({ dependencyType, name, pkg, workspace }) => {
+      async ({ dependencyType, descriptor, name, pkg, workspace }) => {
         // If the dependency is a workspace, then we don't need to check
         // if it is outdated. These type of packages tend to be versioned with
         // a tool like Lerna or they are private.
@@ -330,10 +364,11 @@ export class OutdatedCommand extends BaseCommand {
           return
         }
 
-        const { url, version: latest } = await fetcher.fetch({
+        const { latest, range, url } = await fetcher.fetch({
+          descriptor,
+          includeRange: this.includeRange,
+          includeURL: this.includeURL,
           pkg,
-          range: "latest",
-          url: this.url,
         })
 
         // JSON reports don't use progress, so this only applies for non-JSON cases.
@@ -344,7 +379,11 @@ export class OutdatedCommand extends BaseCommand {
             current: pkg.version!,
             latest,
             name,
-            severity: this.getSeverity(pkg.version!, latest),
+            range,
+            severity: {
+              latest: this.getSeverity(pkg.version!, latest)!,
+              range: range ? this.getSeverity(pkg.version!, range) : null,
+            },
             type: dependencyType,
             url,
             workspace: this.includeWorkspace(project)
@@ -357,7 +396,7 @@ export class OutdatedCommand extends BaseCommand {
 
     return (await Promise.all(outdated))
       .filter(truthy)
-      .filter(({ severity }) => !this.severity || severity === this.severity)
+      .filter((dep) => this.severity?.includes(dep.severity.latest) ?? true)
       .sort((a, b) => a.name.localeCompare(b.name))
   }
 

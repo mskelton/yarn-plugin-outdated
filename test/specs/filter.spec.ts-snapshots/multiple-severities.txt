@@ -2,7 +2,8 @@
 ➤ YN0000: └ Completed
 
 ➤ YN0000: Package   Current   Latest   Package Type
+➤ YN0000: minor     1.0.0     1.1.0    dependencies
 ➤ YN0000: patch     1.0.0     1.0.1    dependencies
 
-➤ YN0000: 1 dependency is out of date
+➤ YN0000: 2 dependencies are out of date
 ➤ YN0000: Done with warnings

@@ -1,10 +1,11 @@
 import { Configuration, formatUtils, MessageName, Report } from "@yarnpkg/core"
-import { OutdatedDependency } from "./types"
+import { OutdatedDependency, Severity } from "./types"
 
 const semverRegex = /^([0-9]+\.)([0-9]+\.)(.+)$/
 const columns = [
   "name",
   "current",
+  "range",
   "latest",
   "workspace",
   "type",
@@ -19,6 +20,7 @@ export class DependencyTable {
     current: "Current",
     latest: "Latest",
     name: "Package",
+    range: "Range",
     type: "Package Type",
     url: "URL",
     workspace: "Workspace",
@@ -36,12 +38,14 @@ export class DependencyTable {
     this.printHeader()
 
     this.dependencies.forEach((dependency) => {
-      const color = this.getDiffColor(dependency)
+      const color = this.getDiffColor(dependency.severity.latest)
+      const rangeColor = this.getDiffColor(dependency.severity.range)
 
       this.printRow({
         current: dependency.current.padEnd(this.sizes.current),
         latest: this.formatVersion(dependency, "latest", color),
         name: this.applyColor(dependency.name.padEnd(this.sizes.name), color),
+        range: this.formatVersion(dependency, "range", rangeColor),
         type: dependency.type.padEnd(this.sizes.type),
         url: dependency.url?.padEnd(this.sizes.url),
         workspace: dependency.workspace?.padEnd(this.sizes.workspace),
@@ -49,21 +53,20 @@ export class DependencyTable {
     })
   }
 
-  private applyColor(value: string, color: string) {
-    return formatUtils.pretty(this.configuration, value, color)
+  private applyColor(value: string, color: string | null) {
+    return color ? formatUtils.pretty(this.configuration, value, color) : value
   }
 
   private formatVersion(
     dependency: OutdatedDependency,
     column: TableColumn,
-    color: string
+    color: string | null
   ) {
-    const value = dependency[column]!.padEnd(this.sizes[column])
-    const matches = value.match(semverRegex)
+    const value = dependency[column]?.padEnd(this.sizes[column])
+    if (!value) return
 
-    if (!matches) {
-      return value
-    }
+    const matches = value.match(semverRegex)
+    if (!matches || !color) return value
 
     const index = ["red", "yellow", "green"].indexOf(color) + 1
     const start = matches.slice(1, index).join("")
@@ -79,20 +82,17 @@ export class DependencyTable {
     )
   }
 
-  private getDiffColor(dependency: OutdatedDependency) {
-    const colors = { major: "red", minor: "yellow", patch: "green" }
-    return colors[dependency.severity]
+  private getDiffColor(severity: Severity) {
+    return severity
+      ? { major: "red", minor: "yellow", patch: "green" }[severity]
+      : null
   }
 
   private getColumnSizes(): Record<TableColumn, number> {
-    const sizes = {
-      current: this.headers.current.length,
-      latest: this.headers.latest.length,
-      name: this.headers.name.length,
-      type: this.headers.type.length,
-      url: this.headers.url.length,
-      workspace: this.headers.workspace.length,
-    }
+    const sizes = columns.reduce(
+      (acc, column) => ({ ...acc, [column]: this.headers[column].length }),
+      {} as Record<TableColumn, number>
+    )
 
     for (const dependency of this.dependencies) {
       for (const [key, value] of Object.entries(dependency)) {
@@ -119,6 +119,7 @@ export class DependencyTable {
       current: this.formatColumnHeader("current"),
       latest: this.formatColumnHeader("latest"),
       name: this.formatColumnHeader("name"),
+      range: this.formatColumnHeader("range"),
       type: this.formatColumnHeader("type"),
       url: this.formatColumnHeader("url"),
       workspace: this.formatColumnHeader("workspace"),
