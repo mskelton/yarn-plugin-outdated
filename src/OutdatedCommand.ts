@@ -361,6 +361,7 @@ export class OutdatedCommand extends BaseCommand {
         // if it is outdated. These type of packages tend to be versioned with
         // a tool like Lerna or they are private.
         if (workspace.project.tryWorkspaceByLocator(pkg)) {
+          progress?.tick()
           return
         }
 
