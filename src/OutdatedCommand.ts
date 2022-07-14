@@ -295,6 +295,13 @@ export class OutdatedCommand extends BaseCommand {
             continue
           }
 
+          // Ignore GitHub dependencies. In the future we could consider adding
+          // some custom logic to test this, but for now let's just ignore them
+          // so at least the plugin doesn't break.
+          if (pkg.reference.includes("github.com")) {
+            continue
+          }
+
           dependencies.push({
             dependencyType,
             descriptor,
