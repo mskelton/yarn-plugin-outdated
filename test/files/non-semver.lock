@@ -54,8 +54,32 @@ __metadata:
     "@scoped/patch": "patch:@scoped/patch@1.0.0#./alias.patch"
     alias: "npm:patch@1.0.0"
     file: "file:./file-dep"
+    githubA: mskelton/yarn-constraints-example
+    githubB: "github:mskelton/yarn-constraints-example"
+    githubC: "git@github.com:mskelton/yarn-constraints-example.git"
     major: "*"
     minor: ">1.0.0 <2.0.0"
     patch: latest
   languageName: unknown
   linkType: soft
+
+githubA@mskelton/yarn-constraints-example:
+  version: 0.0.0
+  resolution: "githubA@https://github.com/mskelton/yarn-constraints-example.git#commit=67be8b59748ffda1bc0dd2605f4abcdf23c8847c"
+  checksum: 32dc113c79338e4808807a876ac8d3e3f435bbc4d0f5055986b9a3bdeda6512840f26ce49f82aca9a88e2470e2fbb34245ac2d452837386cc75ef9afea1e778e
+  languageName: node
+  linkType: hard
+
+"githubB@github:mskelton/yarn-constraints-example":
+  version: 0.0.0
+  resolution: "githubB@https://github.com/mskelton/yarn-constraints-example.git#commit=67be8b59748ffda1bc0dd2605f4abcdf23c8847c"
+  checksum: 02a2c40208398365ae11168a2de08902b27e6dac2327959ce078e69d15cfa340b97c34ff1f818ba8ff5ee961fa064de599f37424368488c6ed502760cd645c89
+  languageName: node
+  linkType: hard
+
+"githubC@git@github.com:mskelton/yarn-constraints-example.git":
+  version: 0.0.0
+  resolution: "githubC@git@github.com:mskelton/yarn-constraints-example.git#commit=67be8b59748ffda1bc0dd2605f4abcdf23c8847c"
+  checksum: 23a1df853c2e943e0b8766c2a6abf9fa9efacb21eaaf9dd0319bf85fdf6c57a498adde3e90327aca8c26fb3de270a028c9804ae14afba7aeeb3259ab8f1af345
+  languageName: node
+  linkType: hard

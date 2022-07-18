@@ -288,6 +288,20 @@ export class OutdatedCommand extends BaseCommand {
           const pkg = project.storedPackages.get(res)
           if (!pkg) this.throw(configuration, dependency)
 
+          // If the dependency is a workspace, then we don't need to check
+          // if it is outdated. These type of packages tend to be versioned with
+          // a tool like Changesets or Lerna; or they are private.
+          if (workspace.project.tryWorkspaceByLocator(pkg)) {
+            continue
+          }
+
+          // Ignore GitHub dependencies. In the future we could consider adding
+          // some custom logic to test this, but for now let's just ignore them
+          // so at least the plugin doesn't break.
+          if (pkg.reference.includes("github.com")) {
+            continue
+          }
+
           dependencies.push({
             dependencyType,
             descriptor,
@@ -357,14 +371,6 @@ export class OutdatedCommand extends BaseCommand {
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
       async ({ dependencyType, descriptor, name, pkg, workspace }) => {
-        // If the dependency is a workspace, then we don't need to check
-        // if it is outdated. These type of packages tend to be versioned with
-        // a tool like Lerna or they are private.
-        if (workspace.project.tryWorkspaceByLocator(pkg)) {
-          progress?.tick()
-          return
-        }
-
         const { latest, range, url } = await fetcher.fetch({
           descriptor,
           includeRange: this.includeRange,
