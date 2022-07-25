@@ -7,9 +7,11 @@ export const truthy = Boolean as unknown as <T>(
 
 function parseRepository(repository: string) {
   const [_, provider, repo] =
-    repository.match(/(github|bitbucket|gitlab):(.+)/) ?? []
+    repository.match(/^(github|bitbucket|gitlab|https?):(.+)/) ?? []
 
-  return provider
+  return provider === 'http' || provider === 'https'
+    ? repository
+    : provider
     ? `https://${provider}.${provider === "bitbucket" ? "org" : "com"}/${repo}`
     : `https://github.com/${repository}`
 }

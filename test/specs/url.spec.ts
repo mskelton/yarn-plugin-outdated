@@ -36,6 +36,9 @@ test.describe.parallel("yarn outdated --url", () => {
 
     expect(getURL({ homepage: "http://foo.com" })).toBe("http://foo.com")
     expect(getURL({ repository: "npm/npm" })).toBe("https://github.com/npm/npm")
+    expect(getURL({ repository: "https://github.com/mskelton/yarn-plugin-outdated.git" })).toBe(
+      "https://github.com/mskelton/yarn-plugin-outdated.git"
+    )
     expect(getURL({ repository: "github:mskelton/yarn-plugin-outdated" })).toBe(
       "https://github.com/mskelton/yarn-plugin-outdated"
     )
