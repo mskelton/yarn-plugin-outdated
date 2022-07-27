@@ -7,13 +7,27 @@ export const truthy = Boolean as unknown as <T>(
 
 function parseRepository(repository: string) {
   const [_, provider, repo] =
-    repository.match(/^(github|bitbucket|gitlab|https?):(.+)/) ?? []
+    repository.match(
+      /^(github|bitbucket|gitlab|(?:git\+)?https?|git|git@[^:]+):(.+)/
+    ) ?? []
 
-  return provider === 'http' || provider === 'https'
-    ? repository
-    : provider
-    ? `https://${provider}.${provider === "bitbucket" ? "org" : "com"}/${repo}`
-    : `https://github.com/${repository}`
+  if (provider === "http" || provider === "https") {
+    // HTTP - use as is
+    return repository
+  } else if (provider === "git") {
+    // Unencrypted git:// protocol - replace with http (as supported by GitHub)
+    return `https:${repo}`
+  } else if (provider?.startsWith("git@")) {
+    // SSH protocol as used by GitHub, GitLab
+    return `https://${provider.split("@")[1]}/${repo}`
+  } else if (provider) {
+    // Shortcut syntax for GitHub, GitLab, Bitbucket -
+    // https://docs.npmjs.com/cli/v8/configuring-npm/package-json#repository
+    const tld = provider === "bitbucket" ? "org" : "com"
+    return `https://${provider}.${tld}/${repo}`
+  } else {
+    return `https://github.com/${repository}`
+  }
 }
 
 export function getHomepageURL(manifest: Manifest) {

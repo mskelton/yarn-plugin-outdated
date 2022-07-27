@@ -48,6 +48,12 @@ test.describe.parallel("yarn outdated --url", () => {
     expect(getURL({ repository: "gitlab:user/repo" })).toBe(
       "https://gitlab.com/user/repo"
     )
+    expect(getURL({ repository: "git://github.com/user/repo.git" })).toBe(
+      "https://github.com/user/repo.git"
+    )
+    expect(getURL({ repository: "git@github.com:user/repo.git" })).toBe(
+      "https://github.com/user/repo.git"
+    )
     expect(getURL({ repository: { url: "http://foo.com" } })).toBe(
       "http://foo.com"
     )
