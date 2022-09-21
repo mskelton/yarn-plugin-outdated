@@ -126,47 +126,11 @@ export class OutdatedCommand extends BaseCommand {
     }
 
     if (this.markdown) {
-      const outdatedList = await this.getOutdatedDependencies(
+      const render = await this.renderMarkdownTable(
         project,
         fetcher,
         dependencies
       )
-
-      if (outdatedList.length === 0) {
-        return
-      }
-
-      const markdownTableData: string[][] = []
-      const headers = ["Package", "Current", "Latest"]
-
-      if (outdatedList[0].workspace) {
-        headers.push("Workspace")
-      }
-
-      headers.push("Package Type")
-
-      if (this.includeURL) {
-        headers.push("URL")
-      }
-
-      markdownTableData.push(headers)
-
-      outdatedList.forEach((outdated) => {
-        const row: string[] = [
-          outdated.name,
-          outdated.current,
-          outdated.latest,
-          outdated.workspace ? outdated.workspace : "",
-          outdated.type,
-        ]
-
-        if (this.includeURL) {
-          row.push(outdated.url ? outdated.url : "")
-        }
-        markdownTableData.push(row)
-      })
-
-      const render = markdownTable(markdownTableData)
 
       this.context.stdout.write(render + "\n")
       return
@@ -490,5 +454,55 @@ export class OutdatedCommand extends BaseCommand {
       MessageName.UNNAMED,
       formatUtils.pretty(configuration, message, "green")
     )
+  }
+
+  async renderMarkdownTable(
+    project: Project,
+    fetcher: DependencyFetcher,
+    dependencies: DependencyInfo[],
+    progress?: ReturnType<typeof Report["progressViaCounter"]>
+  ): Promise<string | undefined> {
+    const outdatedList = await this.getOutdatedDependencies(
+      project,
+      fetcher,
+      dependencies,
+      progress
+    )
+
+    if (outdatedList.length === 0) {
+      return
+    }
+
+    const markdownTableData: string[][] = []
+    const headers = ["Package", "Current", "Latest"]
+
+    if (outdatedList[0].workspace) {
+      headers.push("Workspace")
+    }
+
+    headers.push("Package Type")
+
+    if (this.includeURL) {
+      headers.push("URL")
+    }
+
+    markdownTableData.push(headers)
+
+    outdatedList.forEach((outdated) => {
+      const row: string[] = [
+        outdated.name,
+        outdated.current,
+        outdated.latest,
+        outdated.workspace ? outdated.workspace : "",
+        outdated.type,
+      ]
+
+      if (this.includeURL) {
+        row.push(outdated.url ? outdated.url : "")
+      }
+      markdownTableData.push(row)
+    })
+
+    return markdownTable(markdownTableData)
   }
 }
