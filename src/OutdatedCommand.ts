@@ -14,6 +14,7 @@ import {
   Workspace,
 } from "@yarnpkg/core"
 import { Command, Option, Usage, UsageError } from "clipanion"
+import { markdownTable } from "markdown-table"
 import micromatch from "micromatch"
 import path from "path"
 import semver from "semver"
@@ -27,6 +28,7 @@ import {
   severities,
   Severity,
 } from "./types"
+
 import { isVersionOutdated, truthy } from "./utils"
 
 export class OutdatedCommand extends BaseCommand {
@@ -69,6 +71,10 @@ export class OutdatedCommand extends BaseCommand {
 
   json = Option.Boolean("--json", false, {
     description: "Format the output as JSON",
+  })
+
+  markdown = Option.Boolean("--markdown", false, {
+    description: "Format the output as a markdown table",
   })
 
   severity = Option.Array("-s,--severity", {
@@ -116,6 +122,53 @@ export class OutdatedCommand extends BaseCommand {
       }))
 
       this.context.stdout.write(JSON.stringify(json) + "\n")
+      return
+    }
+
+    if (this.markdown) {
+      const outdatedList = await this.getOutdatedDependencies(
+        project,
+        fetcher,
+        dependencies
+      )
+
+      if (outdatedList.length === 0) {
+        return
+      }
+
+      const markdownTableData: string[][] = []
+      const headers = ["Package", "Current", "Latest"]
+
+      if (outdatedList[0].workspace) {
+        headers.push("Workspace")
+      }
+
+      headers.push("Package Type")
+
+      if (this.includeURL) {
+        headers.push("URL")
+      }
+
+      markdownTableData.push(headers)
+
+      outdatedList.forEach((outdated) => {
+        const row: string[] = [
+          outdated.name,
+          outdated.current,
+          outdated.latest,
+          outdated.workspace ? outdated.workspace : "",
+          outdated.type,
+        ]
+
+        if (this.includeURL) {
+          row.push(outdated.url ? outdated.url : "")
+        }
+        markdownTableData.push(row)
+      })
+
+      const render = markdownTable(markdownTableData)
+
+      this.context.stdout.write(render + "\n")
       return
     }
 

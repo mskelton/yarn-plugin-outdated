@@ -121,3 +121,7 @@ yarn outdated --url
 ### JSON output (`--json`)
 
 If you are writing a script that depends on information from this plugin, you may find the `--json` option helpful to get more raw data that you can then parse and use as your needs require.
+
+### Markdown output (`--markdown`)
+
+If you are writing a script that generates pull requests from this plugin, you may find the `--markdown` option helpful to provide richer information in a pull request body.
