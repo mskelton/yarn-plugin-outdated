@@ -1,4 +1,4 @@
-| Package | Current | Latest | Package Type |                 |
-| ------- | ------- | ------ | ------------ | --------------- |
-| minor   | 1.0.0   | 1.1.0  |              | devDependencies |
-| patch   | 1.0.0   | 1.0.1  |              | dependencies    |
+| Package | Current | Latest | Severity | Package Type    |
+| ------- | ------- | ------ | -------- | --------------- |
+| minor   | 1.0.0   | 1.1.0  | minor    | devDependencies |
+| patch   | 1.0.0   | 1.0.1  | patch    | dependencies    |

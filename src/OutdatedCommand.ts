@@ -474,7 +474,7 @@ export class OutdatedCommand extends BaseCommand {
     }
 
     const markdownTableData: string[][] = []
-    const headers = ["Package", "Current", "Latest"]
+    const headers = ["Package", "Current", "Latest", "Severity"]
 
     if (outdatedList[0].workspace) {
       headers.push("Workspace")
@@ -493,9 +493,14 @@ export class OutdatedCommand extends BaseCommand {
         outdated.name,
         outdated.current,
         outdated.latest,
-        outdated.workspace ? outdated.workspace : "",
-        outdated.type,
+        outdated.severity.latest ? outdated.severity.latest : "",
       ]
+
+      if (outdated.workspace) {
+        row.push(outdated.workspace ? outdated.workspace : "")
+      }
+
+      row.push(outdated.type)
 
       if (this.includeURL) {
         row.push(outdated.url ? outdated.url : "")
