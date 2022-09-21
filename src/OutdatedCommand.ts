@@ -108,6 +108,12 @@ export class OutdatedCommand extends BaseCommand {
     const workspaces = this.getWorkspaces(project)
     const dependencies = this.getDependencies(configuration, workspaces)
 
+    if (this.json && this.markdown) {
+      throw new UsageError(
+        "You can format the output as JSON or as a Markdown Table. Not Both"
+      )
+    }
+
     if (this.json) {
       const outdated = await this.getOutdatedDependencies(
         project,
@@ -461,7 +467,7 @@ export class OutdatedCommand extends BaseCommand {
     fetcher: DependencyFetcher,
     dependencies: DependencyInfo[],
     progress?: ReturnType<typeof Report["progressViaCounter"]>
-  ): Promise<string | undefined> {
+  ): Promise<string> {
     const outdatedList = await this.getOutdatedDependencies(
       project,
       fetcher,
@@ -470,7 +476,7 @@ export class OutdatedCommand extends BaseCommand {
     )
 
     if (outdatedList.length === 0) {
-      return
+      return ""
     }
 
     const markdownTableData: string[][] = []
