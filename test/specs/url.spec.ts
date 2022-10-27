@@ -34,10 +34,9 @@ test.describe("yarn outdated --url", () => {
     const getURL = (raw: Record<string, unknown>) =>
       getHomepageURL({ raw } as Manifest)
 
-    expect(getURL({ homepage: "http://foo.com" })).toBe("http://foo.com")
     expect(getURL({ repository: "npm/npm" })).toBe("https://github.com/npm/npm")
-    expect(getURL({ repository: "https://github.com/mskelton/yarn-plugin-outdated.git" })).toBe(
-      "https://github.com/mskelton/yarn-plugin-outdated.git"
+    expect(getURL({ repository: "https://github.com/user/repo.git" })).toBe(
+      "https://github.com/user/repo"
     )
     expect(getURL({ repository: "github:mskelton/yarn-plugin-outdated" })).toBe(
       "https://github.com/mskelton/yarn-plugin-outdated"
@@ -49,11 +48,13 @@ test.describe("yarn outdated --url", () => {
       "https://gitlab.com/user/repo"
     )
     expect(getURL({ repository: "git://github.com/user/repo.git" })).toBe(
-      "https://github.com/user/repo.git"
+      "https://github.com/user/repo"
     )
     expect(getURL({ repository: "git@github.com:user/repo.git" })).toBe(
-      "https://github.com/user/repo.git"
+      "https://github.com/user/repo"
     )
+    expect(getURL({ homepage: "https://foo.com" })).toBe("https://foo.com")
+    expect(getURL({ homepage: "http://foo.com" })).toBe("http://foo.com")
     expect(getURL({ repository: { url: "http://foo.com" } })).toBe(
       "http://foo.com"
     )

@@ -1,43 +1,22 @@
 import { Manifest } from "@yarnpkg/core"
+import { fromUrl } from "hosted-git-info"
 import semver from "semver"
 
 export const truthy = Boolean as unknown as <T>(
   arg: T | undefined | null | false
 ) => arg is T
 
-function parseRepository(repository: string) {
-  const [_, provider, repo] =
-    repository.match(
-      /^(github|bitbucket|gitlab|(?:git\+)?https?|git|git@[^:]+):(.+)/
-    ) ?? []
+export function getHomepageURL({ raw: manifest }: Manifest): string | null {
+  const repo = manifest.repository
+  const repoURL = !repo
+    ? manifest.homepage
+    : typeof repo === "string"
+    ? repo
+    : typeof repo === "object" && typeof repo.url === "string"
+    ? repo.url
+    : null
 
-  if (provider === "http" || provider === "https") {
-    // HTTP - use as is
-    return repository
-  } else if (provider === "git") {
-    // Unencrypted git:// protocol - replace with http (as supported by GitHub)
-    return `https:${repo}`
-  } else if (provider?.startsWith("git@")) {
-    // SSH protocol as used by GitHub, GitLab
-    return `https://${provider.split("@")[1]}/${repo}`
-  } else if (provider) {
-    // Shortcut syntax for GitHub, GitLab, Bitbucket -
-    // https://docs.npmjs.com/cli/v8/configuring-npm/package-json#repository
-    const tld = provider === "bitbucket" ? "org" : "com"
-    return `https://${provider}.${tld}/${repo}`
-  } else {
-    return `https://github.com/${repository}`
-  }
-}
-
-export function getHomepageURL(manifest: Manifest) {
-  const { homepage, repository } = manifest.raw
-
-  return homepage
-    ? homepage
-    : typeof repository === "string"
-    ? parseRepository(repository)
-    : repository?.url
+  return (repoURL && fromUrl(repoURL)?.browse()) || repoURL
 }
 
 /**

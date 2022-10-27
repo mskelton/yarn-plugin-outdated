@@ -453,6 +453,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/hosted-git-info@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@types/hosted-git-info@npm:3.0.2"
+  checksum: b922a6f13c79d0388762a92e943d098cbc950be20754508de4946d3529ecab730e3be01ebdbe0a235b85ddcc3f7251d8df3073d98978d43018a76200b47e548d
+  languageName: node
+  linkType: hard
+
 "@types/http-cache-semantics@npm:*":
   version: 4.0.0
   resolution: "@types/http-cache-semantics@npm:4.0.0"
@@ -2237,6 +2244,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hosted-git-info@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "hosted-git-info@npm:5.2.0"
+  dependencies:
+    lru-cache: ^7.5.1
+  checksum: a997292085721707cd1c6991c22c8b7780d466dc54702ead7187d76be2c045844c347bf9e2c3f5f5349a412916d9a981321ca0c7f26e625a9c019748cc6d98d7
+  languageName: node
+  linkType: hard
+
 "http-cache-semantics@npm:^4.0.0":
   version: 4.1.0
   resolution: "http-cache-semantics@npm:4.1.0"
@@ -2522,6 +2538,13 @@ __metadata:
   dependencies:
     yallist: ^4.0.0
   checksum: f97f499f898f23e4585742138a22f22526254fdba6d75d41a1c2526b3b6cc5747ef59c5612ba7375f42aca4f8461950e925ba08c991ead0651b4918b7c978297
+  languageName: node
+  linkType: hard
+
+"lru-cache@npm:^7.5.1":
+  version: 7.14.0
+  resolution: "lru-cache@npm:7.14.0"
+  checksum: efdd329f2c1bb790b71d497c6c59272e6bc2d7dd060ba55fc136becd3dd31fc8346edb446275504d94cb60d3c8385dbf5267b79b23789e409b2bdf302d13f0d7
   languageName: node
   linkType: hard
 
@@ -3437,6 +3460,7 @@ __metadata:
     "@babel/eslint-parser": ^7.16.5
     "@mskelton/eslint-config": ^7.1.0
     "@playwright/test": ^1.27.1
+    "@types/hosted-git-info": ^3.0.2
     "@types/micromatch": ^4.0.2
     "@types/node": ^17.0.8
     "@types/semver": ^7.3.9
@@ -3455,6 +3479,7 @@ __metadata:
     eslint-plugin-sort: ^2.3.1
     glob: ^7.2.0
     glob-promise: ^4.2.2
+    hosted-git-info: ^5.2.0
     micromatch: ^4.0.4
     prettier: ^2.5.1
     semver: ^7.3.5
