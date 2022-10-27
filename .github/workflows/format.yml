@@ -1,22 +1,13 @@
 name: Format
-on:
-  push:
-    branches: [main]
-  pull_request_target:
+on: pull_request
 jobs:
   format:
+    if: github.owner == mskelton
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: mskelton/setup-yarn@v1
         with:
           ref: ${{ github.head_ref }}
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: yarn
-      - name: Install dependencies
-        run: yarn install --immutable
       - run: yarn format
       - run: yarn lint --fix || exit 0
       - name: Commit changes
