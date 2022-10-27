@@ -11,7 +11,7 @@ const manifest = {
   },
 }
 
-test.describe.parallel("yarn outdated --url", () => {
+test.describe("yarn outdated --url", () => {
   test("displays the package homepage URL", async ({ run, writeJSON }) => {
     await writeJSON("package.json", manifest)
     await run("install")

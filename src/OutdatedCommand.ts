@@ -23,11 +23,14 @@ import { DependencyTable } from "./DependencyTable"
 import {
   DependencyInfo,
   dependencyTypes,
+  formats,
   OutdatedDependency,
   severities,
   Severity,
 } from "./types"
 import { isVersionOutdated, truthy } from "./utils"
+
+const UP_TO_DATE_MESSAGE = "✨ All your dependencies are up to date!"
 
 export class OutdatedCommand extends BaseCommand {
   static paths = [["outdated"]]
@@ -67,6 +70,11 @@ export class OutdatedCommand extends BaseCommand {
     description: "Exit with exit code 1 when outdated dependencies are found",
   })
 
+  format = Option.String("--format", "text", {
+    description: "The format of the output",
+    validator: t.isEnum(formats),
+  })
+
   json = Option.Boolean("--json", false, {
     description: "Format the output as JSON",
   })
@@ -102,20 +110,18 @@ export class OutdatedCommand extends BaseCommand {
     const workspaces = this.getWorkspaces(project)
     const dependencies = this.getDependencies(configuration, workspaces)
 
-    if (this.json) {
+    if (this.format !== "text" || this.json) {
       const outdated = await this.getOutdatedDependencies(
         project,
         fetcher,
         dependencies
       )
 
-      // Convert the data to the minimal JSON format
-      const json = outdated.map((dep) => ({
-        ...dep,
-        severity: dep.severity.latest,
-      }))
-
-      this.context.stdout.write(JSON.stringify(json) + "\n")
+      if (this.format === "json" || this.json) {
+        this.writeJson(outdated)
+      } else {
+        this.writeMarkdown(configuration, project, outdated)
+      }
       return
     }
 
@@ -133,6 +139,39 @@ export class OutdatedCommand extends BaseCommand {
     )
 
     return report.exitCode()
+  }
+
+  writeJson(outdated: OutdatedDependency[]) {
+    const json = outdated.map((dep) => ({
+      ...dep,
+      severity: dep.severity.latest,
+    }))
+
+    this.context.stdout.write(JSON.stringify(json) + "\n")
+  }
+
+  writeMarkdown(
+    configuration: Configuration,
+    project: Project,
+    outdated: OutdatedDependency[]
+  ) {
+    if (!outdated.length) {
+      this.context.stdout.write(UP_TO_DATE_MESSAGE + "\n")
+      return
+    }
+
+    const table = new DependencyTable(
+      "markdown",
+      (line) => this.context.stdout.write(line + "\n"),
+      configuration,
+      outdated,
+      {
+        range: this.includeRange,
+        url: this.includeURL,
+        workspace: this.includeWorkspace(project),
+      }
+    )
+    table.print()
   }
 
   async checkOutdatedDependencies(
@@ -163,17 +202,26 @@ export class OutdatedCommand extends BaseCommand {
     report.reportSeparator()
 
     if (outdated.length) {
-      const table = new DependencyTable(report, configuration, outdated, {
-        range: this.includeRange,
-        url: this.includeURL,
-        workspace: this.includeWorkspace(project),
-      })
+      const table = new DependencyTable(
+        "text",
+        (row) => report.reportInfo(MessageName.UNNAMED, row),
+        configuration,
+        outdated,
+        {
+          range: this.includeRange,
+          url: this.includeURL,
+          workspace: this.includeWorkspace(project),
+        }
+      )
 
       table.print()
       report.reportSeparator()
       this.printOutdatedCount(report, outdated.length)
     } else {
-      this.printUpToDate(configuration, report)
+      report.reportInfo(
+        MessageName.UNNAMED,
+        formatUtils.pretty(configuration, UP_TO_DATE_MESSAGE, "green")
+      )
     }
   }
 
@@ -428,14 +476,5 @@ export class OutdatedCommand extends BaseCommand {
     } else {
       report.reportWarning(...args)
     }
-  }
-
-  printUpToDate(configuration: Configuration, report: StreamReport) {
-    const message = "✨ All your dependencies are up to date!"
-
-    report.reportInfo(
-      MessageName.UNNAMED,
-      formatUtils.pretty(configuration, message, "green")
-    )
   }
 }

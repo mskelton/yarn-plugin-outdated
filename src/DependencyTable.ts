@@ -1,4 +1,4 @@
-import { Configuration, formatUtils, MessageName, Report } from "@yarnpkg/core"
+import { Configuration, formatUtils } from "@yarnpkg/core"
 import { OutdatedDependency, Severity } from "./types"
 
 const semverRegex = /^([0-9]+\.)([0-9]+\.)(.+)$/
@@ -27,7 +27,8 @@ export class DependencyTable {
   }
 
   constructor(
-    private report: Report,
+    private format: "text" | "markdown",
+    private writer: (row: string) => void,
     private configuration: Configuration,
     private dependencies: OutdatedDependency[],
     private extraColumns: Partial<Record<TableColumn, boolean>>
@@ -124,15 +125,24 @@ export class DependencyTable {
       url: this.formatColumnHeader("url"),
       workspace: this.formatColumnHeader("workspace"),
     })
+
+    if (this.format === "markdown") {
+      this.printRow(
+        (Object.keys(this.sizes) as TableColumn[]).reduce(
+          (acc, key) => ({ ...acc, [key]: "".padEnd(this.sizes[key], "-") }),
+          {} as Record<TableColumn, string>
+        )
+      )
+    }
   }
 
   private printRow(row: Record<TableColumn, string | undefined>) {
+    const isMarkdown = this.format === "markdown"
     const output = columns
       .filter((column) => this.extraColumns[column] ?? true)
       .map((column) => row[column])
-      .join("   ")
-      .trim()
+      .join(isMarkdown ? " | " : "   ")
 
-    this.report.reportInfo(MessageName.UNNAMED, output)
+    this.writer(isMarkdown ? `| ${output} |` : output.trim())
   }
 }

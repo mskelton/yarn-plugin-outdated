@@ -1,7 +1,7 @@
 import { ppath, toFilename } from "@yarnpkg/fslib"
 import { expect, test } from "../fixtures/env"
 
-test.describe.parallel("workspaces", () => {
+test.describe("workspaces", () => {
   test("includes packages from all workspaces", async ({ run, writeJSON }) => {
     await writeJSON("package.json", { workspaces: ["a", "b"] })
     await writeJSON("a/package.json", { dependencies: { patch: "1.0.0" } })
