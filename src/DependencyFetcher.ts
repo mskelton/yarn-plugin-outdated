@@ -42,7 +42,7 @@ export class DependencyFetcher {
     return {
       latest: latest.range,
       range: range?.range,
-      url: homepageURL,
+      url: homepageURL ?? "",
     }
   }
 

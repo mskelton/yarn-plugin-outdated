@@ -1,27 +1,22 @@
 import { Manifest } from "@yarnpkg/core"
+import { fromUrl } from "hosted-git-info"
 import semver from "semver"
 
 export const truthy = Boolean as unknown as <T>(
   arg: T | undefined | null | false
 ) => arg is T
 
-function parseRepository(repository: string) {
-  const [_, provider, repo] =
-    repository.match(/(github|bitbucket|gitlab):(.+)/) ?? []
+export function getHomepageURL({ raw: manifest }: Manifest): string | null {
+  const repo = manifest.repository
+  const repoURL = !repo
+    ? manifest.homepage
+    : typeof repo === "string"
+    ? repo
+    : typeof repo === "object" && typeof repo.url === "string"
+    ? repo.url
+    : null
 
-  return provider
-    ? `https://${provider}.${provider === "bitbucket" ? "org" : "com"}/${repo}`
-    : `https://github.com/${repository}`
-}
-
-export function getHomepageURL(manifest: Manifest) {
-  const { homepage, repository } = manifest.raw
-
-  return homepage
-    ? homepage
-    : typeof repository === "string"
-    ? parseRepository(repository)
-    : repository?.url
+  return (repoURL && fromUrl(repoURL)?.browse()) || repoURL
 }
 
 /**
