@@ -1,6 +1,6 @@
 import { expect, test } from "../fixtures/env"
 
-test.describe.parallel("yarn outdated", () => {
+test.describe("yarn outdated", () => {
   test("filters based on dependency type", async ({ run, writeJSON }) => {
     await writeJSON("package.json", {
       dependencies: { patch: "1.0.0" },

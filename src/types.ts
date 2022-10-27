@@ -6,6 +6,9 @@ export type DependencyType = typeof dependencyTypes[number]
 export const severities = ["major", "minor", "patch"] as const
 export type Severity = typeof severities[number] | null
 
+export const formats = ["text", "json", "markdown"] as const
+export type Format = typeof formats[number] | null
+
 export interface DependencyInfo {
   dependencyType: DependencyType
   descriptor: Descriptor

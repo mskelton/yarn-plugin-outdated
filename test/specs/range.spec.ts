@@ -1,6 +1,6 @@
 import { expect, test } from "../fixtures/env"
 
-test.describe.parallel("yarn outdated --range", () => {
+test.describe("yarn outdated --range", () => {
   test("includes the latest version satisfying the range", async ({
     run,
     writeJSON,
