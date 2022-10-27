@@ -1,7 +1,7 @@
 import { expect, test } from "../fixtures/env"
 import { prettyJSON } from "../utils/format"
 
-test.describe.parallel("yarn outdated --json", () => {
+test.describe.parallel("yarn outdated --format=json", () => {
   test("shows outdated dependencies", async ({ run, writeJSON }) => {
     await writeJSON("package.json", {
       dependencies: { patch: "1.0.0" },
@@ -9,7 +9,7 @@ test.describe.parallel("yarn outdated --json", () => {
     })
     await run("install")
 
-    const { stderr, stdout } = await run("outdated --json")
+    const { stderr, stdout } = await run("outdated --format=json")
     expect(prettyJSON(stdout)).toMatchSnapshot("json.txt")
     expect(stderr).toBe("")
   })
@@ -21,8 +21,20 @@ test.describe.parallel("yarn outdated --json", () => {
     await writeJSON("package.json", { dependencies: { patch: "1.0.1" } })
     await run("install")
 
-    const { stderr, stdout } = await run("outdated --json")
+    const { stderr, stdout } = await run("outdated --format=json")
     expect(JSON.parse(stdout)).toEqual([])
+    expect(stderr).toBe("")
+  })
+
+  test("works with deprecated --json option", async ({ run, writeJSON }) => {
+    await writeJSON("package.json", {
+      dependencies: { patch: "1.0.0" },
+      devDependencies: { minor: "1.0.0" },
+    })
+    await run("install")
+
+    const { stderr, stdout } = await run("outdated --json")
+    expect(prettyJSON(stdout)).toMatchSnapshot("json.txt")
     expect(stderr).toBe("")
   })
 })
