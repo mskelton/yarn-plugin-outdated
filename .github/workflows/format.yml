@@ -2,7 +2,7 @@ name: Format
 on: pull_request
 jobs:
   format:
-    if: github.owner == mskelton
+    if: ${{ github.repository_owner == mskelton }}
     runs-on: ubuntu-latest
     steps:
       - uses: mskelton/setup-yarn@v1
