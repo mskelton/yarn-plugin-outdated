@@ -9,7 +9,7 @@ const manifest = {
   },
 }
 
-test.describe.parallel("Filtering patterns", () => {
+test.describe("Filtering patterns", () => {
   test("filters by an exact package name", async ({ run, writeJSON }) => {
     await writeJSON("package.json", manifest)
     await run("install")

@@ -1,7 +1,7 @@
 import { expect, test } from "../fixtures/env"
 import { readSupplementalFile } from "../utils/files"
 
-test.describe.parallel("yarn outdated", () => {
+test.describe("yarn outdated", () => {
   test("shows outdated dependencies", async ({ run, writeJSON }) => {
     await writeJSON("package.json", {
       dependencies: { patch: "1.0.0" },
