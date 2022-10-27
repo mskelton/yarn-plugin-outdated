@@ -16,7 +16,12 @@ export function getHomepageURL({ raw: manifest }: Manifest): string | null {
     ? repo.url
     : null
 
-  return (repoURL && fromUrl(repoURL)?.browse()) || repoURL
+  const info = repoURL ? fromUrl(repoURL) : undefined
+  const commitish = info?.committish ? `#${info.committish}` : ""
+
+  return info
+    ? `https://${info.domain}/${info.user}/${info.project}${commitish}`
+    : repoURL
 }
 
 /**
