@@ -71,7 +71,7 @@ export class OutdatedCommand extends BaseCommand {
   })
 
   format = Option.String("--format", "text", {
-    description: "The format of the output",
+    description: "The format of the output (text|json|markdown)",
     validator: t.isEnum(formats),
   })
 
@@ -122,7 +122,8 @@ export class OutdatedCommand extends BaseCommand {
       } else {
         this.writeMarkdown(configuration, project, outdated)
       }
-      return
+
+      return outdated.length ? 1 : 0
     }
 
     const report = await StreamReport.start(
