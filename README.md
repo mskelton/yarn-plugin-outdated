@@ -147,13 +147,13 @@ yarn outdated --url
 In addition to the standard terminal text format, this plugin supports JSON and
 markdown formatting.
 
-### JSON (`--format=json`)
+#### JSON (`--format=json`)
 
 If you are writing a script that depends on information from this plugin, you
 may find the `--format=json` option helpful to get raw JSON data that you can
 then parse and use as your needs require.
 
-### JSON (`--format=markdown`)
+#### Markdown (`--format=markdown`)
 
 If you are using this plugin in a GitHub action or other CI provider that
 displays markdown content, use `--format=markdown` to display a formatted
