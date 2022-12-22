@@ -12,12 +12,13 @@ const YARN_RC = stringifySyml({
 
 interface RunOptions {
   cwd?: PortablePath
+  env?: Record<string, string>
 }
 
 // We only need to setup the registry once
 const registry = new Registry()
 
-export async function makeTemporaryEnv() {
+export async function makeTemporaryEnv(globalEnv: Record<string, string>) {
   const [tempDir, homeDir, registryUrl] = await Promise.all([
     xfs.mktempPromise(),
     xfs.mktempPromise(),
@@ -44,7 +45,7 @@ export async function makeTemporaryEnv() {
     await writeFile(target, JSON.stringify(body))
   }
 
-  const run = (command: string, { cwd }: RunOptions = {}) => {
+  const run = (command: string, { cwd, env }: RunOptions = {}) => {
     const yarnPath = `${__dirname}/../../.yarn/releases/yarn-3.2.1.cjs`
     const yarnBinary = require.resolve(yarnPath)
 
@@ -67,6 +68,8 @@ export async function makeTemporaryEnv() {
         YARN_NPM_REGISTRY_SERVER: registryUrl,
         // Otherwise we would more often test the fallback rather than the real logic
         YARN_UNSAFE_HTTP_WHITELIST: new URL(registryUrl).hostname,
+        ...globalEnv,
+        ...env,
       },
     })
   }

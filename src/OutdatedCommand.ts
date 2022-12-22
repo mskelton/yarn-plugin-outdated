@@ -89,7 +89,7 @@ export class OutdatedCommand extends BaseCommand {
     validator: t.isEnum(dependencyTypes),
   })
 
-  includeURL = Option.Boolean("--url", false, {
+  _includeURL = Option.Boolean("--url", {
     description: "Include the homepage URL of each package in the output",
   })
 
@@ -112,6 +112,7 @@ export class OutdatedCommand extends BaseCommand {
 
     if (this.format !== "text" || this.json) {
       const outdated = await this.getOutdatedDependencies(
+        configuration,
         project,
         fetcher,
         dependencies
@@ -142,6 +143,10 @@ export class OutdatedCommand extends BaseCommand {
     return report.exitCode()
   }
 
+  includeURL(configuration: Configuration) {
+    return this._includeURL ?? configuration.get("outdatedIncludeUrl")
+  }
+
   writeJson(outdated: OutdatedDependency[]) {
     const json = outdated.map((dep) => ({
       ...dep,
@@ -168,7 +173,7 @@ export class OutdatedCommand extends BaseCommand {
       outdated,
       {
         range: this.includeRange,
-        url: this.includeURL,
+        url: this.includeURL(configuration),
         workspace: this.includeWorkspace(project),
       }
     )
@@ -192,6 +197,7 @@ export class OutdatedCommand extends BaseCommand {
         report.reportProgress(progress)
 
         outdated = await this.getOutdatedDependencies(
+          configuration,
           project,
           fetcher,
           dependencies,
@@ -210,7 +216,7 @@ export class OutdatedCommand extends BaseCommand {
         outdated,
         {
           range: this.includeRange,
-          url: this.includeURL,
+          url: this.includeURL(configuration),
           workspace: this.includeWorkspace(project),
         }
       )
@@ -413,6 +419,7 @@ export class OutdatedCommand extends BaseCommand {
    * sort them in ascending order.
    */
   async getOutdatedDependencies(
+    configuration: Configuration,
     project: Project,
     fetcher: DependencyFetcher,
     dependencies: DependencyInfo[],
@@ -423,7 +430,7 @@ export class OutdatedCommand extends BaseCommand {
         const { latest, range, url } = await fetcher.fetch({
           descriptor,
           includeRange: this.includeRange,
-          includeURL: this.includeURL,
+          includeURL: this.includeURL(configuration),
           pkg,
         })
 

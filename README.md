@@ -8,13 +8,13 @@ Yarn plugin to show outdated dependencies.
 
 ### Yarn 3
 
-```sh
+```bash
 yarn plugin import https://mskelton.dev/yarn-outdated/v3
 ```
 
 ### Yarn 2
 
-```sh
+```bash
 yarn plugin import https://mskelton.dev/yarn-outdated/v1.2.0
 ```
 
@@ -23,7 +23,7 @@ yarn plugin import https://mskelton.dev/yarn-outdated/v1.2.0
 When run without arguments, this plugin will find outdated plugins in all
 workspaces of your project.
 
-```sh
+```bash
 yarn outdated
 ```
 
@@ -34,13 +34,13 @@ You can easily filter dependencies using any valid
 especially useful when you want to check a set of related dependencies such as a
 component library or tools such as Babel or ESLint.
 
-```sh
+```bash
 yarn outdated '@babel/*'
 ```
 
 And, in case you were wondering, you can add multiple glob patterns!
 
-```sh
+```bash
 yarn outdated '@babel/*' '@types/*'
 ```
 
@@ -53,14 +53,14 @@ be included.
 The simplest way to filter a workspace is by it's name. And just like dependency
 filtering, this flag supports glob patterns!
 
-```sh
+```bash
 yarn outdated --workspace frontend
 ```
 
 You can also filter workspaces by directory using either an absolute or relative
 path.
 
-```sh
+```bash
 yarn outdated --workspace packages/a
 yarn outdated --workspace /Users/mark/project/packages/a
 ```
@@ -69,7 +69,7 @@ The `--workspace` flag can be added multiple times to specify multiple glob
 patterns to match with. You can even mix and match directories and workspace
 names!
 
-```sh
+```bash
 yarn outdated --workspace packages/a --workspace frontend
 ```
 
@@ -83,7 +83,7 @@ got your back! With the `--severity` option, you can specify which severity
 levels to include. By default, we show all but if you only want to display minor
 versions updates, you could use this command.
 
-```sh
+```bash
 yarn outdated --severity minor
 ```
 
@@ -91,7 +91,7 @@ Also, this flag can be specified multiple times if you would like to include
 multiple severities, such as minor and patch versions, as shown in the following
 example.
 
-```sh
+```bash
 yarn outdated --severity minor --severity patch
 ```
 
@@ -100,7 +100,7 @@ yarn outdated --severity minor --severity patch
 The final means of filtering outdated dependencies is by dependency type. For
 example, to only display outdated `devDependencies`, use the following command.
 
-```sh
+```bash
 yarn outdated --type devDependencies
 ```
 
@@ -110,14 +110,14 @@ By default, only the latest version of dependencies are displayed. However, in
 some cases you may wish to know both the latest version and the version that
 satisfies the range specified in your manifest.
 
-```sh
+```bash
 yarn outdated --range
 ```
 
 For example if you have `"glob": "^7.2.0"` in your manifest, the output with
 this flag might look something like this.
 
-```sh
+```bash
 ➤ YN0000: Package   Current   Range   Latest   Package Type
 ➤ YN0000: glob      7.2.0     7.2.3   8.0.3    devDependencies
 ```
@@ -129,16 +129,16 @@ outdated dependencies. While this is perfect for normal use, if you want to use
 this plugin with scripts and fail if there are outdated dependencies, you can
 add the `--check` flag.
 
-```sh
+```bash
 yarn outdated --check
 ```
 
-### Display URL (`--url`)
+### Display homepage URLs (`--url`)
 
 It is possible to display dependency homepage URLs in the output. To do so,
 simply add the `--url` flag to the command!
 
-```sh
+```bash
 yarn outdated --url
 ```
 
@@ -158,3 +158,21 @@ then parse and use as your needs require.
 If you are using this plugin in a GitHub action or other CI provider that
 displays markdown content, use `--format=markdown` to display a formatted
 markdown table.
+
+## Configuration
+
+### Include homepage URLs by default (`outdatedIncludeUrl`)
+
+By default, homepage URLs are not included in the output. In addition to the
+`--url` flag, you can configure URLs to show by default.
+
+```yaml
+outdatedIncludeUrl: true
+```
+
+When this setting is enabled, you can use the `--no-url` flag to disable it on a
+per-command basis.
+
+```bash
+yarn outdated --no-url
+```

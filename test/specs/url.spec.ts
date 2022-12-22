@@ -59,4 +59,29 @@ test.describe("yarn outdated --url", () => {
       "http://foo.com"
     )
   })
+
+  test.describe("when outdatedIncludeURL config is true", () => {
+    test.use({ env: { YARN_OUTDATED_INCLUDE_URL: "true" } })
+
+    test("displays the package homepage URL by default", async ({
+      run,
+      writeJSON,
+    }) => {
+      await writeJSON("package.json", manifest)
+      await run("install")
+
+      const { stderr, stdout } = await run("outdated")
+      expect(stdout).toMatchSnapshot("url.txt")
+      expect(stderr).toBe("")
+    })
+
+    test("favors the flag over the config", async ({ run, writeJSON }) => {
+      await writeJSON("package.json", manifest)
+      await run("install")
+
+      const { stderr, stdout } = await run("outdated --no-url")
+      expect(stdout).toMatchSnapshot("no-url.txt")
+      expect(stderr).toBe("")
+    })
+  })
 })
