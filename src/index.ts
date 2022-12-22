@@ -1,8 +1,21 @@
-import { Plugin } from "@yarnpkg/core"
+import { Plugin, SettingsType } from "@yarnpkg/core"
 import { OutdatedCommand } from "./OutdatedCommand"
+
+declare module "@yarnpkg/core" {
+  interface ConfigurationValueMap {
+    outdatedIncludeURL: boolean
+  }
+}
 
 const plugin: Plugin = {
   commands: [OutdatedCommand],
+  configuration: {
+    outdatedIncludeURL: {
+      default: false,
+      description: `If true, the outdated command will include the package homepage URL by default`,
+      type: SettingsType.BOOLEAN as const,
+    },
+  },
 }
 
 export default plugin
