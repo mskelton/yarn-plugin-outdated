@@ -89,7 +89,7 @@ export class OutdatedCommand extends BaseCommand {
     validator: t.isEnum(dependencyTypes),
   })
 
-  #includeURL = Option.Boolean("--url", {
+  _includeURL = Option.Boolean("--url", {
     description: "Include the homepage URL of each package in the output",
   })
 
@@ -144,7 +144,7 @@ export class OutdatedCommand extends BaseCommand {
   }
 
   includeURL(configuration: Configuration) {
-    return this.#includeURL ?? configuration.get("outdatedIncludeURL")
+    return this._includeURL ?? configuration.get("outdatedIncludeUrl")
   }
 
   writeJson(outdated: OutdatedDependency[]) {

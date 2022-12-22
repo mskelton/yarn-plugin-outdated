@@ -3,14 +3,14 @@ import { OutdatedCommand } from "./OutdatedCommand"
 
 declare module "@yarnpkg/core" {
   interface ConfigurationValueMap {
-    outdatedIncludeURL: boolean
+    outdatedIncludeUrl: boolean
   }
 }
 
 const plugin: Plugin = {
   commands: [OutdatedCommand],
   configuration: {
-    outdatedIncludeURL: {
+    outdatedIncludeUrl: {
       default: false,
       description: `If true, the outdated command will include the package homepage URL by default`,
       type: SettingsType.BOOLEAN as const,

@@ -49,7 +49,7 @@ test.describe("workspaces", () => {
 
   test.describe("--workspace", () => {
     test("filters in the current workspace when a period is specified", async ({
-      env,
+      cwd,
       run,
       writeJSON,
     }) => {
@@ -59,13 +59,13 @@ test.describe("workspaces", () => {
       await run("install")
 
       const { stderr, stdout } = await run("outdated --workspace .", {
-        cwd: ppath.join(env.cwd, toFilename("a")),
+        cwd: ppath.join(cwd, toFilename("a")),
       })
       expect(stdout).toMatchSnapshot("period.txt")
       expect(stderr).toBe("")
     })
 
-    test("filters by absolute directory", async ({ env, run, writeJSON }) => {
+    test("filters by absolute directory", async ({ cwd, run, writeJSON }) => {
       const dependencies = { patch: "1.0.0" }
       await writeJSON("package.json", { dependencies, workspaces: ["a"] })
       await writeJSON("a/package.json", { dependencies })
@@ -73,7 +73,7 @@ test.describe("workspaces", () => {
       await run("install")
 
       const { stderr, stdout } = await run(
-        `outdated --workspace ${env.cwd}/a --workspace ${env.cwd}`
+        `outdated --workspace ${cwd}/a --workspace ${cwd}`
       )
       expect(stdout).toMatchSnapshot("directory-absolute.txt")
       expect(stderr).toBe("")
