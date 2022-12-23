@@ -8,7 +8,7 @@ export const truthy = Boolean as unknown as <T>(
 
 export function getHomepageURL({ raw: manifest }: Manifest): string | null {
   const repo = manifest.repository
-  const repoURL = !repo
+  const repoURL = manifest.homepage
     ? manifest.homepage
     : typeof repo === "string"
     ? repo

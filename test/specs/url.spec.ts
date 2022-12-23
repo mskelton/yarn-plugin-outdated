@@ -34,18 +34,15 @@ test.describe("yarn outdated --url", () => {
     const getURL = (raw: Record<string, unknown>) =>
       getHomepageURL({ raw } as Manifest)
 
+    // npm
     expect(getURL({ repository: "npm/npm" })).toBe("https://github.com/npm/npm")
+
+    // GitHub
     expect(getURL({ repository: "https://github.com/user/repo.git" })).toBe(
       "https://github.com/user/repo"
     )
     expect(getURL({ repository: "github:mskelton/yarn-plugin-outdated" })).toBe(
       "https://github.com/mskelton/yarn-plugin-outdated"
-    )
-    expect(getURL({ repository: "bitbucket:user/repo" })).toBe(
-      "https://bitbucket.org/user/repo"
-    )
-    expect(getURL({ repository: "gitlab:user/repo" })).toBe(
-      "https://gitlab.com/user/repo"
     )
     expect(getURL({ repository: "git://github.com/user/repo.git" })).toBe(
       "https://github.com/user/repo"
@@ -53,11 +50,28 @@ test.describe("yarn outdated --url", () => {
     expect(getURL({ repository: "git@github.com:user/repo.git" })).toBe(
       "https://github.com/user/repo"
     )
+
+    // BitBucket
+    expect(getURL({ repository: "bitbucket:user/repo" })).toBe(
+      "https://bitbucket.org/user/repo"
+    )
+
+    // GitLab
+    expect(getURL({ repository: "gitlab:user/repo" })).toBe(
+      "https://gitlab.com/user/repo"
+    )
+
+    // Other
     expect(getURL({ homepage: "https://foo.com" })).toBe("https://foo.com")
     expect(getURL({ homepage: "http://foo.com" })).toBe("http://foo.com")
     expect(getURL({ repository: { url: "http://foo.com" } })).toBe(
       "http://foo.com"
     )
+
+    // Prefer homepage over repository
+    expect(
+      getURL({ homepage: "http://foo.com", repository: "http://bar.com" })
+    ).toBe("http://foo.com")
   })
 
   test.describe("when outdatedIncludeURL config is true", () => {
