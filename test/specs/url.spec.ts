@@ -72,6 +72,12 @@ test.describe("yarn outdated --url", () => {
     expect(
       getURL({ homepage: "http://foo.com", repository: "http://bar.com" })
     ).toBe("http://foo.com")
+    expect(
+      getURL({
+        homepage: "https://github.com/foo/bar/tree/master/packages/a#readme",
+        repository: "https://github.com/bar/foo",
+      })
+    ).toBe("https://github.com/foo/bar/tree/master/packages/a#readme")
   })
 
   test.describe("when outdatedIncludeURL config is true", () => {

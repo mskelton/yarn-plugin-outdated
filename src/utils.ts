@@ -7,14 +7,18 @@ export const truthy = Boolean as unknown as <T>(
 ) => arg is T
 
 export function getHomepageURL({ raw: manifest }: Manifest): string | null {
+  // Prefer the homepage over the repository URL
+  if (manifest.homepage) {
+    return manifest.homepage
+  }
+
   const repo = manifest.repository
-  const repoURL = manifest.homepage
-    ? manifest.homepage
-    : typeof repo === "string"
-    ? repo
-    : typeof repo === "object" && typeof repo.url === "string"
-    ? repo.url
-    : null
+  const repoURL =
+    typeof repo === "string"
+      ? repo
+      : typeof repo === "object" && typeof repo.url === "string"
+      ? repo.url
+      : null
 
   const info = repoURL ? fromUrl(repoURL) : undefined
   const commitish = info?.committish ? `#${info.committish}` : ""
