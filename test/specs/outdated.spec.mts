@@ -1,5 +1,5 @@
-import { expect, test } from "../fixtures/env"
-import { readSupplementalFile } from "../utils/files"
+import { expect, test } from "../fixtures/env.mjs"
+import { readSupplementalFile } from "../utils/files.mjs"
 
 test.describe("yarn outdated", () => {
   test("shows outdated dependencies", async ({ run, writeJSON }) => {

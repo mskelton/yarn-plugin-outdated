@@ -1,5 +1,5 @@
 import { ppath, toFilename } from "@yarnpkg/fslib"
-import { expect, test } from "../fixtures/env"
+import { expect, test } from "../fixtures/env.mjs"
 
 test.describe("workspaces", () => {
   test("includes packages from all workspaces", async ({ run, writeJSON }) => {

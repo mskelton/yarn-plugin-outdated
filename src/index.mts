@@ -1,5 +1,5 @@
 import { Plugin, SettingsType } from "@yarnpkg/core"
-import { OutdatedCommand } from "./OutdatedCommand"
+import { OutdatedCommand } from "./OutdatedCommand.mjs"
 
 declare module "@yarnpkg/core" {
   interface ConfigurationValueMap {

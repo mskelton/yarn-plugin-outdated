@@ -398,9 +398,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mskelton/eslint-config@npm:^7.1.0":
-  version: 7.1.0
-  resolution: "@mskelton/eslint-config@npm:7.1.0"
+"@mskelton/eslint-config@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "@mskelton/eslint-config@npm:7.2.0"
   dependencies:
     eslint-config-prettier: ^8.3.0
   peerDependencies:
@@ -424,7 +424,14 @@ __metadata:
       optional: true
     eslint-plugin-react-hooks:
       optional: true
-  checksum: 1934c7cb9fb314e13cb2f9e31573c71e621999f5bb2315e0b183acc80964e930430f0d6c578d34aa3d503d3fceaecf85e8309cd8b29a7bfd7218c5ac2a43178f
+  checksum: da29d9b96ee064f7ca9754f93b68b850913fa956563bad3a936614fa8e96332fae81d68f214ca2e9ae8de419c5f79e095606b68fcba1513d8f742c523106d43f
+  languageName: node
+  linkType: hard
+
+"@mskelton/tsconfig@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@mskelton/tsconfig@npm:2.0.0"
+  checksum: 9e0a6bad0786210a7183a57e23a00b5984284d22ceec1a62579270c2201bd8509dc445d75e7a2920b8e983697fd170538b476a040d2a1f383c51847b2b3d6b7d
   languageName: node
   linkType: hard
 
@@ -3755,7 +3762,8 @@ __metadata:
   dependencies:
     "@babel/core": ^7.20.12
     "@babel/eslint-parser": ^7.19.1
-    "@mskelton/eslint-config": ^7.1.0
+    "@mskelton/eslint-config": ^7.2.0
+    "@mskelton/tsconfig": ^2.0.0
     "@playwright/test": ^1.30.0
     "@types/hosted-git-info": ^3.0.2
     "@types/micromatch": ^4.0.2

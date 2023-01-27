@@ -1,5 +1,5 @@
 import { test as base } from "@playwright/test"
-import { makeTemporaryEnv } from "../utils/env"
+import { makeTemporaryEnv } from "../utils/env.mjs"
 
 type Environment = Awaited<ReturnType<typeof makeTemporaryEnv>>
 

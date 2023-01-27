@@ -1,7 +1,7 @@
 import { Manifest } from "@yarnpkg/core"
-import { getHomepageURL } from "../../src/utils"
-import { expect, test } from "../fixtures/env"
-import { prettyJSON } from "../utils/format"
+import { getHomepageURL } from "../../src/utils.mjs"
+import { expect, test } from "../fixtures/env.mjs"
+import { prettyJSON } from "../utils/format.mjs"
 
 const manifest = {
   dependencies: {

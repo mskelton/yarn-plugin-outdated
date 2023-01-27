@@ -6,7 +6,7 @@ import { AddressInfo } from "net"
 import path from "path"
 import semver from "semver"
 import { Gzip } from "zlib"
-import * as fsUtils from "./fs"
+import * as fsUtils from "./fs.mjs"
 
 type Request =
   | {

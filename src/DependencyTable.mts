@@ -1,5 +1,5 @@
 import { Configuration, formatUtils } from "@yarnpkg/core"
-import { OutdatedDependency, Severity } from "./types"
+import { OutdatedDependency, Severity } from "./types.mjs"
 
 const semverRegex = /^([0-9]+\.)([0-9]+\.)(.+)$/
 const columns = [

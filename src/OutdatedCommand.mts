@@ -18,8 +18,8 @@ import micromatch from "micromatch"
 import path from "path"
 import semver from "semver"
 import t from "typanion"
-import { DependencyFetcher } from "./DependencyFetcher"
-import { DependencyTable } from "./DependencyTable"
+import { DependencyFetcher } from "./DependencyFetcher.mjs"
+import { DependencyTable } from "./DependencyTable.mjs"
 import {
   DependencyInfo,
   dependencyTypes,
@@ -27,8 +27,8 @@ import {
   OutdatedDependency,
   severities,
   Severity,
-} from "./types"
-import { isVersionOutdated, truthy } from "./utils"
+} from "./types.mjs"
+import { isVersionOutdated, truthy } from "./utils.mjs"
 
 const UP_TO_DATE_MESSAGE = "✨ All your dependencies are up to date!"
 

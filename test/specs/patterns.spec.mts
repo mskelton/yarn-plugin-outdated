@@ -1,4 +1,4 @@
-import { expect, test } from "../fixtures/env"
+import { expect, test } from "../fixtures/env.mjs"
 
 const manifest = {
   dependencies: {

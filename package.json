@@ -32,7 +32,8 @@
   "devDependencies": {
     "@babel/core": "^7.20.12",
     "@babel/eslint-parser": "^7.19.1",
-    "@mskelton/eslint-config": "^7.1.0",
+    "@mskelton/eslint-config": "^7.2.0",
+    "@mskelton/tsconfig": "^2.0.0",
     "@playwright/test": "^1.30.0",
     "@types/hosted-git-info": "^3.0.2",
     "@types/micromatch": "^4.0.2",

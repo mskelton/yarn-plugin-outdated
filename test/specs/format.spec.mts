@@ -1,5 +1,5 @@
-import { expect, test } from "../fixtures/env"
-import { prettyJSON } from "../utils/format"
+import { expect, test } from "../fixtures/env.mjs"
+import { prettyJSON } from "../utils/format.mjs"
 
 test.describe("yarn outdated --format=json", () => {
   test("shows outdated dependencies", async ({ run, writeJSON }) => {

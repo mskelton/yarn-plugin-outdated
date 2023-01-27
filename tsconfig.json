@@ -1,11 +1,6 @@
 {
+  "extends": "@mskelton/tsconfig",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "esnext",
-    "lib": ["esnext"],
-    "noEmit": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "strict": true
+    "noEmit": true
   }
 }

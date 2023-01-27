@@ -1,4 +1,4 @@
-import { expect, test } from "../fixtures/env"
+import { expect, test } from "../fixtures/env.mjs"
 
 test.describe("yarn outdated", () => {
   test("filters based on dependency type", async ({ run, writeJSON }) => {

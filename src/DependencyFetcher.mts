@@ -10,7 +10,7 @@ import {
   Workspace,
 } from "@yarnpkg/core"
 import { suggestUtils } from "@yarnpkg/plugin-essentials"
-import { getHomepageURL } from "./utils"
+import { getHomepageURL } from "./utils.mjs"
 
 interface FetchOptions {
   descriptor: Descriptor

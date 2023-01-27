@@ -1,4 +1,4 @@
-import { expect, test } from "../fixtures/env"
+import { expect, test } from "../fixtures/env.mjs"
 
 test.describe("yarn outdated --range", () => {
   test("includes the latest version satisfying the range", async ({

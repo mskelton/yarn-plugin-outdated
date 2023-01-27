@@ -1,4 +1,4 @@
-import { expect, test } from "../fixtures/env"
+import { expect, test } from "../fixtures/env.mjs"
 
 test.describe("yarn outdated --check", () => {
   test("returns exit code 0 when dependencies are up to date", async ({
