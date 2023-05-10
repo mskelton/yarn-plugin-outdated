@@ -124,7 +124,7 @@ export class OutdatedCommand extends BaseCommand {
         this.writeMarkdown(configuration, project, outdated)
       }
 
-      return outdated.length ? 1 : 0
+      return this.check && outdated.length ? 1 : 0
     }
 
     const report = await StreamReport.start(
