@@ -2,41 +2,27 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 6
-  cacheKey: 0
+  version: 8
+  cacheKey: 0c0
 
-"@scoped/patch@1.0.0":
+"@scoped/patch@npm:1.0.0":
   version: 1.0.0
   resolution: "@scoped/patch@npm:1.0.0"
-  checksum: a66cf4ff65e1170614fddfcab8fed08b15d7fedb785a94e4e1845076841bd18a80e0b2bd1461e3a184e44a329b4513fc12f7bbd69114943370aa6edd9ae59524
+  checksum: 6ac16c62460050c4c6c90936ac0c59e61aee45d8e54dcfc716121363bafe22268ab68cf27504760a90d7240b8d1a2f100ba86643fd2ff937d893f312884895a1
   languageName: node
   linkType: hard
 
 "@scoped/patch@patch:@scoped/patch@1.0.0#./alias.patch::locator=foo%40workspace%3A.":
   version: 1.0.0
-  resolution: "@scoped/patch@patch:@scoped/patch@npm%3A1.0.0#./alias.patch::version=1.0.0&hash=fa294a&locator=foo%40workspace%3A."
-  checksum: f9f05a295803f5847f002f8c5d1829b98438c028f6dd898923ea2a2b28baa2eff252596ed206a3d76bbe3e045ae2e2ddc93956da74e66b5c918f386e08bf72b2
+  resolution: "@scoped/patch@patch:@scoped/patch@npm%3A1.0.0#./alias.patch::version=1.0.0&hash=2af0b6&locator=foo%40workspace%3A."
+  checksum: fe9c0fc613af446c1d9e6a9e89a4e79c5d9b0a239d72e00dba97c38ea5389a58b0e72716671fbae3626eee924d029eaef0e98058847e6837709ae7f5958356ae
   languageName: node
   linkType: hard
 
-"alias@npm:patch@1.0.0, patch@npm:latest":
+"alias@npm:patch@1.0.0, patch@npm:1.0.0":
   version: 1.0.0
   resolution: "patch@npm:1.0.0"
-  checksum: c01c6b0c9b86548dbee97f6fb2153044ddebc97f48e0233302d47e1425b0f626e7cb59a51cf0c89563bc50f0bc1124d23d8e61bd5415d2a9025f23650bedffc7
-  languageName: node
-  linkType: hard
-
-"major@npm:*":
-  version: 1.0.0
-  resolution: "major@npm:1.0.0"
-  checksum: 1d6bda91b0cfdf6d5ca9c167a0daa2f6fb859b434ecb6e95155fcbe051c3ff5d44489592767117e7818ae24799c90aac710fa4bde0d2e83e816170d2695bfcea
-  languageName: node
-  linkType: hard
-
-"minor@npm:>1.0.0 <2.0.0":
-  version: 1.0.0
-  resolution: "minor@npm:1.0.0"
-  checksum: 38465fcac78151415aa8d5bcc7572678fb6bc14477ef1e3b659cba9a1f4e886c19509336ad21b35d18b430477a19e3e57b3d46cd3a46b7465117da435f32ef6a
+  checksum: fefc3789ae23516a1107fbf4026c9d6e90a68ce590fd0014e69233698a1f6267d071d1080efd5b920f5fb64c46f9b1e76ae6d98fd9fb3bf28f01c745f02991d8
   languageName: node
   linkType: hard
 
@@ -54,32 +40,52 @@ __metadata:
     "@scoped/patch": "patch:@scoped/patch@1.0.0#./alias.patch"
     alias: "npm:patch@1.0.0"
     file: "file:./file-dep"
-    githubA: mskelton/yarn-constraints-example
-    githubB: "github:mskelton/yarn-constraints-example"
-    githubC: "git@github.com:mskelton/yarn-constraints-example.git"
-    major: "*"
-    minor: ">1.0.0 <2.0.0"
-    patch: latest
+    githubA: mskelton/lazy-context
+    githubB: "github:mskelton/lazy-context"
+    githubC: "git@github.com:mskelton/lazy-context.git"
+    major: "npm:1.0.0"
+    minor: "npm:1.0.0"
+    patch: "npm:1.0.0"
   languageName: unknown
   linkType: soft
 
-githubA@mskelton/yarn-constraints-example:
-  version: 0.0.0
-  resolution: "githubA@https://github.com/mskelton/yarn-constraints-example.git#commit=67be8b59748ffda1bc0dd2605f4abcdf23c8847c"
-  checksum: 32dc113c79338e4808807a876ac8d3e3f435bbc4d0f5055986b9a3bdeda6512840f26ce49f82aca9a88e2470e2fbb34245ac2d452837386cc75ef9afea1e778e
+githubA@mskelton/lazy-context:
+  version: 0.0.0-semantically-released
+  resolution: "githubA@https://github.com/mskelton/lazy-context.git#commit=01feb76ed5e7e9418efd2b49055505c760f65112"
+  peerDependencies:
+    react: ">=18"
+  checksum: f5d38dae00574ba1f36a6541e1f4c5c546fef5d3fc332724008039e3447d6c268fe3d5d8a307b087d358220164d93f24bdb5c415ffa36fb6fe335c8a2de7ff4c
   languageName: node
   linkType: hard
 
-"githubB@github:mskelton/yarn-constraints-example":
-  version: 0.0.0
-  resolution: "githubB@https://github.com/mskelton/yarn-constraints-example.git#commit=67be8b59748ffda1bc0dd2605f4abcdf23c8847c"
-  checksum: 02a2c40208398365ae11168a2de08902b27e6dac2327959ce078e69d15cfa340b97c34ff1f818ba8ff5ee961fa064de599f37424368488c6ed502760cd645c89
+"githubB@github:mskelton/lazy-context":
+  version: 0.0.0-semantically-released
+  resolution: "githubB@https://github.com/mskelton/lazy-context.git#commit=01feb76ed5e7e9418efd2b49055505c760f65112"
+  peerDependencies:
+    react: ">=18"
+  checksum: b950e021f79f81f07c9205d132052ee1bb377a7f841f5e671196186947285a9bfd1b8b8a4905e747e8801f1718da03b5fb3c41f5f0de4f58573128b23a1416d5
   languageName: node
   linkType: hard
 
-"githubC@git@github.com:mskelton/yarn-constraints-example.git":
-  version: 0.0.0
-  resolution: "githubC@git@github.com:mskelton/yarn-constraints-example.git#commit=67be8b59748ffda1bc0dd2605f4abcdf23c8847c"
-  checksum: 23a1df853c2e943e0b8766c2a6abf9fa9efacb21eaaf9dd0319bf85fdf6c57a498adde3e90327aca8c26fb3de270a028c9804ae14afba7aeeb3259ab8f1af345
+"githubC@git@github.com:mskelton/lazy-context.git":
+  version: 0.0.0-semantically-released
+  resolution: "githubC@git@github.com:mskelton/lazy-context.git#commit=01feb76ed5e7e9418efd2b49055505c760f65112"
+  peerDependencies:
+    react: ">=18"
+  checksum: 4311df942722c8ef262c1dc8325db6d6952a4f427237bf52c4bf5ef4d5d5561f7cf42d9f6acd953fb7a59f0ad93ae490e5257afa454afeea95746922bfa10bca
+  languageName: node
+  linkType: hard
+
+"major@npm:1.0.0":
+  version: 1.0.0
+  resolution: "major@npm:1.0.0"
+  checksum: 886aec501b6e1ea8c3b5be51fea5b2bc28cbf0e6e862e6faf659aeed711c777e9b7da7adb0ff53eb4420013b85d9b2ff4945b4ea6b33247fadb24f7d186d463f
+  languageName: node
+  linkType: hard
+
+"minor@npm:1.0.0":
+  version: 1.0.0
+  resolution: "minor@npm:1.0.0"
+  checksum: ed93b0483af0cf1c8558240ca5d451351c0d2c789458fa2b4085eca60e110bc41b83bd3e88c4b6333e7a84a86f65ac4eedff6818828b2cb4b7c495f5f1dfcffe
   languageName: node
   linkType: hard

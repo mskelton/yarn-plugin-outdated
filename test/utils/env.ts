@@ -1,7 +1,7 @@
 import { PortablePath, ppath, xfs } from "@yarnpkg/fslib"
 import { stringifySyml } from "@yarnpkg/parsers"
-import path from "path"
-import { URL } from "url"
+import path from "node:path"
+import { URL } from "node:url"
 import { execFile } from "./exec"
 import { Registry } from "./Registry"
 
@@ -54,6 +54,8 @@ export async function makeTemporaryEnv(globalEnv: Record<string, string>) {
       env: {
         HOME: homeDir,
         USERPROFILE: homeDir,
+        // Otherwise snapshots relying on this would break each time it's bumped
+        YARN_CACHE_VERSION_OVERRIDE: "0",
         // Otherwise tests fail on systems where this is globally set to true
         YARN_ENABLE_GLOBAL_CACHE: "false",
         // Otherwise the output wouldn't be the same on CI vs non-CI
@@ -63,6 +65,7 @@ export async function makeTemporaryEnv(globalEnv: Record<string, string>) {
         YARN_ENABLE_TELEMETRY: "0",
         // Otherwise the output isn't stable between runs
         YARN_ENABLE_TIMERS: "false",
+        YARN_IS_TEST_ENV: "true",
         YARN_NPM_REGISTRY_SERVER: registryUrl,
         // Otherwise we would more often test the fallback rather than the real logic
         YARN_UNSAFE_HTTP_WHITELIST: new URL(registryUrl).hostname,

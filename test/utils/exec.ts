@@ -1,5 +1,5 @@
 import { npath, PortablePath } from "@yarnpkg/fslib"
-import cp from "child_process"
+import cp from "node:child_process"
 
 interface Options {
   cwd: PortablePath
@@ -8,9 +8,9 @@ interface Options {
 
 type Output = Record<"stdout" | "stderr", string>
 
-export type ExecSuccess = Output & { code: 0 }
-export type ExecFailure = cp.ExecException & Output
-export type ExecResult = ExecSuccess | ExecFailure
+type ExecResult = Output & {
+  code?: string | number | null
+}
 
 export const execFile = (
   path: string,
@@ -35,7 +35,7 @@ export const execFile = (
         }
 
         if (error) {
-          resolve(Object.assign(error, { stderr, stdout }))
+          resolve({ code: error.code, stderr, stdout })
         } else {
           resolve({ code: 0, stderr, stdout })
         }
