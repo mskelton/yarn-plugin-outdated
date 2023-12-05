@@ -2,7 +2,7 @@
 
 Yarn plugin to show outdated dependencies.
 
-![Screenshot](https://user-images.githubusercontent.com/25914066/170411323-0bd36510-c141-46e6-bd65-ed7586ff55ee.png)
+![Screenshot](https://github.com/mskelton/yarn-plugin-outdated/assets/25914066/436e9ace-7e81-41e4-9eb6-f73e30d81e3f)
 
 ## Installation
 
