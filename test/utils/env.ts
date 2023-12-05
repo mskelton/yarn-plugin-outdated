@@ -46,7 +46,7 @@ export async function makeTemporaryEnv(globalEnv: Record<string, string>) {
   }
 
   const run = (command: string, { cwd, env }: RunOptions = {}) => {
-    const yarnPath = `${__dirname}/../../.yarn/releases/yarn-3.2.1.cjs`
+    const yarnPath = `${__dirname}/../../.yarn/releases/yarn-4.0.2.cjs`
     const yarnBinary = require.resolve(yarnPath)
 
     return execFile(process.execPath, [yarnBinary, ...command.split(" ")], {
@@ -54,8 +54,6 @@ export async function makeTemporaryEnv(globalEnv: Record<string, string>) {
       env: {
         HOME: homeDir,
         USERPROFILE: homeDir,
-        // Otherwise snapshots relying on this would break each time it's bumped
-        YARN_CACHE_KEY_OVERRIDE: "0",
         // Otherwise tests fail on systems where this is globally set to true
         YARN_ENABLE_GLOBAL_CACHE: "false",
         // Otherwise the output wouldn't be the same on CI vs non-CI
