@@ -6,6 +6,12 @@ Yarn plugin to show outdated dependencies.
 
 ## Installation
 
+### Yarn 4
+
+```bash
+yarn plugin import https://mskelton.dev/yarn-outdated/v4
+```
+
 ### Yarn 3
 
 ```bash
