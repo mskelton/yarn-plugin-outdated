@@ -1,11 +1,11 @@
 import { npath } from "@yarnpkg/fslib"
-import crypto from "crypto"
 import glob from "glob-promise"
-import http from "http"
-import { AddressInfo } from "net"
-import path from "path"
+import crypto from "node:crypto"
+import http from "node:http"
+import { AddressInfo } from "node:net"
+import path from "node:path"
+import { Gzip } from "node:zlib"
 import semver from "semver"
-import { Gzip } from "zlib"
 import * as fsUtils from "./fs"
 
 type Request =
