@@ -59,11 +59,13 @@ export class DependencyFetcher {
     const fetcher = this.configuration.makeFetcher()
     const fetchResult = await fetcher.fetch(pkg, {
       cache: this.cache,
+      cacheOptions: {
+        skipIntegrityCheck: true,
+      },
       checksums: this.project.storedChecksums,
       fetcher,
       project: this.project,
       report: new ThrowReport(),
-      skipIntegrityCheck: true,
     })
 
     let manifest: Manifest | undefined

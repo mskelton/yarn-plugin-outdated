@@ -3,7 +3,6 @@ import {
   Cache,
   Configuration,
   Descriptor,
-  FormatType,
   formatUtils,
   Locator,
   MessageName,
@@ -388,7 +387,7 @@ export class OutdatedCommand extends BaseCommand {
         `Pattern ${formatUtils.prettyList(
           configuration,
           this.patterns,
-          FormatType.CODE
+          formatUtils.Type.CODE
         )} doesn't match any packages referenced by any workspace`
       )
     }
