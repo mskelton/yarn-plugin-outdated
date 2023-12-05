@@ -1,3 +1,3 @@
-Usage Error: Invalid value for --format: expected a valid enumeration value (got "blah")
+Usage Error: Invalid value for --format: expected one of "text", "json", or "markdown" (got "blah")
 
 $ yarn outdated [-w,--workspace #0] [-c,--check] [--format #0] [--json] [-s,--severity #0] [-t,--type #0] [--url] [--range] ...

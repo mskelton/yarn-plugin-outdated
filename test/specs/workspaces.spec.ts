@@ -1,4 +1,4 @@
-import { ppath, toFilename } from "@yarnpkg/fslib"
+import { ppath } from "@yarnpkg/fslib"
 import { expect, test } from "../fixtures/env"
 
 test.describe("workspaces", () => {
@@ -59,7 +59,7 @@ test.describe("workspaces", () => {
       await run("install")
 
       const { stderr, stdout } = await run("outdated --workspace .", {
-        cwd: ppath.join(cwd, toFilename("a")),
+        cwd: ppath.join(cwd, "a"),
       })
       expect(stdout).toMatchSnapshot("period.txt")
       expect(stderr).toBe("")
