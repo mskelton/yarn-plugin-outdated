@@ -28,6 +28,9 @@ export function getHomepageURL({ raw: manifest }: Manifest): string | null {
     : repoURL
 }
 
+const hasPrerelease = (version: string) =>
+  semver.parse(version)!.prerelease.length
+
 /**
  * Because some packages have a pre-release version as their `latest` version,
  * we need to first check if the latest version is a pre-release. If it is,
@@ -35,7 +38,7 @@ export function getHomepageURL({ raw: manifest }: Manifest): string | null {
  * version to remove any pre-release identifiers to determine if it is outdated.
  */
 export function isVersionOutdated(current: string, latest: string) {
-  return semver.parse(latest)!.prerelease.length
+  return hasPrerelease(current) && hasPrerelease(latest)
     ? semver.lt(current, latest)
     : semver.lt(semver.coerce(current)!, latest)
 }

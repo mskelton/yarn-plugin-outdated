@@ -163,12 +163,15 @@ test.describe("yarn outdated", () => {
     test.describe(() => {
       test.use({ latestVersions: { patch: "1.0.1" } })
 
-      test("pre-release version is not latest", async ({ run, writeJSON }) => {
-        await writeJSON("package.json", { dependencies: { patch: "1.0.1" } })
+      test("current: non pre-release, latest: non pre-release", async ({
+        run,
+        writeJSON,
+      }) => {
+        await writeJSON("package.json", { dependencies: { patch: "1.0.0" } })
         await run("install")
 
         const { stderr, stdout } = await run("outdated")
-        expect(stdout).toMatchSnapshot("pre-release-not-latest.txt")
+        expect(stdout).toMatchSnapshot("current-non-pre-latest-non-pre.txt")
         expect(stderr).toBe("")
       })
     })
@@ -176,12 +179,51 @@ test.describe("yarn outdated", () => {
     test.describe(() => {
       test.use({ latestVersions: { patch: "1.0.1-alpha.1" } })
 
-      test("pre-release version is latest", async ({ run, writeJSON }) => {
+      test("current: non pre-release, latest: pre-release", async ({
+        run,
+        writeJSON,
+      }) => {
         await writeJSON("package.json", { dependencies: { patch: "1.0.1" } })
         await run("install")
 
         const { stderr, stdout } = await run("outdated")
-        expect(stdout).toMatchSnapshot("pre-release-latest.txt")
+        expect(stdout).toMatchSnapshot("current-non-pre-latest-pre.txt")
+        expect(stderr).toBe("")
+      })
+    })
+
+    test.describe(() => {
+      test.use({ latestVersions: { patch: "1.0.1" } })
+
+      test("current: pre-release, latest: non pre-release", async ({
+        run,
+        writeJSON,
+      }) => {
+        await writeJSON("package.json", {
+          dependencies: { patch: "1.0.1-alpha.1" },
+        })
+        await run("install")
+
+        const { stderr, stdout } = await run("outdated")
+        expect(stdout).toMatchSnapshot("current-pre-latest-non-pre.txt")
+        expect(stderr).toBe("")
+      })
+    })
+
+    test.describe(() => {
+      test.use({ latestVersions: { patch: "1.0.1-alpha.2" } })
+
+      test("current: pre-release, latest: pre-release", async ({
+        run,
+        writeJSON,
+      }) => {
+        await writeJSON("package.json", {
+          dependencies: { patch: "1.0.1-alpha.1" },
+        })
+        await run("install")
+
+        const { stderr, stdout } = await run("outdated")
+        expect(stdout).toMatchSnapshot("current-pre-latest-pre.txt")
         expect(stderr).toBe("")
       })
     })
