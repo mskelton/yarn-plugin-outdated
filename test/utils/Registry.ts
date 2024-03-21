@@ -8,6 +8,8 @@ import { Gzip } from "node:zlib"
 import semver from "semver"
 import * as fsUtils from "./fs"
 
+let packages: Map<string, Map<string, PackageEntry>> = null!
+
 type Request =
   | {
       localName: string
@@ -33,13 +35,14 @@ export class Registry {
   }
 
   public port: number = null!
-  private packages: Map<string, Map<string, PackageEntry>> = null!
   private serverUrl: Promise<string> = null!
+
+  constructor(private latestVersions: Record<string, string>) {}
 
   async start() {
     // Packages on the regsitry don't change from test to test,
     // so we only load them once
-    if (!this.packages) {
+    if (!packages) {
       await this.loadPackages()
     }
 
@@ -69,7 +72,7 @@ export class Registry {
   }
 
   private async loadPackages() {
-    this.packages = new Map()
+    packages = new Map()
 
     // Load the registry packages from the packages directory
     const manifests = await glob("**/package.json", {
@@ -82,9 +85,9 @@ export class Registry {
       const { name, version } = packageJson
 
       // Create the package entry if it doesn't exist
-      let packageEntry = this.packages.get(name)
+      let packageEntry = packages.get(name)
       if (!packageEntry) {
-        this.packages.set(name, (packageEntry = new Map()))
+        packages.set(name, (packageEntry = new Map()))
       }
 
       packageEntry.set(version, {
@@ -102,7 +105,7 @@ export class Registry {
     const { localName, scope } = request
     const name = scope ? `${scope}/${localName}` : localName
 
-    const packageEntry = this.packages.get(name)
+    const packageEntry = packages.get(name)
     if (!packageEntry) {
       return this.sendError(res, 404, `Package not found: ${name}`)
     }
@@ -121,14 +124,11 @@ export class Registry {
           },
         }))
 
-        const latest = [...packageEntry.values()].reduce((acc, cur) => {
-          return cur.packageJson.isLatest
-            ? (cur.packageJson.version as string)
-            : acc
-        }, semver.maxSatisfying(versions, "*"))
-
         const data = {
-          "dist-tags": { latest },
+          "dist-tags": {
+            latest:
+              this.latestVersions[name] ?? semver.maxSatisfying(versions, "*"),
+          },
           name,
           versions: Object.assign({}, ...(await Promise.all(versionEntries))),
         }
@@ -164,7 +164,7 @@ export class Registry {
   }
 
   async getPackageArchiveStream(name: string, version: string): Promise<Gzip> {
-    const packageEntry = this.packages.get(name)
+    const packageEntry = packages.get(name)
     if (!packageEntry) {
       throw new Error(`Unknown package "${name}"`)
     }
@@ -203,7 +203,7 @@ export class Registry {
   }
 
   async getPackageHttpArchivePath(name: string, version: string) {
-    const packageEntry = this.packages.get(name)
+    const packageEntry = packages.get(name)
     if (!packageEntry) {
       throw new Error(`Unknown package "${name}"`)
     }

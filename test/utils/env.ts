@@ -15,10 +15,12 @@ interface RunOptions {
   env?: Record<string, string>
 }
 
-// We only need to setup the registry once
-const registry = new Registry()
+export async function makeTemporaryEnv(
+  globalEnv: Record<string, string>,
+  latestVersions: Record<string, string>
+) {
+  const registry = new Registry(latestVersions)
 
-export async function makeTemporaryEnv(globalEnv: Record<string, string>) {
   const [tempDir, homeDir, registryUrl] = await Promise.all([
     xfs.mktempPromise(),
     xfs.mktempPromise(),

@@ -144,25 +144,48 @@ test.describe("yarn outdated", () => {
   })
 
   test.describe("pre-releases", () => {
-    test("ignores pre-release versions when not marked as latest", async ({
-      run,
-      writeJSON,
-    }) => {
-      await writeJSON("package.json", { dependencies: { patch: "1.0.1" } })
-      await run("install")
+    test.describe(() => {
+      test.use({ latestVersions: { rc: "1.0.1" } })
 
-      const { stderr, stdout } = await run("outdated")
-      expect(stdout).toMatchSnapshot("pre-releases-latest.txt")
-      expect(stderr).toBe("")
+      test("current version is pre-release with newer version", async ({
+        run,
+        writeJSON,
+      }) => {
+        await writeJSON("package.json", {
+          dependencies: { rc: "1.0.1-rc.1" },
+        })
+        await run("install")
+
+        const { stderr, stdout } = await run("outdated")
+        expect(stdout).toMatchSnapshot("has-new-pre-release.txt")
+        expect(stderr).toBe("")
+      })
     })
 
-    test("pre-release version marked as latest", async ({ run, writeJSON }) => {
-      await writeJSON("package.json", { dependencies: { rc: "1.0.0" } })
-      await run("install")
+    test.describe(() => {
+      test.use({ latestVersions: { patch: "1.0.1" } })
 
-      const { stderr, stdout } = await run("outdated")
-      expect(stdout).toMatchSnapshot("pre-releases-outdated.txt")
-      expect(stderr).toBe("")
+      test("pre-release version is not latest", async ({ run, writeJSON }) => {
+        await writeJSON("package.json", { dependencies: { patch: "1.0.1" } })
+        await run("install")
+
+        const { stderr, stdout } = await run("outdated")
+        expect(stdout).toMatchSnapshot("pre-release-not-latest.txt")
+        expect(stderr).toBe("")
+      })
+    })
+
+    test.describe(() => {
+      test.use({ latestVersions: { patch: "1.0.1-alpha.1" } })
+
+      test("pre-release version is latest", async ({ run, writeJSON }) => {
+        await writeJSON("package.json", { dependencies: { patch: "1.0.1" } })
+        await run("install")
+
+        const { stderr, stdout } = await run("outdated")
+        expect(stdout).toMatchSnapshot("pre-release-latest.txt")
+        expect(stderr).toBe("")
+      })
     })
   })
 })

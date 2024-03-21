@@ -5,20 +5,22 @@ type Environment = Awaited<ReturnType<typeof makeTemporaryEnv>>
 
 interface EnvironmentFixtures extends Omit<Environment, "destroy"> {
   env: Record<string, string>
+  latestVersions: Record<string, string>
   yarnEnv: Omit<Environment, "destroy">
 }
 
 export const test = base.extend<EnvironmentFixtures>({
   cwd: ({ yarnEnv }, use) => use(yarnEnv.cwd),
   env: {},
+  latestVersions: {},
   readFile: ({ yarnEnv }, use) => use(yarnEnv.readFile),
   registry: ({ yarnEnv }, use) => use(yarnEnv.registry),
   run: ({ yarnEnv }, use) => use(yarnEnv.run),
   writeFile: ({ yarnEnv }, use) => use(yarnEnv.writeFile),
   writeJSON: ({ yarnEnv }, use) => use(yarnEnv.writeJSON),
-  yarnEnv: async ({ env }, use, testInfo) => {
+  yarnEnv: async ({ env, latestVersions }, use, testInfo) => {
     testInfo.snapshotSuffix = ""
-    const { destroy, ...yarnEnv } = await makeTemporaryEnv(env)
+    const { destroy, ...yarnEnv } = await makeTemporaryEnv(env, latestVersions)
     await use(yarnEnv)
     await destroy()
   },
