@@ -1,6 +1,7 @@
 import { Manifest } from "@yarnpkg/core"
 import { fromUrl } from "hosted-git-info"
 import semver from "semver"
+import { fn } from "typanion"
 
 export const truthy = Boolean as unknown as <T>(
   arg: T | undefined | null | false
@@ -28,17 +29,25 @@ export function getHomepageURL({ raw: manifest }: Manifest): string | null {
     : repoURL
 }
 
-const hasPrerelease = (version: string) =>
-  semver.parse(version)!.prerelease.length
+const isNumber = (value: string | number): value is number =>
+  typeof value === "number"
 
-/**
- * Because some packages have a pre-release version as their `latest` version,
- * we need to first check if the latest version is a pre-release. If it is,
- * we compare the current and latest directly, otherwise we coerce the current
- * version to remove any pre-release identifiers to determine if it is outdated.
- */
+const padArray = (arr: number[], length: number) =>
+  arr.concat(Array(length - arr.length).fill(0))
+
+const parsePreRelease = (prerelease: readonly (string | number)[]) =>
+  padArray(prerelease.filter(isNumber), 3).join(".")
+
 export function isVersionOutdated(current: string, latest: string) {
-  return hasPrerelease(current) && hasPrerelease(latest)
-    ? semver.lt(current, latest)
-    : semver.lt(semver.coerce(current)!, latest)
+  const latestPrerelease = semver.prerelease(latest)
+  const currentPrerelease = semver.prerelease(current)
+
+  if (latestPrerelease && currentPrerelease) {
+    return semver.lt(
+      parsePreRelease(currentPrerelease),
+      parsePreRelease(latestPrerelease)
+    )
+  }
+
+  return semver.lt(current, latest)
 }

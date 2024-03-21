@@ -1,3 +1,4 @@
+import { isVersionOutdated } from "../../src/utils"
 import { expect, test } from "../fixtures/env"
 import { readSupplementalFile, writeSupplementalFile } from "../utils/files"
 
@@ -183,7 +184,7 @@ test.describe("yarn outdated", () => {
         run,
         writeJSON,
       }) => {
-        await writeJSON("package.json", { dependencies: { patch: "1.0.1" } })
+        await writeJSON("package.json", { dependencies: { patch: "1.0.0" } })
         await run("install")
 
         const { stderr, stdout } = await run("outdated")
@@ -228,4 +229,15 @@ test.describe("yarn outdated", () => {
       })
     })
   })
+})
+
+test("isVersionOutdated", () => {
+  expect(isVersionOutdated("1.0.0", "1.0.0")).toBe(false)
+  expect(isVersionOutdated("1.0.0", "1.0.1")).toBe(true)
+  expect(isVersionOutdated("1.0.0", "1.0.1-rc.1")).toBe(true)
+
+  expect(isVersionOutdated("1.0.0-rc.1", "1.0.0")).toBe(true)
+  expect(isVersionOutdated("1.0.0-rc.1", "1.0.1")).toBe(true)
+  expect(isVersionOutdated("1.0.0-rc.1", "1.0.0-rc.1")).toBe(false)
+  expect(isVersionOutdated("1.0.0-rc.1", "1.0.0-rc.2")).toBe(true)
 })
