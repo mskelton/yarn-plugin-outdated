@@ -28,14 +28,25 @@ export function getHomepageURL({ raw: manifest }: Manifest): string | null {
     : repoURL
 }
 
-/**
- * Because some packages have a pre-release version as their `latest` version,
- * we need to first check if the latest version is a pre-release. If it is,
- * we compare the current and latest directly, otherwise we coerce the current
- * version to remove any pre-release identifiers to determine if it is outdated.
- */
+const isNumber = (value: string | number): value is number =>
+  typeof value === "number"
+
+const padArray = (arr: number[], length: number) =>
+  arr.concat(Array(length - arr.length).fill(0))
+
+const parsePreRelease = (prerelease: readonly (string | number)[]) =>
+  padArray(prerelease.filter(isNumber), 3).join(".")
+
 export function isVersionOutdated(current: string, latest: string) {
-  return semver.parse(latest)!.prerelease.length
-    ? semver.lt(current, latest)
-    : semver.lt(semver.coerce(current)!, latest)
+  const latestPrerelease = semver.prerelease(latest)
+  const currentPrerelease = semver.prerelease(current)
+
+  if (semver.eq(current, latest) && latestPrerelease && currentPrerelease) {
+    return semver.lt(
+      parsePreRelease(currentPrerelease),
+      parsePreRelease(latestPrerelease)
+    )
+  }
+
+  return semver.lt(current, latest)
 }

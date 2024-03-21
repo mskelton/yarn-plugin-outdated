@@ -1,3 +1,4 @@
+import { isVersionOutdated } from "../../src/utils"
 import { expect, test } from "../fixtures/env"
 import { readSupplementalFile, writeSupplementalFile } from "../utils/files"
 
@@ -143,14 +144,118 @@ test.describe("yarn outdated", () => {
     expect(stderr).toBe("")
   })
 
-  test("ignores pre-release versions", async ({ run, writeJSON }) => {
-    await writeJSON("package.json", {
-      dependencies: { patch: "1.0.1-alpha.1" },
-    })
-    await run("install")
+  test.describe("pre-releases", () => {
+    test.describe(() => {
+      test.use({ latestVersions: { rc: "1.0.1" } })
 
-    const { stderr, stdout } = await run("outdated")
-    expect(stdout).toMatchSnapshot("pre-releases.txt")
-    expect(stderr).toBe("")
+      test("current version is pre-release with newer version", async ({
+        run,
+        writeJSON,
+      }) => {
+        await writeJSON("package.json", { dependencies: { rc: "1.0.0-rc.1" } })
+        await run("install")
+
+        const { stderr, stdout } = await run("outdated")
+        expect(stdout).toMatchSnapshot("has-new-pre-release.txt")
+        expect(stderr).toBe("")
+      })
+    })
+
+    test.describe(() => {
+      test.use({ latestVersions: { patch: "1.0.1" } })
+
+      test("current: non pre-release, latest: non pre-release", async ({
+        run,
+        writeJSON,
+      }) => {
+        await writeJSON("package.json", { dependencies: { patch: "1.0.0" } })
+        await run("install")
+
+        const { stderr, stdout } = await run("outdated")
+        expect(stdout).toMatchSnapshot("current-non-pre-latest-non-pre.txt")
+        expect(stderr).toBe("")
+      })
+    })
+
+    test.describe(() => {
+      test.use({ latestVersions: { patch: "1.0.1-alpha.1" } })
+
+      test("current: non pre-release, latest: pre-release", async ({
+        run,
+        writeJSON,
+      }) => {
+        await writeJSON("package.json", { dependencies: { patch: "1.0.0" } })
+        await run("install")
+
+        const { stderr, stdout } = await run("outdated")
+        expect(stdout).toMatchSnapshot("current-non-pre-latest-pre.txt")
+        expect(stderr).toBe("")
+      })
+    })
+
+    test.describe(() => {
+      test.use({ latestVersions: { patch: "1.0.1" } })
+
+      test("current: pre-release, latest: non pre-release", async ({
+        run,
+        writeJSON,
+      }) => {
+        await writeJSON("package.json", {
+          dependencies: { patch: "1.0.1-alpha.1" },
+        })
+        await run("install")
+
+        const { stderr, stdout } = await run("outdated")
+        expect(stdout).toMatchSnapshot("current-pre-latest-non-pre.txt")
+        expect(stderr).toBe("")
+      })
+    })
+
+    test.describe(() => {
+      test.use({ latestVersions: { patch: "1.0.1-alpha.2" } })
+
+      test("current: pre-release, latest: pre-release", async ({
+        run,
+        writeJSON,
+      }) => {
+        await writeJSON("package.json", {
+          dependencies: { patch: "1.0.1-alpha.1" },
+        })
+        await run("install")
+
+        const { stderr, stdout } = await run("outdated")
+        expect(stdout).toMatchSnapshot("current-pre-latest-pre.txt")
+        expect(stderr).toBe("")
+      })
+    })
   })
+})
+
+test("isVersionOutdated", () => {
+  expect(isVersionOutdated("1.0.0", "1.0.0")).toBe(false)
+  expect(isVersionOutdated("1.0.0", "1.0.1")).toBe(true)
+  expect(isVersionOutdated("1.0.0", "1.0.1-rc.1")).toBe(true)
+
+  // Old pre-release
+  expect(isVersionOutdated("1.0.0-rc.1", "1.0.0")).toBe(true)
+  expect(isVersionOutdated("1.0.0-rc.1", "1.0.1")).toBe(true)
+  expect(isVersionOutdated("1.0.0-rc.1", "1.0.0-rc.1")).toBe(false)
+  expect(isVersionOutdated("1.0.0-rc.1", "1.0.0-rc.2")).toBe(true)
+  expect(isVersionOutdated("1.0.0-rc.1", "1.0.1-rc.1")).toBe(true)
+
+  // Pre-release past the latest non-pre-release
+  expect(isVersionOutdated("1.0.1-rc.1", "1.0.0")).toBe(false)
+  expect(isVersionOutdated("1.0.1-rc.1", "1.0.0-rc.1")).toBe(false)
+  expect(isVersionOutdated("1.0.1-rc.1", "1.0.1-rc.1")).toBe(false)
+
+  // https://semver.org
+  expect(isVersionOutdated("1.0.0-alpha", "1.0.0-alpha")).toBe(false)
+  expect(isVersionOutdated("1.0.0-alpha.1", "1.0.0-alpha.1")).toBe(false)
+  expect(isVersionOutdated("1.0.0-alpha.1", "1.0.0-alpha.2")).toBe(true)
+  expect(isVersionOutdated("1.0.0-0.3.7", "1.0.0-0.3.7")).toBe(false)
+  expect(isVersionOutdated("1.0.0-0.3.7", "1.0.0-0.4.7")).toBe(true)
+  expect(isVersionOutdated("1.0.0-x.7.z.92", "1.0.0-x.7.z.92")).toBe(false)
+  expect(isVersionOutdated("1.0.0-x.7.z.92", "1.0.0-x.7.z.93")).toBe(true)
+  expect(isVersionOutdated("1.0.0-x.7.z.92", "1.0.0-x.8.z.92")).toBe(true)
+  expect(isVersionOutdated("1.0.0-x.y.z", "1.0.0-x.y.z")).toBe(false)
 })
