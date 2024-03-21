@@ -247,4 +247,15 @@ test("isVersionOutdated", () => {
   expect(isVersionOutdated("1.0.1-rc.1", "1.0.0")).toBe(false)
   expect(isVersionOutdated("1.0.1-rc.1", "1.0.0-rc.1")).toBe(false)
   expect(isVersionOutdated("1.0.1-rc.1", "1.0.1-rc.1")).toBe(false)
+
+  // https://semver.org
+  expect(isVersionOutdated("1.0.0-alpha", "1.0.0-alpha")).toBe(false)
+  expect(isVersionOutdated("1.0.0-alpha.1", "1.0.0-alpha.1")).toBe(false)
+  expect(isVersionOutdated("1.0.0-alpha.1", "1.0.0-alpha.2")).toBe(true)
+  expect(isVersionOutdated("1.0.0-0.3.7", "1.0.0-0.3.7")).toBe(false)
+  expect(isVersionOutdated("1.0.0-0.3.7", "1.0.0-0.4.7")).toBe(true)
+  expect(isVersionOutdated("1.0.0-x.7.z.92", "1.0.0-x.7.z.92")).toBe(false)
+  expect(isVersionOutdated("1.0.0-x.7.z.92", "1.0.0-x.7.z.93")).toBe(true)
+  expect(isVersionOutdated("1.0.0-x.7.z.92", "1.0.0-x.8.z.92")).toBe(true)
+  expect(isVersionOutdated("1.0.0-x.y.z", "1.0.0-x.y.z")).toBe(false)
 })
