@@ -1,11 +1,8 @@
-Internal Error: root-workspace-0b6124@workspace:.: This package doesn't seem to be present in your lockfile; run "yarn install" to update the lockfile
-    at $b.getCandidates (/Users/mark/dev/yarn-plugin-outdated/.yarn/releases/yarn-4.0.2.cjs:205:8149)
-    at vd.getCandidates (/Users/mark/dev/yarn-plugin-outdated/.yarn/releases/yarn-4.0.2.cjs:141:1311)
-    at /Users/mark/dev/yarn-plugin-outdated/.yarn/releases/yarn-4.0.2.cjs:210:8409
-    at Wy (/Users/mark/dev/yarn-plugin-outdated/.yarn/releases/yarn-4.0.2.cjs:140:53920)
-    at ke (/Users/mark/dev/yarn-plugin-outdated/.yarn/releases/yarn-4.0.2.cjs:210:8389)
-    at async Promise.allSettled (index 0)
-    at async Uc (/Users/mark/dev/yarn-plugin-outdated/.yarn/releases/yarn-4.0.2.cjs:140:53248)
-    at async /Users/mark/dev/yarn-plugin-outdated/.yarn/releases/yarn-4.0.2.cjs:210:9140
-    at async Qi.startProgressPromise (/Users/mark/dev/yarn-plugin-outdated/.yarn/releases/yarn-4.0.2.cjs:140:137288)
-    at async St.resolveEverything (/Users/mark/dev/yarn-plugin-outdated/.yarn/releases/yarn-4.0.2.cjs:210:7138)
+➤ YN0000: ┌ Checking for outdated dependencies
+➤ YN0000: └ Completed
+
+➤ YN0000: Package   Current      Latest   Package Type
+➤ YN0000: rc        1.0.0-rc.1   1.0.1    dependencies
+
+➤ YN0000: 1 dependency is out of date
+➤ YN0000: Done with warnings
