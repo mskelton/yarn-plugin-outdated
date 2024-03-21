@@ -96,7 +96,7 @@ export class Registry {
 
   private async process(
     request: Request,
-    req: http.IncomingMessage,
+    _: http.IncomingMessage,
     res: http.ServerResponse
   ) {
     const { localName, scope } = request
@@ -121,8 +121,14 @@ export class Registry {
           },
         }))
 
+        const latest = [...packageEntry.values()].reduce((acc, cur) => {
+          return cur.packageJson.isLatest
+            ? (cur.packageJson.version as string)
+            : acc
+        }, semver.maxSatisfying(versions, "*"))
+
         const data = {
-          "dist-tags": { latest: semver.maxSatisfying(versions, "*") },
+          "dist-tags": { latest },
           name,
           versions: Object.assign({}, ...(await Promise.all(versionEntries))),
         }

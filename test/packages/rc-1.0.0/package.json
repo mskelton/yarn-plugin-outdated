@@ -1,7 +1,6 @@
 {
   "name": "rc",
-  "version": "1.0.0-rc.12",
-  "isLatest": true,
+  "version": "1.0.0",
   "repository": {
     "url": "https://github.com/mskelton/rc"
   }

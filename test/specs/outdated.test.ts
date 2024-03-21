@@ -143,14 +143,26 @@ test.describe("yarn outdated", () => {
     expect(stderr).toBe("")
   })
 
-  test("ignores pre-release versions", async ({ run, writeJSON }) => {
-    await writeJSON("package.json", {
-      dependencies: { patch: "1.0.1-alpha.1" },
-    })
-    await run("install")
+  test.describe("pre-releases", () => {
+    test("ignores pre-release versions when not marked as latest", async ({
+      run,
+      writeJSON,
+    }) => {
+      await writeJSON("package.json", { dependencies: { patch: "1.0.1" } })
+      await run("install")
 
-    const { stderr, stdout } = await run("outdated")
-    expect(stdout).toMatchSnapshot("pre-releases.txt")
-    expect(stderr).toBe("")
+      const { stderr, stdout } = await run("outdated")
+      expect(stdout).toMatchSnapshot("pre-releases-latest.txt")
+      expect(stderr).toBe("")
+    })
+
+    test("pre-release version marked as latest", async ({ run, writeJSON }) => {
+      await writeJSON("package.json", { dependencies: { rc: "1.0.0" } })
+      await run("install")
+
+      const { stderr, stdout } = await run("outdated")
+      expect(stdout).toMatchSnapshot("pre-releases-outdated.txt")
+      expect(stderr).toBe("")
+    })
   })
 })
