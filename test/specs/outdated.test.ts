@@ -236,8 +236,15 @@ test("isVersionOutdated", () => {
   expect(isVersionOutdated("1.0.0", "1.0.1")).toBe(true)
   expect(isVersionOutdated("1.0.0", "1.0.1-rc.1")).toBe(true)
 
+  // Old pre-release
   expect(isVersionOutdated("1.0.0-rc.1", "1.0.0")).toBe(true)
   expect(isVersionOutdated("1.0.0-rc.1", "1.0.1")).toBe(true)
   expect(isVersionOutdated("1.0.0-rc.1", "1.0.0-rc.1")).toBe(false)
   expect(isVersionOutdated("1.0.0-rc.1", "1.0.0-rc.2")).toBe(true)
+  expect(isVersionOutdated("1.0.0-rc.1", "1.0.1-rc.1")).toBe(true)
+
+  // Pre-release past the latest non-pre-release
+  expect(isVersionOutdated("1.0.1-rc.1", "1.0.0")).toBe(false)
+  expect(isVersionOutdated("1.0.1-rc.1", "1.0.0-rc.1")).toBe(false)
+  expect(isVersionOutdated("1.0.1-rc.1", "1.0.1-rc.1")).toBe(false)
 })

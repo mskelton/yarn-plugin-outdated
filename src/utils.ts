@@ -1,7 +1,6 @@
 import { Manifest } from "@yarnpkg/core"
 import { fromUrl } from "hosted-git-info"
 import semver from "semver"
-import { fn } from "typanion"
 
 export const truthy = Boolean as unknown as <T>(
   arg: T | undefined | null | false
@@ -42,7 +41,7 @@ export function isVersionOutdated(current: string, latest: string) {
   const latestPrerelease = semver.prerelease(latest)
   const currentPrerelease = semver.prerelease(current)
 
-  if (latestPrerelease && currentPrerelease) {
+  if (semver.eq(current, latest) && latestPrerelease && currentPrerelease) {
     return semver.lt(
       parsePreRelease(currentPrerelease),
       parsePreRelease(latestPrerelease)
