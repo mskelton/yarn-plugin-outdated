@@ -9,19 +9,19 @@ Yarn plugin to show outdated dependencies.
 ### Yarn 4
 
 ```bash
-yarn plugin import https://mskelton.dev/yarn-outdated/v4
+yarn plugin import https://go.mskelton.dev/yarn-outdated/v4
 ```
 
 ### Yarn 3
 
 ```bash
-yarn plugin import https://mskelton.dev/yarn-outdated/v3
+yarn plugin import https://go.mskelton.dev/yarn-outdated/v3
 ```
 
 ### Yarn 2
 
 ```bash
-yarn plugin import https://mskelton.dev/yarn-outdated/v1.2.0
+yarn plugin import https://go.mskelton.dev/yarn-outdated/v1.2.0
 ```
 
 ## Usage
