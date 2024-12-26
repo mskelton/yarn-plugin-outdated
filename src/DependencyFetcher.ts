@@ -5,7 +5,6 @@ import {
   Manifest,
   Package,
   Project,
-  structUtils,
   ThrowReport,
   Workspace,
 } from "@yarnpkg/core"
@@ -28,21 +27,20 @@ export class DependencyFetcher {
   ) {}
 
   async fetch({ descriptor, includeRange, includeURL, pkg }: FetchOptions) {
-    const [latest, range, homepageURL] = await Promise.all([
-      this.suggest(pkg, "latest"),
-      includeRange ? this.suggest(pkg, descriptor.range) : Promise.resolve(),
-      includeURL ? this.fetchURL(pkg) : Promise.resolve(),
-    ])
+    try {
+      const [latest, range, homepageURL] = await Promise.all([
+        this.suggest(pkg, "latest"),
+        includeRange ? this.suggest(pkg, descriptor.range) : Promise.resolve(),
+        includeURL ? this.fetchURL(pkg) : Promise.resolve(),
+      ])
 
-    if (!latest) {
-      const name = structUtils.prettyIdent(this.configuration, pkg)
-      throw new Error(`Could not fetch candidate for ${name}.`)
-    }
-
-    return {
-      latest: latest.range,
-      range: range?.range,
-      url: homepageURL ?? undefined,
+      return {
+        latest: latest?.range,
+        range: range?.range,
+        url: homepageURL ?? undefined,
+      }
+    } catch (error) {
+      return { error }
     }
   }
 

@@ -200,7 +200,8 @@ export class OutdatedCommand extends BaseCommand {
           project,
           fetcher,
           dependencies,
-          progress
+          progress,
+          report
         )
       }
     )
@@ -422,11 +423,12 @@ export class OutdatedCommand extends BaseCommand {
     project: Project,
     fetcher: DependencyFetcher,
     dependencies: DependencyInfo[],
-    progress?: ReturnType<typeof Report["progressViaCounter"]>
+    progress?: ReturnType<typeof Report["progressViaCounter"]>,
+    report?: StreamReport
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
       async ({ dependencyType, descriptor, name, pkg, workspace }) => {
-        const { latest, range, url } = await fetcher.fetch({
+        const { error, latest, range, url } = await fetcher.fetch({
           descriptor,
           includeRange: this.includeRange,
           includeURL: this.includeURL(configuration),
@@ -436,7 +438,16 @@ export class OutdatedCommand extends BaseCommand {
         // JSON reports don't use progress, so this only applies for non-JSON cases.
         progress?.tick()
 
-        if (isVersionOutdated(pkg.version!, latest)) {
+        if (error instanceof Error) {
+          report?.reportError(
+            MessageName.UNNAMED,
+            `Failed to fetch ${name}: ${error.message}`
+          )
+
+          return
+        }
+
+        if (latest && isVersionOutdated(pkg.version!, latest)) {
           return {
             current: pkg.version!,
             latest,

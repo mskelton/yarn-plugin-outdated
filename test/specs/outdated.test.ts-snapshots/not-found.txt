@@ -1,7 +1,6 @@
 ➤ YN0000: ┌ Checking for outdated dependencies
-➤ YN0035: │ Package not found
-➤ YN0035: │   Response Code: 404 (Not Found)
-➤ YN0035: │   Request Method: GET
-➤ YN0035: │   Request URL: http://localhost:<registry port>/not-found
+➤ YN0000: │ Failed to fetch not-found: Package not found
 ➤ YN0000: └ Completed
+
+➤ YN0000: ✨ All your dependencies are up to date!
 ➤ YN0000: Failed with errors

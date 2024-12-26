@@ -39,9 +39,8 @@ test.describe("yarn outdated", () => {
     expect(stderr).toBe("")
   })
 
-  test("throws an error when a package is not found", async ({
+  test("displays a report error when a package is not found", async ({
     readFile,
-    registry,
     run,
     writeFile,
     writeJSON,
@@ -58,8 +57,7 @@ test.describe("yarn outdated", () => {
     await writeFile("yarn.lock", lockfile.replace(/patch/g, "not-found"))
 
     const { code, stderr, stdout } = await run("outdated")
-    const output = stdout.replace(registry.port.toString(), "<registry port>")
-    expect(output).toMatchSnapshot("not-found.txt")
+    expect(stdout).toMatchSnapshot("not-found.txt")
     expect(stderr).toBe("")
     expect(code).toBe(1)
   })
