@@ -10,5 +10,9 @@
     "newlinesBetween": false,
     "enabled": true
   },
-  "ignorePatterns": [".yarn/", ".yarnrc.yml"]
+  "ignorePatterns": [
+    ".yarn/",
+    ".yarnrc.yml",
+    "bundles/**"
+  ]
 }
