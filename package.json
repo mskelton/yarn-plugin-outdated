@@ -12,6 +12,7 @@
   "scripts": {
     "build": "builder build plugin",
     "lint": "eslint .",
+    "format:check": "oxfmt --check .",
     "format": "oxfmt .",
     "test": "playwright test",
     "ts": "tsc"

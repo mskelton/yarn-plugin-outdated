@@ -4,8 +4,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: mskelton/setup-yarn@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - run: yarn
       - run: yarn lint
+      - run: yarn format:check
       - run: yarn ts
       - run: yarn build
       - run: yarn test
