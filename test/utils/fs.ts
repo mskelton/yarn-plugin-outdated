@@ -12,7 +12,6 @@ export async function packToStream(
 
   const zipperStream = zlib.createGzip()
   const packStream = tarFs.pack(npath.fromPortablePath(source), {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     map(header: any) {
       header.name = npath.toPortablePath(header.name)
       header.name = ppath.resolve(PortablePath.root, header.name)

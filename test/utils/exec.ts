@@ -6,7 +6,7 @@ interface Options {
   env?: Record<string, string>
 }
 
-type Output = Record<"stdout" | "stderr", string>
+type Output = Record<"stderr" | "stdout", string>
 
 type ExecResult = Output & {
   code?: string | number | null

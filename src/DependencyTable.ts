@@ -27,7 +27,7 @@ export class DependencyTable {
   }
 
   constructor(
-    private format: "text" | "markdown",
+    private format: "markdown" | "text",
     private writer: (row: string) => void,
     private configuration: Configuration,
     private dependencies: OutdatedDependency[],

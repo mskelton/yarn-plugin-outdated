@@ -152,7 +152,7 @@ export class OutdatedCommand extends BaseCommand {
       severity: dep.severity.latest,
     }))
 
-    this.context.stdout.write(JSON.stringify(json) + "\n")
+    this.context.stdout.write(`${JSON.stringify(json)}\n`)
   }
 
   writeMarkdown(
@@ -161,13 +161,13 @@ export class OutdatedCommand extends BaseCommand {
     outdated: OutdatedDependency[]
   ) {
     if (!outdated.length) {
-      this.context.stdout.write(UP_TO_DATE_MESSAGE + "\n")
+      this.context.stdout.write(`${UP_TO_DATE_MESSAGE}\n`)
       return
     }
 
     const table = new DependencyTable(
       "markdown",
-      (line) => this.context.stdout.write(line + "\n"),
+      (line) => this.context.stdout.write(`${line}\n`),
       configuration,
       outdated,
       {
