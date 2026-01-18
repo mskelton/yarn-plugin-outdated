@@ -31,7 +31,7 @@ test.describe("yarn outdated", () => {
     await run("install")
 
     const { stderr, stdout } = await run(
-      "outdated --severity=patch --severity=minor"
+      "outdated --severity=patch --severity=minor",
     )
     expect(stdout).toMatchSnapshot("multiple-severities.txt")
     expect(stderr).toBe("")

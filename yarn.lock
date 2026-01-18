@@ -314,6 +314,62 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@oxfmt/darwin-arm64@npm:0.24.0":
+  version: 0.24.0
+  resolution: "@oxfmt/darwin-arm64@npm:0.24.0"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@oxfmt/darwin-x64@npm:0.24.0":
+  version: 0.24.0
+  resolution: "@oxfmt/darwin-x64@npm:0.24.0"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@oxfmt/linux-arm64-gnu@npm:0.24.0":
+  version: 0.24.0
+  resolution: "@oxfmt/linux-arm64-gnu@npm:0.24.0"
+  conditions: os=linux & cpu=arm64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@oxfmt/linux-arm64-musl@npm:0.24.0":
+  version: 0.24.0
+  resolution: "@oxfmt/linux-arm64-musl@npm:0.24.0"
+  conditions: os=linux & cpu=arm64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@oxfmt/linux-x64-gnu@npm:0.24.0":
+  version: 0.24.0
+  resolution: "@oxfmt/linux-x64-gnu@npm:0.24.0"
+  conditions: os=linux & cpu=x64 & libc=glibc
+  languageName: node
+  linkType: hard
+
+"@oxfmt/linux-x64-musl@npm:0.24.0":
+  version: 0.24.0
+  resolution: "@oxfmt/linux-x64-musl@npm:0.24.0"
+  conditions: os=linux & cpu=x64 & libc=musl
+  languageName: node
+  linkType: hard
+
+"@oxfmt/win32-arm64@npm:0.24.0":
+  version: 0.24.0
+  resolution: "@oxfmt/win32-arm64@npm:0.24.0"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@oxfmt/win32-x64@npm:0.24.0":
+  version: 0.24.0
+  resolution: "@oxfmt/win32-x64@npm:0.24.0"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
 "@playwright/test@npm:^1.27.1":
   version: 1.27.1
   resolution: "@playwright/test@npm:1.27.1"
@@ -3512,6 +3568,42 @@ __metadata:
   languageName: node
   linkType: hard
 
+"oxfmt@npm:^0.24.0":
+  version: 0.24.0
+  resolution: "oxfmt@npm:0.24.0"
+  dependencies:
+    "@oxfmt/darwin-arm64": "npm:0.24.0"
+    "@oxfmt/darwin-x64": "npm:0.24.0"
+    "@oxfmt/linux-arm64-gnu": "npm:0.24.0"
+    "@oxfmt/linux-arm64-musl": "npm:0.24.0"
+    "@oxfmt/linux-x64-gnu": "npm:0.24.0"
+    "@oxfmt/linux-x64-musl": "npm:0.24.0"
+    "@oxfmt/win32-arm64": "npm:0.24.0"
+    "@oxfmt/win32-x64": "npm:0.24.0"
+    tinypool: "npm:2.0.0"
+  dependenciesMeta:
+    "@oxfmt/darwin-arm64":
+      optional: true
+    "@oxfmt/darwin-x64":
+      optional: true
+    "@oxfmt/linux-arm64-gnu":
+      optional: true
+    "@oxfmt/linux-arm64-musl":
+      optional: true
+    "@oxfmt/linux-x64-gnu":
+      optional: true
+    "@oxfmt/linux-x64-musl":
+      optional: true
+    "@oxfmt/win32-arm64":
+      optional: true
+    "@oxfmt/win32-x64":
+      optional: true
+  bin:
+    oxfmt: bin/oxfmt
+  checksum: 5d10057f7f59ba6137759df52c633ad16f92735974c4852d9c785b418fad0076021bfe21a29d7acfe631c6269d88415f4c27bfbb440086f2ce145ec44b7bb5d9
+  languageName: node
+  linkType: hard
+
 "p-cancelable@npm:^2.0.0":
   version: 2.0.0
   resolution: "p-cancelable@npm:2.0.0"
@@ -3649,15 +3741,6 @@ __metadata:
   version: 1.2.1
   resolution: "prelude-ls@npm:1.2.1"
   checksum: b00d617431e7886c520a6f498a2e14c75ec58f6d93ba48c3b639cf241b54232d90daa05d83a9e9b9fef6baa63cb7e1e4602c2372fea5bc169668401eb127d0cd
-  languageName: node
-  linkType: hard
-
-"prettier@npm:^2.5.1":
-  version: 2.5.1
-  resolution: "prettier@npm:2.5.1"
-  bin:
-    prettier: bin-prettier.js
-  checksum: fa9750193b3fcdb4bd54ba4e57996d335de4cd492d277539b6ffb6d146c8b6d3c3dc264b75021914c99c91574643637f607da08ef4588ef30a7b78d14326f470
   languageName: node
   linkType: hard
 
@@ -4305,6 +4388,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tinypool@npm:2.0.0":
+  version: 2.0.0
+  resolution: "tinypool@npm:2.0.0"
+  checksum: 3888cc668cdbb1bc85e1b58587897501254ffc5de52cf4e0d30936869922a4eaf2f085ce10562122df3eb7536cbf3d29ecc2faba37656933649d1d2f5bc9bff7
+  languageName: node
+  linkType: hard
+
 "to-regex-range@npm:^5.0.1":
   version: 5.0.1
   resolution: "to-regex-range@npm:5.0.1"
@@ -4656,7 +4746,7 @@ __metadata:
     glob-promise: "npm:^4.2.2"
     hosted-git-info: "npm:^7.0.1"
     micromatch: "npm:^4.0.5"
-    prettier: "npm:^2.5.1"
+    oxfmt: "npm:^0.24.0"
     semver: "npm:^7.5.4"
     tar-fs: "npm:^2.1.1"
     typanion: "npm:^3.14.0"

@@ -17,7 +17,7 @@ interface RunOptions {
 
 export async function makeTemporaryEnv(
   globalEnv: Record<string, string>,
-  latestVersions: Record<string, string>
+  latestVersions: Record<string, string>,
 ) {
   const registry = new Registry(latestVersions)
 

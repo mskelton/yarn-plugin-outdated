@@ -73,7 +73,7 @@ test.describe("workspaces", () => {
       await run("install")
 
       const { stderr, stdout } = await run(
-        `outdated --workspace ${cwd}/a --workspace ${cwd}`
+        `outdated --workspace ${cwd}/a --workspace ${cwd}`,
       )
       expect(stdout).toMatchSnapshot("directory-absolute.txt")
       expect(stderr).toBe("")
@@ -137,7 +137,7 @@ test.describe("workspaces", () => {
       await run("install")
 
       const { stderr, stdout } = await run(
-        "outdated --workspace a --workspace b"
+        "outdated --workspace a --workspace b",
       )
       expect(stdout).toMatchSnapshot("multiple-globs.txt")
       expect(stderr).toBe("")

@@ -3,7 +3,7 @@ import { fromUrl } from "hosted-git-info"
 import semver from "semver"
 
 export const truthy = Boolean as unknown as <T>(
-  arg: T | undefined | null | false
+  arg: T | undefined | null | false,
 ) => arg is T
 
 export function getHomepageURL({ raw: manifest }: Manifest): string | null {
@@ -17,8 +17,8 @@ export function getHomepageURL({ raw: manifest }: Manifest): string | null {
     typeof repo === "string"
       ? repo
       : typeof repo === "object" && typeof repo.url === "string"
-      ? repo.url
-      : null
+        ? repo.url
+        : null
 
   const info = repoURL ? fromUrl(repoURL) : undefined
   const commitish = info?.committish ? `#${info.committish}` : ""
@@ -44,7 +44,7 @@ export function isVersionOutdated(current: string, latest: string) {
   if (semver.eq(current, latest) && latestPrerelease && currentPrerelease) {
     return semver.lt(
       parsePreRelease(currentPrerelease),
-      parsePreRelease(latestPrerelease)
+      parsePreRelease(latestPrerelease),
     )
   }
 

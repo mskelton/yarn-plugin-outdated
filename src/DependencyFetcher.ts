@@ -23,7 +23,7 @@ export class DependencyFetcher {
     private configuration: Configuration,
     private project: Project,
     private workspace: Workspace,
-    private cache: Cache
+    private cache: Cache,
   ) {}
 
   async fetch({ descriptor, includeRange, includeURL, pkg }: FetchOptions) {

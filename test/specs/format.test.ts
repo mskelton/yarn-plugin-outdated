@@ -90,7 +90,7 @@ test.describe("yarn outdated --format", () => {
     await run("install")
 
     const { code, stderr, stdout } = await run(
-      "outdated --format=markdown --check"
+      "outdated --format=markdown --check",
     )
     expect(stdout).toMatchSnapshot("markdown.md")
     expect(stderr).toBe("")

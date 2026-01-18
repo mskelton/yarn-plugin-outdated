@@ -100,7 +100,7 @@ export class Registry {
   private async process(
     request: Request,
     _: http.IncomingMessage,
-    res: http.ServerResponse
+    res: http.ServerResponse,
   ) {
     const { localName, scope } = request
     const name = scope ? `${scope}/${localName}` : localName
@@ -130,7 +130,7 @@ export class Registry {
               this.latestVersions[name] ?? semver.maxSatisfying(versions, "*"),
           },
           name,
-          versions: Object.assign({}, ...(await Promise.all(versionEntries))),
+          "versions": Object.assign({}, ...(await Promise.all(versionEntries))),
         }
 
         res.writeHead(200, { "Content-Type": "application/json" })
@@ -175,13 +175,15 @@ export class Registry {
 
     return fsUtils.packToStream(
       npath.toPortablePath(packageVersionEntry.path),
-      { virtualPath: npath.toPortablePath(`/package`) }
+      {
+        virtualPath: npath.toPortablePath(`/package`),
+      },
     )
   }
 
   async getPackageArchiveHash(
     name: string,
-    version: string
+    version: string,
   ): Promise<string | Buffer> {
     const stream = await this.getPackageArchiveStream(name, version)
 
@@ -238,7 +240,7 @@ export class Registry {
   private sendError(
     res: http.ServerResponse,
     statusCode: number,
-    errorMessage: string
+    errorMessage: string,
   ) {
     res.writeHead(statusCode)
     res.end(errorMessage)

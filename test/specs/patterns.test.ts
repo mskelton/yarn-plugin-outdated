@@ -4,8 +4,8 @@ const manifest = {
   dependencies: {
     "@scoped/minor": "1.0.0",
     "@scoped/patch": "1.0.0",
-    minor: "1.0.0",
-    patch: "1.0.0",
+    "minor": "1.0.0",
+    "patch": "1.0.0",
   },
 }
 

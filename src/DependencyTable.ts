@@ -12,7 +12,7 @@ const columns = [
   "url",
 ] as const
 
-type TableColumn = typeof columns[number]
+type TableColumn = (typeof columns)[number]
 
 export class DependencyTable {
   private sizes: Record<TableColumn, number> = null!
@@ -31,7 +31,7 @@ export class DependencyTable {
     private writer: (row: string) => void,
     private configuration: Configuration,
     private dependencies: OutdatedDependency[],
-    private extraColumns: Partial<Record<TableColumn, boolean>>
+    private extraColumns: Partial<Record<TableColumn, boolean>>,
   ) {}
 
   print() {
@@ -61,7 +61,7 @@ export class DependencyTable {
   private formatVersion(
     dependency: OutdatedDependency,
     column: TableColumn,
-    color: string | null
+    color: string | null,
   ) {
     const value = dependency[column]?.padEnd(this.sizes[column])
     if (!value) return
@@ -78,7 +78,7 @@ export class DependencyTable {
       formatUtils.pretty(
         this.configuration,
         this.applyColor(end, color),
-        "bold"
+        "bold",
       )
     )
   }
@@ -92,7 +92,7 @@ export class DependencyTable {
   private getColumnSizes(): Record<TableColumn, number> {
     const sizes = columns.reduce(
       (acc, column) => ({ ...acc, [column]: this.headers[column].length }),
-      {} as Record<TableColumn, number>
+      {} as Record<TableColumn, number>,
     )
 
     for (const dependency of this.dependencies) {
@@ -111,7 +111,7 @@ export class DependencyTable {
     return formatUtils.pretty(
       this.configuration,
       this.headers[column].padEnd(this.sizes[column]),
-      "bold"
+      "bold",
     )
   }
 
@@ -130,8 +130,8 @@ export class DependencyTable {
       this.printRow(
         (Object.keys(this.sizes) as TableColumn[]).reduce(
           (acc, key) => ({ ...acc, [key]: "".padEnd(this.sizes[key], "-") }),
-          {} as Record<TableColumn, string>
-        )
+          {} as Record<TableColumn, string>,
+        ),
       )
     }
   }

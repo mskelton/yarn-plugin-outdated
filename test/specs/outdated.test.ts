@@ -101,11 +101,11 @@ test.describe("yarn outdated", () => {
     const lockfile = "non-semver.lock"
     const dependencies = {
       "@scoped/patch": "patch:@scoped/patch@1.0.0#./alias.patch",
-      alias: "npm:patch@1.0.0",
-      file: "file:./file-dep",
-      githubA: "mskelton/lazy-context",
-      githubB: "github:mskelton/lazy-context",
-      githubC: "git@github.com:mskelton/lazy-context.git",
+      "alias": "npm:patch@1.0.0",
+      "file": "file:./file-dep",
+      "githubA": "mskelton/lazy-context",
+      "githubB": "github:mskelton/lazy-context",
+      "githubC": "git@github.com:mskelton/lazy-context.git",
     }
 
     // This test requires a lockfile, so anytime that it requires updating, run

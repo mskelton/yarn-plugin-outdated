@@ -9,6 +9,6 @@ export function writeSupplementalFile(filename: string, content: string) {
   return fs.writeFile(
     path.join(__dirname, "..", "files", filename),
     content,
-    "utf8"
+    "utf8",
   )
 }

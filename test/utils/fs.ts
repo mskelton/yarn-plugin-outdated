@@ -4,7 +4,7 @@ import zlib from "zlib"
 
 export async function packToStream(
   source: PortablePath,
-  { virtualPath = null }: { virtualPath?: PortablePath | null } = {}
+  { virtualPath = null }: { virtualPath?: PortablePath | null } = {},
 ) {
   if (virtualPath) {
     virtualPath = ppath.resolve(virtualPath)

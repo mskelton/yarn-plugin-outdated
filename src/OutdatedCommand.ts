@@ -104,7 +104,7 @@ export class OutdatedCommand extends BaseCommand {
       configuration,
       project,
       workspace,
-      cache
+      cache,
     )
     const workspaces = this.getWorkspaces(project)
     const dependencies = this.getDependencies(configuration, workspaces)
@@ -114,7 +114,7 @@ export class OutdatedCommand extends BaseCommand {
         configuration,
         project,
         fetcher,
-        dependencies
+        dependencies,
       )
 
       if (this.format === "json" || this.json) {
@@ -134,9 +134,9 @@ export class OutdatedCommand extends BaseCommand {
           project,
           dependencies,
           fetcher,
-          report
+          report,
         )
-      }
+      },
     )
 
     return report.exitCode()
@@ -158,7 +158,7 @@ export class OutdatedCommand extends BaseCommand {
   writeMarkdown(
     configuration: Configuration,
     project: Project,
-    outdated: OutdatedDependency[]
+    outdated: OutdatedDependency[],
   ) {
     if (!outdated.length) {
       this.context.stdout.write(`${UP_TO_DATE_MESSAGE}\n`)
@@ -174,7 +174,7 @@ export class OutdatedCommand extends BaseCommand {
         range: this.includeRange,
         url: this.includeURL(configuration),
         workspace: this.includeWorkspace(project),
-      }
+      },
     )
     table.print()
   }
@@ -184,7 +184,7 @@ export class OutdatedCommand extends BaseCommand {
     project: Project,
     dependencies: DependencyInfo[],
     fetcher: DependencyFetcher,
-    report: StreamReport
+    report: StreamReport,
   ) {
     let outdated: OutdatedDependency[] = null!
 
@@ -201,9 +201,9 @@ export class OutdatedCommand extends BaseCommand {
           fetcher,
           dependencies,
           progress,
-          report
+          report,
         )
-      }
+      },
     )
 
     report.reportSeparator()
@@ -218,7 +218,7 @@ export class OutdatedCommand extends BaseCommand {
           range: this.includeRange,
           url: this.includeURL(configuration),
           workspace: this.includeWorkspace(project),
-        }
+        },
       )
 
       table.print()
@@ -227,7 +227,7 @@ export class OutdatedCommand extends BaseCommand {
     } else {
       report.reportInfo(
         MessageName.UNNAMED,
-        formatUtils.pretty(configuration, UP_TO_DATE_MESSAGE, "green")
+        formatUtils.pretty(configuration, UP_TO_DATE_MESSAGE, "green"),
       )
     }
   }
@@ -238,7 +238,7 @@ export class OutdatedCommand extends BaseCommand {
   async loadProject() {
     const configuration = await Configuration.find(
       this.context.cwd,
-      this.context.plugins
+      this.context.plugins,
     )
 
     const [cache, { project, workspace }] = await Promise.all([
@@ -272,20 +272,20 @@ export class OutdatedCommand extends BaseCommand {
     return !patterns
       ? project.workspaces
       : patterns[0] === "."
-      ? project.workspaces.filter((w) => w.cwd === this.context.cwd)
-      : project.workspaces.filter((w) => {
-          // For each pattern provided by the user, we include a copy of the
-          // pattern with the current working directory prepended to allow
-          // easily searching by relative paths.
-          const globs = [
-            ...patterns,
-            ...patterns.map((p) => path.join(this.context.cwd, p)),
-          ]
+        ? project.workspaces.filter((w) => w.cwd === this.context.cwd)
+        : project.workspaces.filter((w) => {
+            // For each pattern provided by the user, we include a copy of the
+            // pattern with the current working directory prepended to allow
+            // easily searching by relative paths.
+            const globs = [
+              ...patterns,
+              ...patterns.map((p) => path.join(this.context.cwd, p)),
+            ]
 
-          // The globs are matched against the workspace name and working
-          // directory to allow both directory and name filtering.
-          return micromatch.some([this.getWorkspaceName(w), w.cwd], globs)
-        })
+            // The globs are matched against the workspace name and working
+            // directory to allow both directory and name filtering.
+            return micromatch.some([this.getWorkspaceName(w), w.cwd], globs)
+          })
   }
 
   /**
@@ -376,7 +376,7 @@ export class OutdatedCommand extends BaseCommand {
 
     // Only include the dependencies matching the pattern provided by the user.
     const filteredDependencies = dependencies.filter(({ name }) =>
-      micromatch.isMatch(name, this.patterns)
+      micromatch.isMatch(name, this.patterns),
     )
 
     // If ther user entered a pattern that doesn't match any dependencies, they
@@ -388,8 +388,8 @@ export class OutdatedCommand extends BaseCommand {
         `Pattern ${formatUtils.prettyList(
           configuration,
           this.patterns,
-          formatUtils.Type.CODE
-        )} doesn't match any packages referenced by any workspace`
+          formatUtils.Type.CODE,
+        )} doesn't match any packages referenced by any workspace`,
       )
     }
 
@@ -408,10 +408,10 @@ export class OutdatedCommand extends BaseCommand {
     return semver.eq(current, latest)
       ? null
       : current.major === 0 || latest.major > current.major
-      ? "major"
-      : latest.minor > current.minor
-      ? "minor"
-      : "patch"
+        ? "major"
+        : latest.minor > current.minor
+          ? "minor"
+          : "patch"
   }
 
   /**
@@ -423,8 +423,8 @@ export class OutdatedCommand extends BaseCommand {
     project: Project,
     fetcher: DependencyFetcher,
     dependencies: DependencyInfo[],
-    progress?: ReturnType<typeof Report["progressViaCounter"]>,
-    report?: StreamReport
+    progress?: ReturnType<(typeof Report)["progressViaCounter"]>,
+    report?: StreamReport,
   ): Promise<OutdatedDependency[]> {
     const outdated = dependencies.map(
       async ({ dependencyType, descriptor, name, pkg, workspace }) => {
@@ -441,7 +441,7 @@ export class OutdatedCommand extends BaseCommand {
         if (error instanceof Error) {
           report?.reportError(
             MessageName.UNNAMED,
-            `Failed to fetch ${name}: ${error.message}`
+            `Failed to fetch ${name}: ${error.message}`,
           )
 
           return
@@ -464,7 +464,7 @@ export class OutdatedCommand extends BaseCommand {
               : undefined,
           }
         }
-      }
+      },
     )
 
     return (await Promise.all(outdated))

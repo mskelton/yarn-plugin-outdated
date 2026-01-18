@@ -15,7 +15,7 @@ type ExecResult = Output & {
 export const execFile = (
   path: string,
   args: string[],
-  { cwd, env }: Options
+  { cwd, env }: Options,
 ): Promise<ExecResult> => {
   return new Promise((resolve) => {
     cp.execFile(
@@ -39,7 +39,7 @@ export const execFile = (
         } else {
           resolve({ code: 0, stderr, stdout })
         }
-      }
+      },
     )
   })
 }
