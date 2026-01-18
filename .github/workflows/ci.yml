@@ -1,0 +1,11 @@
+name: Build
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mskelton/setup-yarn@v1
+      - run: yarn lint
+      - run: yarn ts
+      - run: yarn build
+      - run: yarn test
